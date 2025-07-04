@@ -50,7 +50,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
     // Load Japan prefecture GeoJSON data
     const loadJapanData = async () => {
       try {
-        const response = await fetch('/data/japan-prefectures.geojson')
+        const response = await fetch('data/japan-prefectures.geojson')
         const data = await response.json()
         setJapanData(data)
         setLoading(false)
