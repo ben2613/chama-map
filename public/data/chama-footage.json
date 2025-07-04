@@ -2,7 +2,17 @@
   "Kyoto Fu": [],
   "Saga Ken": [],
   "Kumamoto Ken": [],
-  "Kagawa Ken": [],
+  "Kagawa Ken": [
+    {
+      "coordinates": [134.04883647779042, 34.34470473651565],
+      "title": "Mini",
+      "image": "data/images/GuLav0wbUAA__c7.jpg",
+      "tweets": [
+        "https://x.com/akaihaato/status/1937351310262882320",
+        "https://x.com/akaihaato/status/1937360487953702988"
+      ]
+    }
+  ],
   "Aichi Ken": [],
   "Tochigi Ken": [],
   "Yamanashi Ken": [],
@@ -31,16 +41,13 @@
   "Toyama Ken": [],
   "Tokyo To": [
     {
-      "coordinates": [139.6917, 35.6895],
-      "title": "Shibuya Crossing Adventure",
-      "image": "https://dummyimage.com/600x400",
-      "tweet": "https://twitter.com/akaihaato/status/1234567890"
-    },
-    {
       "coordinates": [139.8107, 35.7101],
       "title": "Tokyo Skytree Visit",
       "image": "https://dummyimage.com/600x400",
-      "tweet": "https://twitter.com/akaihaato/status/2345678901"
+      "description": "Haachama in Tokyo Skytree",
+      "tweets": [
+        "https://twitter.com/akaihaato/status/2345678901"
+      ]
     }
   ],
   "Saitama Ken": [],
