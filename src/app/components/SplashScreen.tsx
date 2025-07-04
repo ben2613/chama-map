@@ -17,7 +17,7 @@ const SplashScreen: React.FC = () => {
         className="flex flex-col items-center"
       >
         <span className="text-5xl md:text-7xl mb-4 animate-bounce">🗾</span>
-        <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-2 drop-shadow-lg">Chama Map</h1>
+        <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-2 drop-shadow-lg">Haachama Radar</h1>
         <p className="text-lg text-gray-600 mb-4">A fan project for Haachama&apos;s Japan trips</p>
       </motion.div>
     </motion.div>
