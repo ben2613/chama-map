@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
+import type { FeatureCollection, Feature, Geometry } from 'geojson'
 
 // Fix for default markers in React Leaflet
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -12,18 +14,10 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 })
 
-// Cartoon-style color palette for prefectures
+// Use only two comfortable colors: soft yellow and soft red
 const PREFECTURE_COLORS = [
-  '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
-  '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
-  '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#F4D03F',
-  '#AED6F1', '#A9DFBF', '#F9E79F', '#D7BDE2', '#A3E4D7',
-  '#FAD7A0', '#D5A6BD', '#A9CCE3', '#ABEBC6', '#F5B7B1',
-  '#87CEEB', '#DEB887', '#F0E68C', '#DA70D6', '#40E0D0',
-  '#FF69B4', '#00CED1', '#FFB6C1', '#20B2AA', '#FF1493',
-  '#00BFFF', '#FF6347', '#7B68EE', '#00FA9A', '#FF4500',
-  '#9370DB', '#32CD32', '#FF8C00', '#6A5ACD', '#00FF7F',
-  '#FF69B4', '#1E90FF'
+  '#FFE066', // Soft yellow
+  '#F44336'  // Soft red
 ]
 
 interface JapanMapProps {
@@ -34,18 +28,12 @@ interface PrefectureProperties {
   nam: string
   nam_ja: string
   id: number
-  [key: string]: any
-}
-
-interface PrefectureFeature {
-  type: 'Feature'
-  properties: PrefectureProperties
-  geometry: any
+  // Add more specific properties here if needed
 }
 
 const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
-  const [japanData, setJapanData] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [japanData, setJapanData] = useState<FeatureCollection | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     // Load Japan prefecture GeoJSON data
@@ -65,7 +53,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
   }, [])
 
   // Style function for cartoon-like appearance
-  const getFeatureStyle = (feature?: any) => {
+  const getFeatureStyle = (feature?: Feature<Geometry, PrefectureProperties>) => {
     const prefectureId = feature?.properties?.id || 0
     const featureIndex = prefectureId % PREFECTURE_COLORS.length
     
@@ -80,7 +68,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
   }
 
   // Interaction handlers
-  const onEachFeature = (feature: PrefectureFeature, layer: L.Layer) => {
+  const onEachFeature = (feature: Feature<Geometry, PrefectureProperties>, layer: L.Layer) => {
     const popupContent = `
       <div style="
         font-family: 'Comic Sans MS', cursive;
@@ -107,22 +95,22 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
     
     // Hover effects for cartoon-style interaction
     layer.on({
-      mouseover: (e) => {
-        const layer = e.target
+      mouseover: (e: L.LeafletMouseEvent) => {
+        const layer = e.target as L.Path
         layer.setStyle({
           weight: 5,
-          color: '#FF6B6B',
+          color: '#FF6F61',
           fillOpacity: 0.9,
           dashArray: '',
         })
         layer.bringToFront()
       },
-      mouseout: (e) => {
-        const layer = e.target
+      mouseout: (e: L.LeafletMouseEvent) => {
+        const layer = e.target as L.Path
         layer.setStyle(getFeatureStyle(feature))
       },
-      click: (e) => {
-        const layer = e.target
+      click: (e: L.LeafletMouseEvent) => {
+        const layer = e.target as L.Path
         // Add click animation
         layer.setStyle({
           weight: 8,
