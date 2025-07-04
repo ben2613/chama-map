@@ -1,5 +1,10 @@
 'use client'
 import dynamic from 'next/dynamic'
+import React, { useState } from 'react'
+import SplashScreen from './components/SplashScreen'
+import { AnimatePresence } from 'framer-motion'
+import FloatingArrowButton from './components/FloatingArrowButton'
+import InfoPanel from './components/InfoPanel'
 
 // Dynamically import the map to avoid SSR issues
 const JapanMap = dynamic(() => import('./components/JapanMap'), {
@@ -8,48 +13,26 @@ const JapanMap = dynamic(() => import('./components/JapanMap'), {
 })
 
 export default function Home() {
+  const [infoOpen, setInfoOpen] = useState(false)
+  const [showSplash, setShowSplash] = useState(true)
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 1500)
+    return () => clearTimeout(timer)
+  }, [])
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <main className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            🗾 Japan Prefecture Map
-          </h1>
-          <p className="text-lg text-gray-600">
-            Interactive cartoon-style map of Japan&apos;s 47 prefectures
-          </p>
-        </div>
-        
-        <div className="w-full h-[600px] mb-8">
-          <JapanMap className="w-full h-full" />
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            About This Map
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Features</h3>
-              <ul className="text-gray-600 space-y-2">
-                <li>• Interactive prefecture boundaries</li>
-                <li>• Cartoon-style colorful overlay</li>
-                <li>• Hover effects and popups</li>
-                <li>• Click animations</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Tech Stack</h3>
-              <ul className="text-gray-600 space-y-2">
-                <li>• Next.js (Static Export)</li>
-                <li>• React Leaflet</li>
-                <li>• Tailwind CSS</li>
-                <li>• TypeScript</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </main>
+    <div className="min-h-screen min-w-screen w-screen h-screen fixed top-0 left-0 bg-gradient-to-br from-blue-50 to-purple-50">
+      <AnimatePresence>
+        {showSplash && <SplashScreen key="splash" />}
+      </AnimatePresence>
+      {!showSplash && <JapanMap className="w-full h-full" />}
+      {/* Floating Arrow Button */}
+      {!showSplash && (
+        <FloatingArrowButton open={infoOpen} onClick={() => setInfoOpen(v => !v)} />
+      )}
+      {/* Info Panel */}
+      {!showSplash && (
+        <InfoPanel open={infoOpen} />
+      )}
     </div>
   )
 }
