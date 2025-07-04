@@ -8,6 +8,14 @@ import FootageMarker from './FootageMarker'
 import chamaFootage from '../../../public/data/chama-footage.json'
 import type { FootageMarkerHandle } from './FootageMarker';
 
+interface Footage {
+  coordinates: [number, number];
+  title: string;
+  image: string;
+  description: string;
+  tweets: string[];
+}
+
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -126,22 +134,23 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
           />
         )}
         {/* Render markers for all footage */}
-        {Object.entries(chamaFootage as unknown as Record<string, Array<{coordinates: [number, number], title: string, image: string, tweet: string}>>).flatMap(([prefName, footageArr]) =>
+        {Object.entries(chamaFootage as unknown as Record<string, Footage[]>).flatMap(([prefName, footageArr]) =>
           footageArr.map((footage, idx) => (
             <FootageMarker
               key={`${prefName}-${idx}`}
               ref={registerMarkerRef(prefName, idx)}
               coordinates={footage.coordinates}
               title={footage.title}
+              description={footage.description}
               image={footage.image}
-              tweet={footage.tweet}
+              tweets={footage.tweets}
             />
           ))
         )}
         {/* React-based popup for prefecture */}
         {selectedPrefecture && (
           (() => {
-            const footages = (chamaFootage as unknown as Record<string, Array<{coordinates: [number, number], title: string, image: string, tweet: string}>>)[selectedPrefecture] || [];
+            const footages = (chamaFootage as unknown as Record<string, Footage[]>)[selectedPrefecture] || [];
             // Find the center of the prefecture for popup placement
             const feature = japanData?.features.find(f => f.properties!.nam === selectedPrefecture);
             let center: [number, number] = [36.2048, 138.2529];

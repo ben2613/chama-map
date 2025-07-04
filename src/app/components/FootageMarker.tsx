@@ -10,7 +10,8 @@ interface FootageMarkerProps {
   coordinates: [number, number]; // [lng, lat]
   title: string;
   image: string;
-  tweet: string;
+  description: string;
+  tweets: string[];
 }
 
 const icon = new L.Icon({
@@ -24,7 +25,7 @@ const icon = new L.Icon({
 });
 
 const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
-  ({ coordinates, title, image, tweet }, ref) => {
+  ({ coordinates, title, image, description, tweets }, ref) => {
     const markerRef = useRef<LeafletMarker>(null);
 
     useImperativeHandle(ref, () => ({
@@ -41,9 +42,12 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
         <Popup>
           <div style={{ textAlign: 'center', minWidth: 200 }}>
             <div style={{ fontWeight: 'bold', marginBottom: 8 }}>{title}</div>
+            {description && <div style={{ marginBottom: 8 }}>{description}</div>}
             <img src={image} alt={title} style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 8 }} />
             <div>
-              <a href={tweet} target="_blank" rel="noopener noreferrer">View Tweet</a>
+              {tweets.map((tweet, index) => (
+                <a key={index} href={tweet} target="_blank" rel="noopener noreferrer">View Tweet {index + 1}</a>
+              ))}
             </div>
           </div>
         </Popup>
