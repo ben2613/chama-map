@@ -5,7 +5,8 @@ import SplashScreen from './components/SplashScreen';
 import { AnimatePresence } from 'framer-motion';
 import FloatingArrowButton from './components/FloatingArrowButton';
 import InfoPanel from './components/InfoPanel';
-import type { FeatureCollection } from 'geojson';
+import type { FeatureCollection, Geometry } from 'geojson';
+import { FootageProperties } from '@/types/map';
 
 const JapanMap = dynamic(() => import('./components/JapanMap'), {
   ssr: false,
@@ -16,7 +17,7 @@ export default function Home() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [japanData, setJapanData] = useState<FeatureCollection | null>(null);
-  const [chamaFootage, setChamaFootage] = useState<FeatureCollection | null>(null);
+  const [chamaFootage, setChamaFootage] = useState<FeatureCollection<Geometry, FootageProperties> | null>(null);
 
   useEffect(() => {
     let splashTimeout: NodeJS.Timeout;

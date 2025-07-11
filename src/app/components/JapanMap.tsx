@@ -1,11 +1,12 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import type { FeatureCollection, Feature, Geometry, Point, Position } from 'geojson';
 import FootageMarker from './FootageMarker';
 import type { FootageMarkerHandle } from './FootageMarker';
+import { FootageProperties, PrefectureProperties } from '@/types/map';
 
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,14 +20,7 @@ L.Icon.Default.mergeOptions({
 interface JapanMapProps {
   className?: string;
   japanData: FeatureCollection;
-  chamaFootage: FeatureCollection;
-}
-
-interface PrefectureProperties {
-  nam: string;
-  nam_ja: string;
-  id: number;
-  // Add more specific properties here if needed
+  chamaFootage: FeatureCollection<Geometry, FootageProperties>;
 }
 
 const SOFT_YELLOW = '#FFE066';
@@ -39,9 +33,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
   // Style function for cartoon-like appearance
   const getFeatureStyle = (feature?: Feature<Geometry, PrefectureProperties>) => {
     const prefectureName = feature?.properties?.nam;
-    const hasFootage = chamaFootage?.features.some(
-      (f: Feature<Geometry, any>) => f.properties.prefecture === prefectureName
-    );
+    const hasFootage = chamaFootage?.features.some((f) => f.properties.prefecture === prefectureName);
     return {
       fillColor: hasFootage ? SOFT_RED : SOFT_YELLOW,
       weight: 3,
@@ -96,7 +88,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
         {japanData && <GeoJSON data={japanData} style={getFeatureStyle} onEachFeature={onEachFeature} />}
         {/* Render markers for all footage */}
         {chamaFootage &&
-          (chamaFootage.features as Feature<Geometry, any>[]).map((feature, idx) => {
+          chamaFootage.features.map((feature, idx) => {
             // Only render markers for Point geometries
             if (feature.geometry.type !== 'Point') return null;
             const coords = (feature.geometry as Point).coordinates as [number, number];
@@ -106,7 +98,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
                 ref={registerMarkerRef(feature.properties.prefecture, idx)}
                 coordinates={coords}
                 title={feature.properties.title}
-                description={feature.properties.description}
+                description={feature.properties.description ?? ''}
                 image={feature.properties.image}
                 tweets={feature.properties.tweets}
               />
@@ -116,9 +108,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
         {selectedPrefecture &&
           chamaFootage &&
           (() => {
-            const footages = chamaFootage.features.filter(
-              (f: Feature<Geometry, any>) => f.properties.prefecture === selectedPrefecture
-            );
+            const footages = chamaFootage.features.filter((f) => f.properties.prefecture === selectedPrefecture);
             // Find the center of the prefecture for popup placement
             const feature = japanData?.features.find((f) => f.properties!.nam === selectedPrefecture);
             let center: [number, number] = [36.2048, 138.2529];
@@ -147,7 +137,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
                   <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>{selectedPrefecture}</div>
                   {footages.length > 0 ? (
                     <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
-                      {footages.map((f: Feature<Geometry, any>, idx: number) => (
+                      {footages.map((f, idx: number) => (
                         <li key={idx} style={{ marginBottom: 8 }}>
                           <a
                             href="#"
