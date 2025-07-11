@@ -3,9 +3,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-import type { FeatureCollection, Feature, Geometry, Position } from 'geojson'
+import type { FeatureCollection, Feature, Geometry, Point, Position } from 'geojson'
 import FootageMarker from './FootageMarker'
-import chamaFootage from '../../../public/data/chama-footage.json'
 import type { FootageMarkerHandle } from './FootageMarker';
 
 interface Footage {
@@ -45,6 +44,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
   const [loading, setLoading] = useState<boolean>(true)
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
   const markerRefs = useRef<Record<string, React.RefObject<FootageMarkerHandle | null>[]>>({});
+  const [chamaFootage, setChamaFootage] = useState<FeatureCollection | null>(null);
 
   useEffect(() => {
     // Load Japan prefecture GeoJSON data
@@ -63,10 +63,19 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
     loadJapanData()
   }, [])
 
+  useEffect(() => {
+    fetch('data/chama-footage.geojson')
+      .then(res => res.json())
+      .then(setChamaFootage)
+      .catch(() => setChamaFootage(null));
+  }, []);
+
   // Style function for cartoon-like appearance
   const getFeatureStyle = (feature?: Feature<Geometry, PrefectureProperties>) => {
     const prefectureName = feature?.properties?.nam
-    const hasFootage = prefectureName && (chamaFootage as Record<string, unknown[]>)[prefectureName]?.length > 0
+    const hasFootage = chamaFootage?.features.some(
+      (f: Feature<Geometry, any>) => f.properties.prefecture === prefectureName
+    );
     return {
       fillColor: hasFootage ? SOFT_RED : SOFT_YELLOW,
       weight: 3,
@@ -134,23 +143,31 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
           />
         )}
         {/* Render markers for all footage */}
-        {Object.entries(chamaFootage as unknown as Record<string, Footage[]>).flatMap(([prefName, footageArr]) =>
-          footageArr.map((footage, idx) => (
-            <FootageMarker
-              key={`${prefName}-${idx}`}
-              ref={registerMarkerRef(prefName, idx)}
-              coordinates={footage.coordinates}
-              title={footage.title}
-              description={footage.description}
-              image={footage.image}
-              tweets={footage.tweets}
-            />
-          ))
+        {chamaFootage && (
+          (chamaFootage.features as Feature<Geometry, any>[]).map((feature, idx) => {
+            // Only render markers for Point geometries
+            if (feature.geometry.type !== 'Point') return null;
+            const coords = (feature.geometry as Point).coordinates as [number, number];
+            return (
+              <FootageMarker
+                key={idx}
+                ref={registerMarkerRef(feature.properties.prefecture, idx)}
+                coordinates={coords}
+                title={feature.properties.title}
+                description={feature.properties.description}
+                image={feature.properties.image}
+                tweets={feature.properties.tweets}
+              />
+            );
+          })
         )}
         {/* React-based popup for prefecture */}
         {selectedPrefecture && (
           (() => {
-            const footages = (chamaFootage as unknown as Record<string, Footage[]>)[selectedPrefecture] || [];
+            if (!chamaFootage) return null;
+            const footages = chamaFootage.features.filter(
+              (f: Feature<Geometry, any>) => f.properties.prefecture === selectedPrefecture
+            );
             // Find the center of the prefecture for popup placement
             const feature = japanData?.features.find(f => f.properties!.nam === selectedPrefecture);
             let center: [number, number] = [36.2048, 138.2529];
@@ -178,7 +195,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
                   <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>{selectedPrefecture}</div>
                   {footages.length > 0 ? (
                     <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
-                      {footages.map((f, idx) => (
+                      {footages.map((f: Feature<Geometry, any>, idx: number) => (
                         <li key={idx} style={{ marginBottom: 8 }}>
                           <a
                             href="#"
@@ -191,7 +208,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
                               }
                             }}
                           >
-                            {f.title}
+                            {f.properties.title}
                           </a>
                         </li>
                       ))}
