@@ -9,7 +9,7 @@ interface InfoPanelProps {
 const panelVariants = {
   hidden: { opacity: 0, y: -30 },
   visible: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -30 },
+  exit: { opacity: 0, y: -30 }
 };
 
 const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
@@ -31,16 +31,10 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
             style={{ minWidth: 280 }}
           >
             <div className="text-center mb-4">
-              <h1 className="text-2xl font-bold text-gray-800 mb-1">
-                🗾 Japan Prefecture Map
-              </h1>
-              <p className="text-base text-gray-600">
-                Interactive cartoon-style map of Japan&apos;s 47 prefectures
-              </p>
+              <h1 className="text-2xl font-bold text-gray-800 mb-1">🗾 Japan Prefecture Map</h1>
+              <p className="text-base text-gray-600">Interactive cartoon-style map of Japan&apos;s 47 prefectures</p>
             </div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">
-              About This Map
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">About This Map</h2>
             <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <h3 className="text-base font-medium text-gray-700 mb-1">Features</h3>
@@ -69,4 +63,4 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
   );
 };
 
-export default InfoPanel; 
+export default InfoPanel;

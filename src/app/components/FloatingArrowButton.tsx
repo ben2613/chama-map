@@ -8,7 +8,9 @@ interface FloatingArrowButtonProps {
 
 const FloatingArrowButton: React.FC<FloatingArrowButtonProps> = ({ open, onClick, className }) => (
   <button
-    className={`fixed top-30 left-2 z-[10001] bg-white/90 hover:bg-white shadow-lg rounded-full p-2 flex items-center justify-center border border-gray-200 transition ${className || ''}`}
+    className={`fixed top-30 left-2 z-[10001] bg-white/90 hover:bg-white shadow-lg rounded-full p-2 flex items-center justify-center border border-gray-200 transition ${
+      className || ''
+    }`}
     style={{ width: 48, height: 48 }}
     onClick={onClick}
     aria-label={open ? 'Hide info' : 'Show info'}
@@ -17,4 +19,4 @@ const FloatingArrowButton: React.FC<FloatingArrowButtonProps> = ({ open, onClick
   </button>
 );
 
-export default FloatingArrowButton; 
+export default FloatingArrowButton;

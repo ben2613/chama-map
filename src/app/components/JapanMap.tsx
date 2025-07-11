@@ -1,20 +1,20 @@
-'use client'
-import React, { useEffect, useRef, useState } from 'react'
-import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
-import type { FeatureCollection, Feature, Geometry, Point, Position } from 'geojson'
-import FootageMarker from './FootageMarker'
+'use client';
+import React, { useEffect, useRef, useState } from 'react';
+import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import type { FeatureCollection, Feature, Geometry, Point, Position } from 'geojson';
+import FootageMarker from './FootageMarker';
 import type { FootageMarkerHandle } from './FootageMarker';
 
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-delete (L.Icon.Default.prototype as any)._getIconUrl
+delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-})
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png'
+});
 
 interface JapanMapProps {
   className?: string;
@@ -23,14 +23,14 @@ interface JapanMapProps {
 }
 
 interface PrefectureProperties {
-  nam: string
-  nam_ja: string
-  id: number
+  nam: string;
+  nam_ja: string;
+  id: number;
   // Add more specific properties here if needed
 }
 
-const SOFT_YELLOW = '#FFE066'
-const SOFT_RED = '#FF6F61'
+const SOFT_YELLOW = '#FFE066';
+const SOFT_RED = '#FF6F61';
 
 const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage }) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
@@ -38,7 +38,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
 
   // Style function for cartoon-like appearance
   const getFeatureStyle = (feature?: Feature<Geometry, PrefectureProperties>) => {
-    const prefectureName = feature?.properties?.nam
+    const prefectureName = feature?.properties?.nam;
     const hasFootage = chamaFootage?.features.some(
       (f: Feature<Geometry, any>) => f.properties.prefecture === prefectureName
     );
@@ -48,9 +48,9 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
       opacity: 1,
       color: '#2C3E50',
       dashArray: '',
-      fillOpacity: 0.8,
-    }
-  }
+      fillOpacity: 0.8
+    };
+  };
 
   // Helper to register marker refs
   const registerMarkerRef = (prefName: string, idx: number) => {
@@ -70,14 +70,14 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
           weight: 5,
           color: '#FF6F61',
           fillOpacity: 0.9,
-          dashArray: '',
+          dashArray: ''
         });
         layer.bringToFront();
       },
       mouseout: (e: L.LeafletMouseEvent) => {
         const layer = e.target as L.Path;
         layer.setStyle(getFeatureStyle(feature));
-      },
+      }
     });
   };
 
@@ -93,15 +93,9 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
-        {japanData && (
-          <GeoJSON
-            data={japanData}
-            style={getFeatureStyle}
-            onEachFeature={onEachFeature}
-          />
-        )}
+        {japanData && <GeoJSON data={japanData} style={getFeatureStyle} onEachFeature={onEachFeature} />}
         {/* Render markers for all footage */}
-        {chamaFootage && (
+        {chamaFootage &&
           (chamaFootage.features as Feature<Geometry, any>[]).map((feature, idx) => {
             // Only render markers for Point geometries
             if (feature.geometry.type !== 'Point') return null;
@@ -117,21 +111,22 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
                 tweets={feature.properties.tweets}
               />
             );
-          })
-        )}
+          })}
         {/* React-based popup for prefecture */}
-        {selectedPrefecture && chamaFootage && (
+        {selectedPrefecture &&
+          chamaFootage &&
           (() => {
             const footages = chamaFootage.features.filter(
               (f: Feature<Geometry, any>) => f.properties.prefecture === selectedPrefecture
             );
             // Find the center of the prefecture for popup placement
-            const feature = japanData?.features.find(f => f.properties!.nam === selectedPrefecture);
+            const feature = japanData?.features.find((f) => f.properties!.nam === selectedPrefecture);
             let center: [number, number] = [36.2048, 138.2529];
             if (feature) {
-              const coords = feature.geometry.type === 'Polygon'
-                ? feature.geometry.coordinates[0]
-                : feature.geometry.type === 'MultiPolygon'
+              const coords =
+                feature.geometry.type === 'Polygon'
+                  ? feature.geometry.coordinates[0]
+                  : feature.geometry.type === 'MultiPolygon'
                   ? feature.geometry.coordinates[0][0]
                   : null;
               if (coords && coords.length > 0) {
@@ -157,7 +152,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
                           <a
                             href="#"
                             style={{ color: '#2980b9', textDecoration: 'underline', cursor: 'pointer' }}
-                            onClick={e => {
+                            onClick={(e) => {
                               e.preventDefault();
                               const ref = markerRefs.current[selectedPrefecture]?.[idx];
                               if (ref && ref.current) {
@@ -176,35 +171,34 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
                 </div>
               </Popup>
             );
-          })()
-        )}
+          })()}
       </MapContainer>
-      
+
       <style jsx>{`
         .prefecture-border {
           stroke-linecap: round;
           stroke-linejoin: round;
-          filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+          filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
           transition: all 0.3s ease;
         }
-        
+
         .prefecture-hover {
-          filter: drop-shadow(4px 4px 8px rgba(0,0,0,0.2));
+          filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.2));
           transform: scale(1.02);
         }
-        
+
         .leaflet-popup-content-wrapper {
           border-radius: 12px;
           background: rgba(255, 255, 255, 0.95);
           backdrop-filter: blur(10px);
         }
-        
+
         .leaflet-popup-tip {
           background: rgba(255, 255, 255, 0.95);
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
 
-export default JapanMap 
+export default JapanMap;

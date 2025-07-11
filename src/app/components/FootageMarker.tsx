@@ -21,7 +21,7 @@ const icon = new L.Icon({
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+  shadowSize: [41, 41]
 });
 
 const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
@@ -33,12 +33,14 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
         if (markerRef.current) {
           markerRef.current.openPopup();
         }
-      },
+      }
     }));
 
     return (
       <Marker position={[coordinates[1], coordinates[0]]} icon={icon} ref={markerRef}>
-        <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent={false}>{title}</Tooltip>
+        <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent={false}>
+          {title}
+        </Tooltip>
         <Popup>
           <div style={{ textAlign: 'center', minWidth: 200 }}>
             <div style={{ fontWeight: 'bold', marginBottom: 8 }}>{title}</div>
@@ -46,7 +48,9 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
             <img src={image} alt={title} style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 8 }} />
             <div>
               {tweets.map((tweet, index) => (
-                <a key={index} href={tweet} target="_blank" rel="noopener noreferrer">View Tweet {index + 1}</a>
+                <a key={index} href={tweet} target="_blank" rel="noopener noreferrer">
+                  View Tweet {index + 1}
+                </a>
               ))}
             </div>
           </div>
@@ -58,4 +62,4 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
 
 FootageMarker.displayName = 'FootageMarker';
 
-export default FootageMarker; 
+export default FootageMarker;
