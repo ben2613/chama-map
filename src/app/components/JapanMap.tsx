@@ -7,14 +7,6 @@ import type { FeatureCollection, Feature, Geometry, Point, Position } from 'geoj
 import FootageMarker from './FootageMarker'
 import type { FootageMarkerHandle } from './FootageMarker';
 
-interface Footage {
-  coordinates: [number, number];
-  title: string;
-  image: string;
-  description: string;
-  tweets: string[];
-}
-
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -24,12 +16,10 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 })
 
-// Use only two comfortable colors: soft yellow and soft red
-const SOFT_YELLOW = '#FFE066'
-const SOFT_RED = '#FF6F61'
-
 interface JapanMapProps {
-  className?: string
+  className?: string;
+  japanData: FeatureCollection;
+  chamaFootage: FeatureCollection;
 }
 
 interface PrefectureProperties {
@@ -39,36 +29,12 @@ interface PrefectureProperties {
   // Add more specific properties here if needed
 }
 
-const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
-  const [japanData, setJapanData] = useState<FeatureCollection | null>(null)
-  const [loading, setLoading] = useState<boolean>(true)
+const SOFT_YELLOW = '#FFE066'
+const SOFT_RED = '#FF6F61'
+
+const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage }) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
   const markerRefs = useRef<Record<string, React.RefObject<FootageMarkerHandle | null>[]>>({});
-  const [chamaFootage, setChamaFootage] = useState<FeatureCollection | null>(null);
-
-  useEffect(() => {
-    // Load Japan prefecture GeoJSON data
-    const loadJapanData = async () => {
-      try {
-        const response = await fetch('data/japan-prefectures.geojson')
-        const data = await response.json()
-        setJapanData(data)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error loading Japan data:', error)
-        setLoading(false)
-      }
-    }
-
-    loadJapanData()
-  }, [])
-
-  useEffect(() => {
-    fetch('data/chama-footage.geojson')
-      .then(res => res.json())
-      .then(setChamaFootage)
-      .catch(() => setChamaFootage(null));
-  }, []);
 
   // Style function for cartoon-like appearance
   const getFeatureStyle = (feature?: Feature<Geometry, PrefectureProperties>) => {
@@ -115,14 +81,6 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
     });
   };
 
-  if (loading) {
-    return (
-      <div className={`flex items-center justify-center h-96 ${className}`}>
-        <div className="text-lg font-comic text-gray-600">Loading Japan Map...</div>
-      </div>
-    )
-  }
-
   return (
     <div className={className} style={{ position: 'relative' }}>
       <MapContainer
@@ -162,9 +120,8 @@ const JapanMap: React.FC<JapanMapProps> = ({ className }) => {
           })
         )}
         {/* React-based popup for prefecture */}
-        {selectedPrefecture && (
+        {selectedPrefecture && chamaFootage && (
           (() => {
-            if (!chamaFootage) return null;
             const footages = chamaFootage.features.filter(
               (f: Feature<Geometry, any>) => f.properties.prefecture === selectedPrefecture
             );
