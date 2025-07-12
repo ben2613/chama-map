@@ -5,7 +5,6 @@
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [134.04883647779042, 34.34470473651565] },
       "properties": {
-        "prefecture": "Kagawa Ken",
         "title": "Mini",
         "image": "data/images/GuLav0wbUAA__c7.jpg",
         "tweets": [
@@ -18,14 +17,11 @@
       "type": "Feature",
       "geometry": { "type": "Point", "coordinates": [139.8107, 35.7101] },
       "properties": {
-        "prefecture": "Tokyo To",
         "title": "Tokyo Skytree Visit",
         "image": "https://dummyimage.com/600x400",
         "description": "Haachama in Tokyo Skytree",
-        "tweets": [
-          "https://twitter.com/akaihaato/status/2345678901"
-        ]
+        "tweets": ["https://twitter.com/akaihaato/status/2345678901"]
       }
     }
   ]
-} 
+}

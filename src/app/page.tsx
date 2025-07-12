@@ -5,18 +5,29 @@ import SplashScreen from './components/SplashScreen';
 import { AnimatePresence } from 'framer-motion';
 import FloatingArrowButton from './components/FloatingArrowButton';
 import InfoPanel from './components/InfoPanel';
-import type { FeatureCollection, Geometry } from 'geojson';
-import { FootageProperties } from '@/types/map';
+import type { FeatureCollection, Geometry, MultiPolygon } from 'geojson';
+import { FootageProperties, PrefectureProperties } from '@/types/map';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { Coord } from '@turf/helpers';
 
 const JapanMap = dynamic(() => import('./components/JapanMap'), {
   ssr: false,
   loading: () => <div className="flex items-center justify-center h-96">Loading map...</div>
 });
 
+function getPrefectureForPoint(point: Coord, prefectures: FeatureCollection<MultiPolygon, PrefectureProperties>) {
+  for (const feature of prefectures.features) {
+    if (booleanPointInPolygon(point, feature)) {
+      return feature.properties.nam;
+    }
+  }
+  return null;
+}
+
 export default function Home() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
-  const [japanData, setJapanData] = useState<FeatureCollection | null>(null);
+  const [japanData, setJapanData] = useState<FeatureCollection<MultiPolygon, PrefectureProperties> | null>(null);
   const [chamaFootage, setChamaFootage] = useState<FeatureCollection<Geometry, FootageProperties> | null>(null);
 
   useEffect(() => {
@@ -27,6 +38,10 @@ export default function Home() {
     ]).then(([japan, footage]) => {
       setJapanData(japan);
       setChamaFootage(footage);
+      // set prefecture properties of chama footage with getPrefectureForPoint
+      for (const feature of footage.features) {
+        feature.properties.prefecture = getPrefectureForPoint(feature.geometry.coordinates, japan);
+      }
       splashTimeout = setTimeout(() => setShowSplash(false), 1500);
     });
     return () => clearTimeout(splashTimeout);
