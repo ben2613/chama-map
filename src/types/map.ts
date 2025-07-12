@@ -3,14 +3,14 @@ export interface PrefectureProperties {
   nam_ja: string;
   id: number;
   // Add more specific properties here if needed
-  center: [number, number]
+  center: [number, number];
 }
 
 export interface FootageProperties {
   prefecture: string; // calculated from getPrefectureForPoint
   icon: string;
   title: string;
-  image: string;
+  images: string[];
   description?: string;
   tweets: string[];
 }

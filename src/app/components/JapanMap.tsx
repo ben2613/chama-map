@@ -100,7 +100,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
                 coordinates={coords}
                 title={feature.properties.title}
                 description={feature.properties.description ?? ''}
-                image={feature.properties.image}
+                images={feature.properties.images}
                 tweets={feature.properties.tweets}
                 icon={feature.properties.icon}
               />

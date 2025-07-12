@@ -85,11 +85,11 @@ export async function getChamaFootage(): Promise<FeatureCollection<Point, Footag
     const description = descriptionStripped.replace(/https?:\/\/\S+/g, '').trim();
 
     // Image from gx_media_links
-    let image = '';
+    let images: string[] = [];
     const dataNodes = placemark.getElementsByTagName('Data');
     for (let j = 0; j < dataNodes.length; j++) {
       if (dataNodes[j].getAttribute('name') === 'gx_media_links') {
-        image = dataNodes[j].getElementsByTagName('value')[0]?.textContent || '';
+        images = dataNodes[j].getElementsByTagName('value')[0]?.textContent?.split(' ') || [];
         break;
       }
     }
@@ -123,7 +123,7 @@ export async function getChamaFootage(): Promise<FeatureCollection<Point, Footag
         title: name,
         description,
         tweets,
-        image,
+        images,
         icon,
         prefecture: '' // still required by FootageProperties
       }

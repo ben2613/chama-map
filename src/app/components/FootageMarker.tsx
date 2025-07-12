@@ -9,7 +9,7 @@ export interface FootageMarkerHandle {
 interface FootageMarkerProps {
   coordinates: [number, number]; // [lng, lat]
   title: string;
-  image: string;
+  images: string[];
   description: string;
   tweets: string[];
   icon: string;
@@ -26,7 +26,7 @@ const defaultIcon = new L.Icon({
 });
 
 const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
-  ({ icon, coordinates, title, image, description, tweets }, ref) => {
+  ({ icon, coordinates, title, images, description, tweets }, ref) => {
     const markerIcon = icon
       ? new L.Icon({
           iconUrl: icon,
@@ -39,6 +39,7 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
       : defaultIcon;
 
     const markerRef = useRef<LeafletMarker>(null);
+    const [imgIndex, setImgIndex] = React.useState(0);
 
     useImperativeHandle(ref, () => ({
       openPopup: () => {
@@ -47,6 +48,19 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
         }
       }
     }));
+
+    // Handlers for mouseover on left/right buttons
+    const handlePrev = () => {
+      setImgIndex((idx) => (idx > 0 ? idx - 1 : idx));
+    };
+    const handleNext = () => {
+      setImgIndex((idx) => (images && idx < images.length - 1 ? idx + 1 : idx));
+    };
+
+    // Reset imgIndex if images array changes
+    React.useEffect(() => {
+      setImgIndex(0);
+    }, [images]);
 
     return (
       <Marker position={[coordinates[1], coordinates[0]]} icon={markerIcon} ref={markerRef}>
@@ -57,12 +71,58 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
           <div style={{ textAlign: 'center', minWidth: 200 }}>
             <div style={{ fontWeight: 'bold', marginBottom: 8 }}>{title}</div>
             {description && <div style={{ marginBottom: 8 }}>{description}</div>}
-            {image && (
-              <img
-                src={process.env.NEXT_PUBLIC_CORS_PROXY + image}
-                alt={title}
-                style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 8 }}
-              />
+            {images && images.length > 0 && (
+              <div
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 8
+                }}
+              >
+                {images.length > 1 && (
+                  <button
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      zIndex: 2,
+                      background: 'rgba(255,255,255,0.7)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      height: '100%'
+                    }}
+                    onClick={handlePrev}
+                    disabled={imgIndex === 0}
+                    aria-label="Previous image"
+                  >
+                    &#8592;
+                  </button>
+                )}
+                <img
+                  src={process.env.NEXT_PUBLIC_CORS_PROXY + images[imgIndex]}
+                  alt={title}
+                  style={{ width: '100%', maxWidth: 250, borderRadius: 8, display: 'block' }}
+                />
+                {images.length > 1 && (
+                  <button
+                    style={{
+                      position: 'absolute',
+                      right: 0,
+                      zIndex: 2,
+                      background: 'rgba(255,255,255,0.7)',
+                      border: 'none',
+                      cursor: 'pointer',
+                      height: '100%'
+                    }}
+                    onClick={handleNext}
+                    disabled={imgIndex === images.length - 1}
+                    aria-label="Next image"
+                  >
+                    &#8594;
+                  </button>
+                )}
+              </div>
             )}
             <div>
               {tweets.map((tweet, index) => (
