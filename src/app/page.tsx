@@ -8,7 +8,7 @@ import InfoPanel from './components/InfoPanel';
 import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
 import { FootageProperties, PrefectureProperties } from '@/types/map';
 import { getPrefectureForPoint } from './shared/function';
-import { getChamaFootage } from './shared/api';
+import { getChamaFootage, getJapanPrefectures } from './shared/api';
 
 const JapanMap = dynamic(() => import('./components/JapanMap'), {
   ssr: false,
@@ -23,17 +23,15 @@ export default function Home() {
 
   useEffect(() => {
     let splashTimeout: NodeJS.Timeout;
-    Promise.all([fetch('data/japan-prefectures.geojson').then((res) => res.json()), getChamaFootage()]).then(
-      ([japan, footage]) => {
-        setJapanData(japan);
-        setChamaFootage(footage);
-        // set prefecture properties of chama footage with getPrefectureForPoint
-        for (const feature of footage.features) {
-          feature.properties.prefecture = getPrefectureForPoint(feature.geometry.coordinates, japan);
-        }
-        splashTimeout = setTimeout(() => setShowSplash(false), 1500);
+    Promise.all([getJapanPrefectures(), getChamaFootage()]).then(([japan, footage]) => {
+      setJapanData(japan);
+      setChamaFootage(footage);
+      // set prefecture properties of chama footage with getPrefectureForPoint
+      for (const feature of footage.features) {
+        feature.properties.prefecture = getPrefectureForPoint(feature.geometry.coordinates, japan);
       }
-    );
+      splashTimeout = setTimeout(() => setShowSplash(false), 1500);
+    });
     return () => clearTimeout(splashTimeout);
   }, []);
 

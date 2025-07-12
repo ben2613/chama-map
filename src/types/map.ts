@@ -3,6 +3,7 @@ export interface PrefectureProperties {
   nam_ja: string;
   id: number;
   // Add more specific properties here if needed
+  center: [number, number]
 }
 
 export interface FootageProperties {

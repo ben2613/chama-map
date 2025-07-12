@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import type { FeatureCollection, Feature, Geometry, Point, Position } from 'geojson';
+import type { FeatureCollection, Feature, Geometry, Point, MultiPolygon } from 'geojson';
 import FootageMarker from './FootageMarker';
 import type { FootageMarkerHandle } from './FootageMarker';
 import { FootageProperties, PrefectureProperties } from '@/types/map';
@@ -20,8 +20,8 @@ L.SVG.prototype.options.padding = 0.5;
 
 interface JapanMapProps {
   className?: string;
-  japanData: FeatureCollection;
-  chamaFootage: FeatureCollection<Geometry, FootageProperties>;
+  japanData: FeatureCollection<MultiPolygon, PrefectureProperties>;
+  chamaFootage: FeatureCollection<Point, FootageProperties>;
 }
 
 const SOFT_YELLOW = '#FFE066';
@@ -113,18 +113,8 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
             // Find the center of the prefecture for popup placement
             const feature = japanData?.features.find((f) => f.properties!.nam === selectedPrefecture);
             let center: [number, number] = [36.2048, 138.2529];
-            if (feature) {
-              const coords =
-                feature.geometry.type === 'Polygon'
-                  ? feature.geometry.coordinates[0]
-                  : feature.geometry.type === 'MultiPolygon'
-                  ? feature.geometry.coordinates[0][0]
-                  : null;
-              if (coords && coords.length > 0) {
-                // Average the coordinates for a rough center
-                const avg = coords.reduce((acc: Position, cur: Position) => [acc[0] + cur[0], acc[1] + cur[1]], [0, 0]);
-                center = [avg[1] / coords.length, avg[0] / coords.length];
-              }
+            if (feature && feature.properties?.center) {
+              center = feature.properties.center;
             }
             return (
               <Popup
