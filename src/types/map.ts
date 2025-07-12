@@ -6,7 +6,8 @@ export interface PrefectureProperties {
 }
 
 export interface FootageProperties {
-  prefecture: string;
+  prefecture: string; // calculated from getPrefectureForPoint
+  icon: string;
   title: string;
   image: string;
   description?: string;
