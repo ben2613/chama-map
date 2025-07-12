@@ -58,7 +58,11 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
             <div style={{ fontWeight: 'bold', marginBottom: 8 }}>{title}</div>
             {description && <div style={{ marginBottom: 8 }}>{description}</div>}
             {image && (
-              <img src={image} alt={title} style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 8 }} />
+              <img
+                src={process.env.NEXT_PUBLIC_CORS_PROXY + image}
+                alt={title}
+                style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 8 }}
+              />
             )}
             <div>
               {tweets.map((tweet, index) => (
