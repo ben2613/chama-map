@@ -102,6 +102,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
                 description={feature.properties.description ?? ''}
                 image={feature.properties.image}
                 tweets={feature.properties.tweets}
+                icon={feature.properties.icon}
               />
             );
           })}

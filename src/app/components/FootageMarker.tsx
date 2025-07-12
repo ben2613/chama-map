@@ -12,9 +12,10 @@ interface FootageMarkerProps {
   image: string;
   description: string;
   tweets: string[];
+  icon: string;
 }
 
-const icon = new L.Icon({
+const defaultIcon = new L.Icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -25,7 +26,18 @@ const icon = new L.Icon({
 });
 
 const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
-  ({ coordinates, title, image, description, tweets }, ref) => {
+  ({ icon, coordinates, title, image, description, tweets }, ref) => {
+    const markerIcon = icon
+      ? new L.Icon({
+          iconUrl: icon,
+          shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+          iconSize: [28, 28],
+          iconAnchor: [14, 28],
+          popupAnchor: [0, -35],
+          shadowSize: [28, 28]
+        })
+      : defaultIcon;
+
     const markerRef = useRef<LeafletMarker>(null);
 
     useImperativeHandle(ref, () => ({
@@ -37,7 +49,7 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
     }));
 
     return (
-      <Marker position={[coordinates[1], coordinates[0]]} icon={icon} ref={markerRef}>
+      <Marker position={[coordinates[1], coordinates[0]]} icon={markerIcon} ref={markerRef}>
         <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent={false}>
           {title}
         </Tooltip>
@@ -45,7 +57,9 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
           <div style={{ textAlign: 'center', minWidth: 200 }}>
             <div style={{ fontWeight: 'bold', marginBottom: 8 }}>{title}</div>
             {description && <div style={{ marginBottom: 8 }}>{description}</div>}
-            <img src={image} alt={title} style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 8 }} />
+            {image && (
+              <img src={image} alt={title} style={{ width: '100%', maxWidth: 250, borderRadius: 8, marginBottom: 8 }} />
+            )}
             <div>
               {tweets.map((tweet, index) => (
                 <a key={index} href={tweet} target="_blank" rel="noopener noreferrer">
