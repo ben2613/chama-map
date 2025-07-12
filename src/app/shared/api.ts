@@ -136,7 +136,7 @@ export async function getChamaFootage(): Promise<FeatureCollection<Point, Footag
 }
 
 export async function getJapanPrefectures(): Promise<FeatureCollection<MultiPolygon, PrefectureProperties>> {
-  const res = await fetch('/data/japan-prefectures.geojson');
+  const res = await fetch('data/japan-prefectures.geojson');
   const data = await res.json();
   // set center of each feature
   for (const feature of data.features) {
