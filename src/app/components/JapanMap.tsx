@@ -1,8 +1,8 @@
 'use client';
-import React, { useRef, useState } from 'react';
-import { MapContainer, TileLayer, GeoJSON, Popup } from 'react-leaflet';
+import React, { useRef, useState, useEffect } from 'react';
+import { MapContainer, TileLayer, GeoJSON, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import L, { PopupEvent } from 'leaflet';
 import type { FeatureCollection, Feature, Geometry, Point, MultiPolygon } from 'geojson';
 import FootageMarker from './FootageMarker';
 import type { FootageMarkerHandle } from './FootageMarker';
@@ -30,6 +30,9 @@ const SOFT_RED = '#FF6F61';
 const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage }) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
   const markerRefs = useRef<Record<string, React.RefObject<FootageMarkerHandle | null>[]>>({});
+  const popupRef = useRef<L.Popup | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const isPopupOpening = useRef<boolean>(false);
 
   // Style function for cartoon-like appearance
   const getFeatureStyle = (feature?: Feature<Geometry, PrefectureProperties>) => {
@@ -56,7 +59,16 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
   const onEachFeature = (feature: Feature<Geometry, PrefectureProperties>, layer: L.Layer) => {
     const prefectureName = feature.properties.nam;
     layer.on({
-      click: () => setSelectedPrefecture(prefectureName),
+      click: () => {
+        console.log('prefecture clicked:', prefectureName);
+        isPopupOpening.current = true;
+        setSelectedPrefecture(prefectureName);
+        console.log('selectedPrefecture set to:', prefectureName);
+        // Reset flag after a short delay
+        setTimeout(() => {
+          isPopupOpening.current = false;
+        }, 500);
+      },
       mouseover: (e: L.LeafletMouseEvent) => {
         const layer = e.target as L.Path;
         layer.setStyle({
@@ -74,6 +86,30 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
     });
   };
 
+  // Component to handle map events
+  const MapEventHandler = () => {
+    const map = useMapEvents({
+      popupclose: (e: PopupEvent) => {
+        console.log('popup closed via map event', e);
+        console.log('isPopupOpening:', isPopupOpening.current);
+        // Only close if it's not during popup opening
+        if (!isPopupOpening.current) {
+          console.log('closing prefecture popup');
+          setSelectedPrefecture(null);
+        } else {
+          console.log('ignoring popup close during opening');
+        }
+      }
+    });
+
+    // Store map reference
+    useEffect(() => {
+      mapRef.current = map;
+    }, [map]);
+
+    return null;
+  };
+
   return (
     <div className={className} style={{ position: 'relative' }}>
       <MapContainer
@@ -82,6 +118,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
         style={{ height: '100%', width: '100%' }}
         className="rounded-lg shadow-lg"
       >
+        <MapEventHandler />
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -110,6 +147,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
         {selectedPrefecture &&
           chamaFootage &&
           (() => {
+            console.log('rendering popup for:', selectedPrefecture);
             const footages = chamaFootage.features.filter((f) => f.properties.prefecture === selectedPrefecture);
             // Find the center of the prefecture for popup placement
             const feature = japanData?.features.find((f) => f.properties!.nam === selectedPrefecture);
@@ -117,13 +155,17 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
             if (feature && feature.properties?.center) {
               center = feature.properties.center;
             }
+            console.log('popup center:', center);
             return (
               <Popup
-                eventHandlers={{
-                  popupclose: () => setSelectedPrefecture(null)
-                }}
                 position={center}
                 autoPan={true}
+                ref={(ref) => {
+                  if (ref) {
+                    popupRef.current = ref;
+                    console.log('popup ref set');
+                  }
+                }}
               >
                 <div style={{ minWidth: 200 }}>
                   <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>{selectedPrefecture}</div>
