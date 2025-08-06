@@ -31,5 +31,5 @@ function getClosestPrefecture(point: Position, prefectures: FeatureCollection<Mu
 }
 
 function getDistance(point: Position, center: Position) {
-  return Math.sqrt((point[0] - center[0]) ** 2 + (point[1] - center[1]) ** 2);
+  return Math.sqrt((point[1] - center[0]) ** 2 + (point[0] - center[1]) ** 2);
 }
