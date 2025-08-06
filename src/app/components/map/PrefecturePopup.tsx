@@ -55,7 +55,8 @@ const PrefecturePopup = ({
                   style={{ color: '#2980b9', textDecoration: 'underline', cursor: 'pointer' }}
                   onClick={(e) => {
                     e.preventDefault();
-                    const ref = markerRefs.current[selectedPrefecture]?.[idx];
+                    const originalIdx = chamaFootage.features.findIndex((f1) => f1 === f);
+                    const ref = markerRefs.current[selectedPrefecture]?.[originalIdx];
                     if (ref && ref.current) {
                       setTimeout(() => {
                         ref.current?.openPopup();
