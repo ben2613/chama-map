@@ -13,7 +13,7 @@ function getImageUrlFromFiles(files: Unzipped, iconPath: string) {
 
 export async function getChamaFootage(): Promise<FeatureCollection<Point, FootageProperties>> {
   // 1. Fetch KMZ as ArrayBuffer
-  const res = await fetch('https://www.google.com/maps/d/kml?mid=1a45uJ6SzJbC3jBX8C8L2sENgRM1dNUY&lid=sAQuhRAMIVs');
+  const res = await fetch('https://www.google.com/maps/d/kml?mid=1a45uJ6SzJbC3jBX8C8L2sENgRM1dNUY');
   const arrayBuffer = await res.arrayBuffer();
   const uint8 = new Uint8Array(arrayBuffer);
 
