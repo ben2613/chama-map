@@ -180,7 +180,9 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaFootage 
                               e.preventDefault();
                               const ref = markerRefs.current[selectedPrefecture]?.[idx];
                               if (ref && ref.current) {
-                                ref.current.openPopup();
+                                setTimeout(() => {
+                                  ref.current?.openPopup();
+                                }, 100);
                               }
                             }}
                           >
