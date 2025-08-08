@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function LanguageSelector() {
   const { currentLanguage, changeLanguage } = useLanguage();
-  const isEnglish = currentLanguage === 'en';
+  const isEnglish = currentLanguage.includes('en');
 
   const toggleLanguage = () => {
     changeLanguage(isEnglish ? 'ja' : 'en');
