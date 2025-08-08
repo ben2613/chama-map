@@ -1,17 +1,17 @@
 'use client';
 import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
-import SplashScreen from './components/SplashScreen';
+import SplashScreen from '@/components/ui/SplashScreen';
 import { AnimatePresence } from 'framer-motion';
-import FloatingArrowButton from './components/FloatingArrowButton';
-import InfoPanel from './components/InfoPanel';
+import FloatingArrowButton from '@/components/ui/FloatingArrowButton';
+import InfoPanel from '@/components/ui/InfoPanel';
 import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
 import { TrackProperties, PrefectureProperties } from '@/types/map';
-import { getPrefectureForPoint } from './shared/function';
-import { getChamaTrack, getJapanPrefectures } from './shared/api';
-import LanguageSelector from './components/LanguageSelector';
+import { getPrefectureForPoint } from '../utils/mapPrefectureUtils';
+import { getChamaTrack, getJapanPrefectures } from '../services/api';
+import LanguageSelector from '@/components/ui/LanguageSelector';
 
-const JapanMap = dynamic(() => import('./components/JapanMap'), {
+const JapanMap = dynamic(() => import('@/components/map/JapanMap'), {
   ssr: false,
   loading: () => <div className="flex items-center justify-center h-96">Loading map...</div>
 });

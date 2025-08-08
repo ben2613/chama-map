@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import type { TrackMarkerHandle } from '../components/TrackMarker';
+import type { TrackMarkerHandle } from '../components/map/TrackMarker';
 
 export const useMapRefs = () => {
   const markerRefs = useRef<Record<string, React.RefObject<TrackMarkerHandle | null>[]>>({});

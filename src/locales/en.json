@@ -10,7 +10,8 @@
     "description": "Explore Haachama's journey across Japan",
     "prefecture": "Prefecture",
     "location": "Location",
-    "date": "Date"
+    "date": "Date",
+    "noTracks": "No Haachama tracks found for this prefecture"
   },
   "navigation": {
     "home": "Home",

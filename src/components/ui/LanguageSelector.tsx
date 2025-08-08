@@ -1,5 +1,5 @@
 'use client';
-import { useLanguage } from '@/lib/hooks';
+import { useLanguage } from '@/hooks/useLanguage';
 import { motion } from 'framer-motion';
 
 export default function LanguageSelector() {

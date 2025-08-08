@@ -10,7 +10,8 @@
     "description": "はあちゃまの日本旅行を探索しよう",
     "prefecture": "都道府県",
     "location": "場所",
-    "date": "日付"
+    "date": "日付",
+    "noTracks": "この都道府県にははあちゃまがいません"
   },
   "navigation": {
     "home": "ホーム",

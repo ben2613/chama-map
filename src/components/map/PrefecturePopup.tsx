@@ -2,8 +2,9 @@
 import React from 'react';
 import { Popup } from 'react-leaflet';
 import type { FeatureCollection, Point, MultiPolygon } from 'geojson';
-import type { TrackMarkerHandle } from '../TrackMarker';
+import type { TrackMarkerHandle } from './TrackMarker';
 import { TrackProperties, PrefectureProperties } from '@/types/map';
+import { useAppTranslation } from '@/hooks/useTranslation';
 
 interface PrefecturePopupProps {
   selectedPrefecture: string;
@@ -14,7 +15,7 @@ interface PrefecturePopupProps {
 }
 
 const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs, popupRef }: PrefecturePopupProps) => {
-  console.log('rendering popup for:', selectedPrefecture);
+  const { t } = useAppTranslation();
 
   const tracks = chamaTrack.features.filter((f) => f.properties.prefecture === selectedPrefecture);
 
@@ -25,8 +26,6 @@ const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs
     center = feature.properties.center;
   }
 
-  console.log('popup center:', center);
-
   return (
     <Popup
       position={center}
@@ -34,7 +33,6 @@ const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs
       ref={(ref) => {
         if (ref) {
           popupRef.current = ref;
-          console.log('popup ref set');
         }
       }}
     >
@@ -64,7 +62,7 @@ const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs
             ))}
           </ul>
         ) : (
-          <div style={{ color: '#7F8C8D' }}>No tracks found for this prefecture.</div>
+          <div style={{ color: '#7F8C8D' }}>{t('map.noTracks')}</div>
         )}
       </div>
     </Popup>

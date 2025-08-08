@@ -5,13 +5,13 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import type { FeatureCollection, Point, MultiPolygon } from 'geojson';
 import TrackMarker from './TrackMarker';
-import MapEventHandler from './map/MapEventHandler';
-import PrefecturePopup from './map/PrefecturePopup';
-import MapStyles from './map/MapStyles';
+import MapEventHandler from './MapEventHandler';
+import PrefecturePopup from './PrefecturePopup';
+import MapStyles from './MapStyles';
 import { TrackProperties, PrefectureProperties } from '@/types/map';
-import { useMapRefs } from '../hooks/useMapRefs';
-import { getFeatureStyle } from '../utils/mapStyles';
-import { createPrefectureHandlers } from '../utils/prefectureHandlers';
+import { useMapRefs } from '@/hooks/useMapRefs';
+import { getFeatureStyle } from '@/utils/mapStyles';
+import { createPrefectureHandlers } from '@/utils/mapPrefectureUtils';
 
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
