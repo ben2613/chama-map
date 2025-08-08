@@ -4,7 +4,7 @@ import { Popup } from 'react-leaflet';
 import type { FeatureCollection, Point, MultiPolygon } from 'geojson';
 import type { TrackMarkerHandle } from './TrackMarker';
 import { TrackProperties, PrefectureProperties } from '@/types/map';
-import { useAppTranslation } from '@/hooks/useTranslation';
+import { useAppTranslation } from '@/hooks/useAppTranslation';
 
 interface PrefecturePopupProps {
   selectedPrefecture: string;
@@ -15,7 +15,7 @@ interface PrefecturePopupProps {
 }
 
 const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs, popupRef }: PrefecturePopupProps) => {
-  const { t } = useAppTranslation();
+  const { t, currentLanguage } = useAppTranslation();
 
   const tracks = chamaTrack.features.filter((f) => f.properties.prefecture === selectedPrefecture);
 
@@ -37,7 +37,9 @@ const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs
       }}
     >
       <div style={{ minWidth: 200 }}>
-        <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>{selectedPrefecture}</div>
+        <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>
+          {currentLanguage === 'ja' ? feature?.properties.nam_ja : feature?.properties.nam}
+        </div>
         {tracks.length > 0 ? (
           <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
             {tracks.map((f, idx: number) => (

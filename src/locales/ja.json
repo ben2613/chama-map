@@ -11,7 +11,7 @@
     "prefecture": "都道府県",
     "location": "場所",
     "date": "日付",
-    "noTracks": "この都道府県にははあちゃまがいません"
+    "noTracks": "この地域にははあちゃまがいません"
   },
   "navigation": {
     "home": "ホーム",
