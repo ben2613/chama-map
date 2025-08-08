@@ -1,4 +1,5 @@
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import i18n from './i18n';
 
 // Language slice
 interface LanguageState {
@@ -18,6 +19,8 @@ const languageSlice = createSlice({
     setLanguage: (state, action: PayloadAction<string>) => {
       if (state.availableLanguages.includes(action.payload)) {
         state.currentLanguage = action.payload;
+        // Change i18n language when Redux state changes
+        i18n.changeLanguage(action.payload);
       }
     },
     addLanguage: (state, action: PayloadAction<string>) => {

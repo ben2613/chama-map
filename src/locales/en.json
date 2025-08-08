@@ -1,0 +1,25 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "close": "Close",
+    "open": "Open"
+  },
+  "map": {
+    "title": "Haachama's Travel Map",
+    "description": "Explore Haachama's journey across Japan",
+    "prefecture": "Prefecture",
+    "location": "Location",
+    "date": "Date"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "settings": "Settings"
+  },
+  "language": {
+    "english": "English",
+    "japanese": "Japanese",
+    "switchTo": "Switch to {{language}}"
+  }
+}
