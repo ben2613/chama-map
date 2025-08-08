@@ -1,11 +1,8 @@
-'use client';
-
 // import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import StoreProvider from '@/components/providers/StoreProvider';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
-import '../lib/i18n'; // Initialize i18n
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
