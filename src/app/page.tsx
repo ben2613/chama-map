@@ -9,6 +9,7 @@ import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
 import { TrackProperties, PrefectureProperties } from '@/types/map';
 import { getPrefectureForPoint } from './shared/function';
 import { getChamaTrack, getJapanPrefectures } from './shared/api';
+import LanguageSelector from './components/LanguageSelector';
 
 const JapanMap = dynamic(() => import('./components/JapanMap'), {
   ssr: false,
@@ -45,6 +46,8 @@ export default function Home() {
       {!showSplash && <FloatingArrowButton open={infoOpen} onClick={() => setInfoOpen((v) => !v)} />}
       {/* Info Panel */}
       {!showSplash && <InfoPanel open={infoOpen} />}
+      {/* Language Selector */}
+      {!showSplash && <LanguageSelector />}
     </div>
   );
 }
