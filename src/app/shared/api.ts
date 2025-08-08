@@ -1,4 +1,4 @@
-import { FootageProperties, PrefectureProperties } from '@/types/map';
+import { TrackProperties, PrefectureProperties } from '@/types/map';
 import type { FeatureCollection, Feature, Point, MultiPolygon, Position } from 'geojson';
 import { unzipSync, strFromU8, Unzipped } from 'fflate';
 import { DOMParser } from 'xmldom';
@@ -11,7 +11,7 @@ function getImageUrlFromFiles(files: Unzipped, iconPath: string) {
   return URL.createObjectURL(blob);
 }
 
-export async function getChamaFootage(): Promise<FeatureCollection<Point, FootageProperties>> {
+export async function getChamaTrack(): Promise<FeatureCollection<Point, TrackProperties>> {
   // 1. Fetch KMZ as ArrayBuffer
   const res = await fetch('https://www.google.com/maps/d/kml?mid=1a45uJ6SzJbC3jBX8C8L2sENgRM1dNUY');
   const arrayBuffer = await res.arrayBuffer();
@@ -71,7 +71,7 @@ export async function getChamaFootage(): Promise<FeatureCollection<Point, Footag
 
   // 6. Convert KML Placemarks to GeoJSON features
   const placemarks = dom.getElementsByTagName('Placemark');
-  const features: Feature<Point, FootageProperties>[] = [];
+  const features: Feature<Point, TrackProperties>[] = [];
   for (let i = 0; i < placemarks.length; i++) {
     const placemark = placemarks[i];
     const name = placemark.getElementsByTagName('name')[0]?.textContent || '';
@@ -125,7 +125,7 @@ export async function getChamaFootage(): Promise<FeatureCollection<Point, Footag
         tweets,
         images,
         icon,
-        prefecture: '' // still required by FootageProperties
+        prefecture: '' // still required by TrackProperties
       }
     });
   }

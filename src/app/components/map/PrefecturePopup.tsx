@@ -2,27 +2,21 @@
 import React from 'react';
 import { Popup } from 'react-leaflet';
 import type { FeatureCollection, Point, MultiPolygon } from 'geojson';
-import type { FootageMarkerHandle } from '../FootageMarker';
-import { FootageProperties, PrefectureProperties } from '@/types/map';
+import type { TrackMarkerHandle } from '../TrackMarker';
+import { TrackProperties, PrefectureProperties } from '@/types/map';
 
 interface PrefecturePopupProps {
   selectedPrefecture: string;
-  chamaFootage: FeatureCollection<Point, FootageProperties>;
+  chamaTrack: FeatureCollection<Point, TrackProperties>;
   japanData: FeatureCollection<MultiPolygon, PrefectureProperties>;
-  markerRefs: React.RefObject<Record<string, React.RefObject<FootageMarkerHandle | null>[]>>;
+  markerRefs: React.RefObject<Record<string, React.RefObject<TrackMarkerHandle | null>[]>>;
   popupRef: React.RefObject<L.Popup | null>;
 }
 
-const PrefecturePopup = ({
-  selectedPrefecture,
-  chamaFootage,
-  japanData,
-  markerRefs,
-  popupRef
-}: PrefecturePopupProps) => {
+const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs, popupRef }: PrefecturePopupProps) => {
   console.log('rendering popup for:', selectedPrefecture);
 
-  const footages = chamaFootage.features.filter((f) => f.properties.prefecture === selectedPrefecture);
+  const tracks = chamaTrack.features.filter((f) => f.properties.prefecture === selectedPrefecture);
 
   // Find the center of the prefecture for popup placement
   const feature = japanData?.features.find((f) => f.properties!.nam === selectedPrefecture);
@@ -46,16 +40,16 @@ const PrefecturePopup = ({
     >
       <div style={{ minWidth: 200 }}>
         <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>{selectedPrefecture}</div>
-        {footages.length > 0 ? (
+        {tracks.length > 0 ? (
           <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
-            {footages.map((f, idx: number) => (
+            {tracks.map((f, idx: number) => (
               <li key={idx} style={{ marginBottom: 8 }}>
                 <a
                   href="#"
                   style={{ color: '#2980b9', textDecoration: 'underline', cursor: 'pointer' }}
                   onClick={(e) => {
                     e.preventDefault();
-                    const originalIdx = chamaFootage.features.findIndex((f1) => f1 === f);
+                    const originalIdx = chamaTrack.features.findIndex((f1) => f1 === f);
                     const ref = markerRefs.current[selectedPrefecture]?.[originalIdx];
                     if (ref && ref.current) {
                       setTimeout(() => {
@@ -70,7 +64,7 @@ const PrefecturePopup = ({
             ))}
           </ul>
         ) : (
-          <div style={{ color: '#7F8C8D' }}>No footages found for this prefecture.</div>
+          <div style={{ color: '#7F8C8D' }}>No tracks found for this prefecture.</div>
         )}
       </div>
     </Popup>

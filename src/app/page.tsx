@@ -6,9 +6,9 @@ import { AnimatePresence } from 'framer-motion';
 import FloatingArrowButton from './components/FloatingArrowButton';
 import InfoPanel from './components/InfoPanel';
 import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
-import { FootageProperties, PrefectureProperties } from '@/types/map';
+import { TrackProperties, PrefectureProperties } from '@/types/map';
 import { getPrefectureForPoint } from './shared/function';
-import { getChamaFootage, getJapanPrefectures } from './shared/api';
+import { getChamaTrack, getJapanPrefectures } from './shared/api';
 
 const JapanMap = dynamic(() => import('./components/JapanMap'), {
   ssr: false,
@@ -19,15 +19,15 @@ export default function Home() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [japanData, setJapanData] = useState<FeatureCollection<MultiPolygon, PrefectureProperties> | null>(null);
-  const [chamaFootage, setChamaFootage] = useState<FeatureCollection<Point, FootageProperties> | null>(null);
+  const [chamaTrack, setChamaTrack] = useState<FeatureCollection<Point, TrackProperties> | null>(null);
 
   useEffect(() => {
     let splashTimeout: NodeJS.Timeout;
-    Promise.all([getJapanPrefectures(), getChamaFootage()]).then(([japan, footage]) => {
+    Promise.all([getJapanPrefectures(), getChamaTrack()]).then(([japan, track]) => {
       setJapanData(japan);
-      setChamaFootage(footage);
-      // set prefecture properties of chama footage with getPrefectureForPoint
-      for (const feature of footage.features) {
+      setChamaTrack(track);
+      // set prefecture properties of chama track with getPrefectureForPoint
+      for (const feature of track.features) {
         feature.properties.prefecture = getPrefectureForPoint(feature.geometry.coordinates, japan);
       }
       splashTimeout = setTimeout(() => setShowSplash(false), 1500);
@@ -38,8 +38,8 @@ export default function Home() {
   return (
     <div className="min-h-screen min-w-screen w-screen h-screen fixed top-0 left-0 bg-gradient-to-br from-blue-50 to-purple-50">
       <AnimatePresence>{showSplash && <SplashScreen key="splash" />}</AnimatePresence>
-      {!showSplash && japanData && chamaFootage && (
-        <JapanMap className="w-full h-full" japanData={japanData} chamaFootage={chamaFootage} />
+      {!showSplash && japanData && chamaTrack && (
+        <JapanMap className="w-full h-full" japanData={japanData} chamaTrack={chamaTrack} />
       )}
       {/* Floating Arrow Button */}
       {!showSplash && <FloatingArrowButton open={infoOpen} onClick={() => setInfoOpen((v) => !v)} />}

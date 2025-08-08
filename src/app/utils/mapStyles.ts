@@ -1,5 +1,5 @@
 import type { Feature, Geometry, FeatureCollection, Point } from 'geojson';
-import type { PrefectureProperties, FootageProperties } from '@/types/map';
+import type { PrefectureProperties, TrackProperties } from '@/types/map';
 
 // Map color constants
 export const SOFT_YELLOW = '#FFE066';
@@ -8,13 +8,13 @@ export const SOFT_RED = '#FF6F61';
 // Style function for cartoon-like appearance
 export const getFeatureStyle = (
   feature?: Feature<Geometry, PrefectureProperties>,
-  chamaFootage?: FeatureCollection<Point, FootageProperties>
+  chamaTrack?: FeatureCollection<Point, TrackProperties>
 ) => {
   const prefectureName = feature?.properties?.nam;
-  const hasFootage = chamaFootage?.features.some((f) => f.properties.prefecture === prefectureName);
-  
+  const hasTrack = chamaTrack?.features.some((f) => f.properties.prefecture === prefectureName);
+
   return {
-    fillColor: hasFootage ? SOFT_RED : SOFT_YELLOW,
+    fillColor: hasTrack ? SOFT_RED : SOFT_YELLOW,
     weight: 3,
     opacity: 1,
     color: '#2C3E50',

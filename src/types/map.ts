@@ -6,7 +6,7 @@ export interface PrefectureProperties {
   center: [number, number];
 }
 
-export interface FootageProperties {
+export interface TrackProperties {
   prefecture: string; // calculated from getPrefectureForPoint
   icon: string;
   title: string;

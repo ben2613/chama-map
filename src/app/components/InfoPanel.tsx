@@ -43,7 +43,7 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
                   <li>• Cartoon-style colorful overlay</li>
                   <li>• Hover effects and popups</li>
                   <li>• Click animations</li>
-                  <li>• Haachama trip footage markers</li>
+                  <li>• Haachama trip track markers</li>
                 </ul>
               </div>
               <div>

@@ -1,12 +1,12 @@
 import L from 'leaflet';
 import type { Feature, Geometry, FeatureCollection, Point } from 'geojson';
-import type { PrefectureProperties, FootageProperties } from '@/types/map';
+import type { PrefectureProperties, TrackProperties } from '@/types/map';
 import { getFeatureStyle, getHoverStyle } from './mapStyles';
 
 export const createPrefectureHandlers = (
   setSelectedPrefecture: (name: string) => void,
   isPopupOpening: React.RefObject<boolean>,
-  chamaFootage?: FeatureCollection<Point, FootageProperties>
+  chamaTrack?: FeatureCollection<Point, TrackProperties>
 ) => {
   return (feature: Feature<Geometry, PrefectureProperties>, layer: L.Layer) => {
     const prefectureName = feature.properties.nam;
@@ -29,7 +29,7 @@ export const createPrefectureHandlers = (
       },
       mouseout: (e: L.LeafletMouseEvent) => {
         const layer = e.target as L.Path;
-        layer.setStyle(getFeatureStyle(feature, chamaFootage));
+        layer.setStyle(getFeatureStyle(feature, chamaTrack));
       }
     });
   };

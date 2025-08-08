@@ -2,11 +2,11 @@ import { Marker, Popup, Tooltip } from 'react-leaflet';
 import L, { Marker as LeafletMarker } from 'leaflet';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 
-export interface FootageMarkerHandle {
+export interface TrackMarkerHandle {
   openPopup: () => void;
 }
 
-interface FootageMarkerProps {
+interface TrackMarkerProps {
   coordinates: [number, number]; // [lng, lat]
   title: string;
   images: string[];
@@ -25,7 +25,7 @@ const defaultIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
-const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
+const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
   ({ icon, coordinates, title, images, description, tweets }, ref) => {
     const markerIcon = icon
       ? new L.Icon({
@@ -138,6 +138,6 @@ const FootageMarker = forwardRef<FootageMarkerHandle, FootageMarkerProps>(
   }
 );
 
-FootageMarker.displayName = 'FootageMarker';
+TrackMarker.displayName = 'TrackMarker';
 
-export default FootageMarker;
+export default TrackMarker;
