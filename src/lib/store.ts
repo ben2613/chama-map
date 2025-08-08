@@ -8,7 +8,7 @@ interface LanguageState {
 }
 
 const initialState: LanguageState = {
-  currentLanguage: 'en',
+  currentLanguage: i18n.language,
   availableLanguages: ['en', 'ja']
 };
 

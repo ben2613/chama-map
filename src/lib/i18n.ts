@@ -28,7 +28,9 @@ i18n
     },
 
     detection: {
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      order: navigator.cookieEnabled
+        ? ['cookie', 'localStorage', 'navigator', 'htmlTag']
+        : ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage']
     }
   });

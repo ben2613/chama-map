@@ -21,5 +21,9 @@
     "english": "英語",
     "japanese": "日本語",
     "switchTo": "{{language}}に切り替え"
+  },
+  "meta": {
+    "title": "はあちゃまレーダー",
+    "description": "はあちゃまがどこにいるか見つけよう！"
   }
 }
