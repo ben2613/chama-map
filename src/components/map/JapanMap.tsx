@@ -12,7 +12,7 @@ import { TrackProperties, PrefectureProperties } from '@/types/map';
 import { useMapRefs } from '@/hooks/useMapRefs';
 import { getFeatureStyle } from '@/utils/mapStyles';
 import { createPrefectureHandlers } from '@/utils/mapPrefectureUtils';
-import '@/lib/SmoothWheelZoom';
+// import '@/lib/SmoothWheelZoom';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
 
 // Fix for default markers in React Leaflet
@@ -55,10 +55,11 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
         zoom={6}
         style={{ height: '100%', width: '100%' }}
         className="rounded-lg shadow-lg"
-        scrollWheelZoom={false}
-        /** @ts-expect-error smoothWheelZoom is not a valid prop */
-        smoothWheelZoom={true}
-        smoothSensitivity={1}
+        // scrollWheelZoom={false}
+        // zoomSnap={1}
+        // /** @ts-expect-error smoothWheelZoom is not a valid prop */
+        // smoothWheelZoom={true}
+        // smoothSensitivity={1}
       >
         <MapEventHandler
           onPopupClose={() => setSelectedPrefecture(null)}
@@ -75,6 +76,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
           <TileLayer
             url="https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png"
             attribution='出典: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院（地理院タイル）</a>'
+            // updateWhenZooming={false}
           />
         )}
 
