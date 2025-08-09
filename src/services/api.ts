@@ -70,64 +70,111 @@ export async function getChamaTrack(): Promise<FeatureCollection<Point, TrackPro
   }
 
   // 6. Convert KML Placemarks to GeoJSON features
-  const placemarks = dom.getElementsByTagName('Placemark');
   const features: Feature<Point, TrackProperties>[] = [];
-  for (let i = 0; i < placemarks.length; i++) {
-    const placemark = placemarks[i];
-    const name = placemark.getElementsByTagName('name')[0]?.textContent || '';
-    const descriptionRaw = placemark.getElementsByTagName('description')[0]?.textContent || '';
-    // Remove <img> tags and strip HTML
-    const descriptionNoImg = descriptionRaw.replace(/<img[^>]*>/g, '');
-    const descriptionStripped = striptags(descriptionNoImg, undefined, ' ').trim();
-    // Extract URLs (tweets)
-    const tweets = Array.from(descriptionStripped.matchAll(/https?:\/\/\S+/g)).map((m) => m[0]);
-    // remove the URLS
-    const description = descriptionStripped.replace(/https?:\/\/\S+/g, '').trim();
 
-    // Image from gx_media_links
-    let images: string[] = [];
-    const dataNodes = placemark.getElementsByTagName('Data');
-    for (let j = 0; j < dataNodes.length; j++) {
-      if (dataNodes[j].getAttribute('name') === 'gx_media_links') {
-        images = dataNodes[j].getElementsByTagName('value')[0]?.textContent?.split(' ') || [];
-        break;
+  // Iterate over Folders; each Folder's name is the layerName
+  const folderNodes = dom.getElementsByTagName('Folder');
+  for (let fi = 0; fi < folderNodes.length; fi++) {
+    const folder = folderNodes[fi];
+    const layerName = folder.getElementsByTagName('name')[0]?.textContent?.trim() || '';
+    const placemarks = folder.getElementsByTagName('Placemark');
+
+    for (let i = 0; i < placemarks.length; i++) {
+      const placemark = placemarks[i];
+
+      // Display name handling
+      const outerName = placemark.getElementsByTagName('name')[0]?.textContent?.trim() || '';
+
+      // ExtendedData map
+      const dataNodes = placemark.getElementsByTagName('Data');
+      const dataMap: Record<string, string> = {};
+      for (let j = 0; j < dataNodes.length; j++) {
+        const key = dataNodes[j].getAttribute('name') || '';
+        const valueNode = dataNodes[j].getElementsByTagName('value')[0];
+        const value = valueNode?.textContent ?? '';
+        dataMap[key] = value;
       }
-    }
-    // Icon from styleUrl, StyleMap, and Style
-    let icon = '';
-    const styleUrl = placemark.getElementsByTagName('styleUrl')[0]?.textContent || '';
-    let resolvedStyleUrl = styleUrl;
-    // If styleUrl points to a StyleMap, resolve to normal style
-    if (styleMap[styleUrl]) {
-      resolvedStyleUrl = styleMap[styleUrl];
-    }
-    // Now resolvedStyleUrl should point to a Style, get the icon href
-    if (iconHrefMap[resolvedStyleUrl]) {
-      icon = iconHrefMap[resolvedStyleUrl];
-    }
-    if (icon) {
-      icon = getImageUrlFromFiles(files, icon) || '';
-    }
-    // Coordinates
-    const coordsText = placemark.getElementsByTagName('coordinates')[0]?.textContent || '';
-    const coords = coordsText.split(',').map(Number); // [lng, lat, alt]
-    if (coords.length < 2) continue;
-    // Build GeoJSON feature
-    features.push({
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [coords[0], coords[1]]
-      },
-      properties: {
-        title: name,
-        description,
-        tweets,
-        images,
-        icon,
-        prefecture: '' // still required by TrackProperties
+
+      // Name/NameJp logic:
+      // - If ExtendedData has both name and name_jp, the folder uses "name" as display field.
+      //   Save as: name = ExtendedData.name, nameJp = ExtendedData.name_jp.
+      // - Otherwise, outer <name> is actually Japanese display: nameJp = outerName, name = ExtendedData.name (if any).
+      let name = '';
+      let nameJp = '';
+      if (dataMap['name'] && dataMap['name_jp']) {
+        name = dataMap['name'];
+        nameJp = dataMap['name_jp'];
+      } else {
+        nameJp = outerName;
+        name = dataMap['name'] || '';
       }
-    });
+
+      // Descriptions from ExtendedData only
+      const description = dataMap['description'] ? striptags(dataMap['description'], undefined, ' ').trim() : '';
+      const descriptionJp = dataMap['description_jp']
+        ? striptags(dataMap['description_jp'], undefined, ' ').trim()
+        : '';
+
+      // Links: space-separated URLs in ExtendedData
+      const linksRaw = dataMap['links'] || '';
+      const links = linksRaw
+        .split(/\s+/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+
+      // Tweets (compat for UI): prefer links; if absent, extract any URLs from descriptions
+      const tweets =
+        links.length > 0
+          ? links
+          : Array.from(`${description} ${descriptionJp}`.matchAll(/https?:\/\/\S+/g)).map((m) => m[0]);
+
+      // Image from gx_media_links
+      let images: string[] = [];
+      if (dataMap['gx_media_links']) {
+        images = dataMap['gx_media_links'].split(' ').filter(Boolean);
+      }
+
+      // Icon from styleUrl, StyleMap, and Style
+      let icon = '';
+      const styleUrl = placemark.getElementsByTagName('styleUrl')[0]?.textContent || '';
+      let resolvedStyleUrl = styleUrl;
+      if (styleMap[styleUrl]) {
+        resolvedStyleUrl = styleMap[styleUrl];
+      }
+      if (iconHrefMap[resolvedStyleUrl]) {
+        icon = iconHrefMap[resolvedStyleUrl];
+      }
+      if (icon) {
+        icon = getImageUrlFromFiles(files, icon) || '';
+      }
+
+      // Coordinates
+      const coordsText = placemark.getElementsByTagName('coordinates')[0]?.textContent || '';
+      const coords = coordsText.split(',').map(Number); // [lng, lat, alt]
+      if (coords.length < 2) continue;
+
+      // Build GeoJSON feature
+      features.push({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [coords[0], coords[1]]
+        },
+        properties: {
+          title: outerName,
+          layerName,
+          name,
+          nameJp,
+          description,
+          descriptionJp,
+          links,
+          tweets,
+          images,
+          icon,
+          prefecture: ''
+        }
+      });
+    }
   }
   return {
     type: 'FeatureCollection',
