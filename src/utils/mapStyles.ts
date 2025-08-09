@@ -19,7 +19,7 @@ export const getFeatureStyle = (
     opacity: 1,
     color: '#2C3E50',
     dashArray: '',
-    fillOpacity: 0.8
+    fillOpacity: 0.6
   };
 };
 

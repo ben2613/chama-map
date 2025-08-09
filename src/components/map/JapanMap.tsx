@@ -13,6 +13,7 @@ import { useMapRefs } from '@/hooks/useMapRefs';
 import { getFeatureStyle } from '@/utils/mapStyles';
 import { createPrefectureHandlers } from '@/utils/mapPrefectureUtils';
 import '@/lib/SmoothWheelZoom';
+import { useAppTranslation } from '@/hooks/useAppTranslation';
 
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,6 +35,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
   const [popupKey, setPopupKey] = useState<number>(0);
   const { markerRefs, popupRef, mapRef, isPopupOpening, registerMarkerRef } = useMapRefs();
+  const { currentLanguage } = useAppTranslation();
 
   // Create prefecture interaction handlers
   const onEachFeature = createPrefectureHandlers(
@@ -64,10 +66,17 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
           mapRef={mapRef}
         />
 
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        />
+        {currentLanguage === 'en' ? (
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          />
+        ) : (
+          <TileLayer
+            url="https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png"
+            attribution='出典: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院（地理院タイル）</a>'
+          />
+        )}
 
         {japanData && (
           <GeoJSON
