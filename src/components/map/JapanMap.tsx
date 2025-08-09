@@ -32,10 +32,19 @@ interface JapanMapProps {
 
 const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack }) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
+  const [popupKey, setPopupKey] = useState<number>(0);
   const { markerRefs, popupRef, mapRef, isPopupOpening, registerMarkerRef } = useMapRefs();
 
   // Create prefecture interaction handlers
-  const onEachFeature = createPrefectureHandlers(setSelectedPrefecture, isPopupOpening, chamaTrack);
+  const onEachFeature = createPrefectureHandlers(
+    (name: string) => {
+      // Bump key to force remount/reopen even when selecting the same prefecture
+      setPopupKey((prev) => prev + 1);
+      setSelectedPrefecture(name);
+    },
+    isPopupOpening,
+    chamaTrack
+  );
 
   return (
     <div className={className} style={{ position: 'relative' }}>
@@ -90,6 +99,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
         {/* Prefecture popup */}
         {selectedPrefecture && chamaTrack && (
           <PrefecturePopup
+            key={`${selectedPrefecture}-${popupKey}`}
             selectedPrefecture={selectedPrefecture}
             chamaTrack={chamaTrack}
             japanData={japanData}
