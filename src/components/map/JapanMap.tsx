@@ -46,7 +46,22 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
   // Create prefecture interaction handlers
   const onEachFeature = createPrefectureHandlers(
     (name: string) => {
-      // Bump key to force remount/reopen even when selecting the same prefecture
+      // If only one grouped track exists in this prefecture, open it directly
+      const groupsForPrefecture = Object.values(groupedChamaTracks).filter(
+        (group) => group.length > 0 && group[0].properties.prefecture === name
+      );
+      if (groupsForPrefecture.length === 1) {
+        const rep = groupsForPrefecture[0][0];
+        const originalIdx = chamaTrack.features.findIndex((f1) => f1 === rep);
+        const ref = markerRefs.current[name]?.[originalIdx];
+        if (ref && ref.current) {
+          setTimeout(() => {
+            ref.current?.openPopup();
+          }, 0);
+        }
+        return;
+      }
+      // Otherwise show prefecture list popup
       setPopupKey((prev) => prev + 1);
       setSelectedPrefecture(name);
     },
