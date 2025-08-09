@@ -12,6 +12,7 @@ import { TrackProperties, PrefectureProperties } from '@/types/map';
 import { useMapRefs } from '@/hooks/useMapRefs';
 import { getFeatureStyle } from '@/utils/mapStyles';
 import { createPrefectureHandlers } from '@/utils/mapPrefectureUtils';
+import '@/lib/SmoothWheelZoom';
 
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,6 +44,10 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
         zoom={6}
         style={{ height: '100%', width: '100%' }}
         className="rounded-lg shadow-lg"
+        scrollWheelZoom={false}
+        /** @ts-expect-error smoothWheelZoom is not a valid prop */
+        smoothWheelZoom={true}
+        smoothSensitivity={1}
       >
         <MapEventHandler
           onPopupClose={() => setSelectedPrefecture(null)}
