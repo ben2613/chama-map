@@ -5,6 +5,8 @@ import type { FeatureCollection, Point, MultiPolygon } from 'geojson';
 import type { TrackMarkerHandle } from './TrackMarker';
 import { TrackProperties, PrefectureProperties } from '@/types/map';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
+import type { Feature } from 'geojson';
+import { getGroupingKeyForFeature } from '@/utils/groupTrackFeatures';
 
 interface PrefecturePopupProps {
   selectedPrefecture: string;
@@ -12,9 +14,17 @@ interface PrefecturePopupProps {
   japanData: FeatureCollection<MultiPolygon, PrefectureProperties>;
   markerRefs: React.RefObject<Record<string, React.RefObject<TrackMarkerHandle | null>[]>>;
   popupRef: React.RefObject<L.Popup | null>;
+  groupedMap?: Record<string, Feature<Point, TrackProperties>[]>;
 }
 
-const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs, popupRef }: PrefecturePopupProps) => {
+const PrefecturePopup = ({
+  selectedPrefecture,
+  chamaTrack,
+  japanData,
+  markerRefs,
+  popupRef,
+  groupedMap
+}: PrefecturePopupProps) => {
   const { t, currentLanguage } = useAppTranslation();
 
   const tracks = chamaTrack.features.filter((f) => f.properties.prefecture === selectedPrefecture);
@@ -25,6 +35,13 @@ const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs
   if (feature && feature.properties?.center) {
     center = feature.properties.center;
   }
+
+  // Deduplicated groups for the selected prefecture when groupedMap is provided
+  const groupedList: Feature<Point, TrackProperties>[][] | null = groupedMap
+    ? Object.values(groupedMap).filter(
+        (group) => group.length > 0 && group[0].properties.prefecture === selectedPrefecture
+      )
+    : null;
 
   return (
     <Popup
@@ -40,28 +57,35 @@ const PrefecturePopup = ({ selectedPrefecture, chamaTrack, japanData, markerRefs
         <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>
           {currentLanguage === 'ja' ? feature?.properties.nam_ja : feature?.properties.nam}
         </div>
-        {tracks.length > 0 ? (
+        {(groupedList ? groupedList.length > 0 : tracks.length > 0) ? (
           <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
-            {tracks.map((f, idx: number) => (
-              <li key={idx} style={{ marginBottom: 8 }}>
-                <a
-                  href="#"
-                  style={{ color: '#2980b9', textDecoration: 'underline', cursor: 'pointer' }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    const originalIdx = chamaTrack.features.findIndex((f1) => f1 === f);
-                    const ref = markerRefs.current[selectedPrefecture]?.[originalIdx];
-                    if (ref && ref.current) {
-                      setTimeout(() => {
-                        ref.current?.openPopup();
-                      }, 100);
-                    }
-                  }}
-                >
-                  {f.properties.title}
-                </a>
-              </li>
-            ))}
+            {(groupedList ?? tracks.map((f) => [f] as Feature<Point, TrackProperties>[])).map((group, idx: number) => {
+              const rep = group[0];
+              const label = currentLanguage === 'ja' ? rep.properties.nameJp : rep.properties.name;
+              const groupCount = group.length;
+              const key = getGroupingKeyForFeature(rep, 6);
+              return (
+                <li key={`${key}-${idx}`} style={{ marginBottom: 8 }}>
+                  <a
+                    href="#"
+                    style={{ color: '#2980b9', textDecoration: 'underline', cursor: 'pointer' }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const originalIdx = chamaTrack.features.findIndex((f1) => f1 === rep);
+                      const ref = markerRefs.current[selectedPrefecture]?.[originalIdx];
+                      if (ref && ref.current) {
+                        setTimeout(() => {
+                          ref.current?.openPopup();
+                        }, 100);
+                      }
+                    }}
+                  >
+                    {label}
+                    {groupCount > 1 ? ` (${groupCount})` : ''}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <div style={{ color: '#7F8C8D' }}>{t('map.noTracks')}</div>

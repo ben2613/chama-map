@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -14,6 +14,7 @@ import { getFeatureStyle } from '@/utils/mapStyles';
 import { createPrefectureHandlers } from '@/utils/mapPrefectureUtils';
 // import '@/lib/SmoothWheelZoom';
 import { useAppTranslation } from '@/hooks/useAppTranslation';
+import { groupMapByNameAndCoordinates } from '@/utils/groupTrackFeatures';
 
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,6 +37,11 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
   const [popupKey, setPopupKey] = useState<number>(0);
   const { markerRefs, popupRef, mapRef, isPopupOpening, registerMarkerRef } = useMapRefs();
   const { currentLanguage } = useAppTranslation();
+
+  const groupedChamaTracks = useMemo(() => {
+    if (!chamaTrack) return {};
+    return groupMapByNameAndCoordinates(chamaTrack, 6);
+  }, [chamaTrack]);
 
   // Create prefecture interaction handlers
   const onEachFeature = createPrefectureHandlers(
@@ -93,16 +99,17 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
           // Only render markers for Point geometries
           if (feature.geometry.type !== 'Point') return null;
           const coords = feature.geometry.coordinates as [number, number];
+          const name = (feature.properties.name || feature.properties.nameJp || feature.properties.title || '').trim();
+          const key = `${name}|${coords[0].toFixed(6)},${coords[1].toFixed(6)}`;
+          const group = groupedChamaTracks[key];
           return (
             <TrackMarker
               key={idx}
               ref={registerMarkerRef(feature.properties.prefecture, idx)}
               coordinates={coords}
-              title={feature.properties.title}
-              description={feature.properties.description ?? ''}
-              images={feature.properties.images}
-              tweets={feature.properties.tweets}
               icon={feature.properties.icon}
+              groupedKey={key}
+              groupedTracks={group}
             />
           );
         })}
@@ -116,6 +123,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
             japanData={japanData}
             markerRefs={markerRefs}
             popupRef={popupRef}
+            groupedMap={groupedChamaTracks}
           />
         )}
       </MapContainer>
