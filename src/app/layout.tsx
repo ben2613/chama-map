@@ -1,7 +1,6 @@
 // import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import StoreProvider from '@/components/providers/StoreProvider';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
 
 const geistSans = Geist({
@@ -28,7 +27,8 @@ export default function RootLayout({
     <html lang="en">
       <DynamicMetadata />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <StoreProvider>{children}</StoreProvider>
+        {/* <StoreProvider>{children}</StoreProvider> */}
+        {children}
       </body>
     </html>
   );
