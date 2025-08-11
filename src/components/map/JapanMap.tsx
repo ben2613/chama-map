@@ -13,8 +13,8 @@ import { useMapRefs } from '@/hooks/useMapRefs';
 import { getFeatureStyle } from '@/utils/mapStyles';
 import { createPrefectureHandlers } from '@/utils/mapPrefectureUtils';
 // import '@/lib/SmoothWheelZoom';
-import { useAppTranslation } from '@/hooks/useAppTranslation';
 import { groupMapByNameAndCoordinates } from '@/utils/groupTrackFeatures';
+import { useTranslation } from 'react-i18next';
 
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,7 +36,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
   const [popupKey, setPopupKey] = useState<number>(0);
   const { markerRefs, popupRef, mapRef, isPopupOpening, registerMarkerRef } = useMapRefs();
-  const { currentLanguage } = useAppTranslation();
+  const { i18n } = useTranslation();
 
   const groupedChamaTracks = useMemo(() => {
     if (!chamaTrack) return {};
@@ -88,7 +88,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
           mapRef={mapRef}
         />
 
-        {currentLanguage === 'en' ? (
+        {i18n.language === 'en' ? (
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'

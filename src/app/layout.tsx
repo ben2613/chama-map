@@ -2,6 +2,7 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
+import TranslationProvider from '@/components/providers/TranslationProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,8 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <DynamicMetadata />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* <StoreProvider>{children}</StoreProvider> */}
-        {children}
+        <TranslationProvider>{children}</TranslationProvider>
       </body>
     </html>
   );

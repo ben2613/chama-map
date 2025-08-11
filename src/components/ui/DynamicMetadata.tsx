@@ -16,8 +16,8 @@ interface DynamicMetadataProps {
 export default function DynamicMetadata({ title, description, image, url }: DynamicMetadataProps) {
   const { t, i18n } = useTranslation();
 
-  const defaultTitle = t('meta.title', 'Haachama Radar');
-  const defaultDescription = t('meta.description', 'Find where the Haachama are!');
+  const defaultTitle = t('meta.title');
+  const defaultDescription = t('meta.description');
 
   const finalTitle = title || defaultTitle;
   const finalDescription = description || defaultDescription;

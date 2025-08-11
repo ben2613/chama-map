@@ -3,7 +3,7 @@ import L, { Marker as LeafletMarker } from 'leaflet';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import type { Feature, Point } from 'geojson';
 import type { TrackProperties } from '@/types/map';
-import { useAppTranslation } from '@/hooks/useAppTranslation';
+import { useTranslation } from 'react-i18next';
 
 export interface TrackMarkerHandle {
   openPopup: () => void;
@@ -27,7 +27,7 @@ const defaultIcon = new L.Icon({
 });
 
 const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coordinates, groupedTracks }, ref) => {
-  const { currentLanguage } = useAppTranslation();
+  const { i18n } = useTranslation();
 
   const markerIcon = icon
     ? new L.Icon({
@@ -46,8 +46,8 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
 
   const active = groupedTracks && groupedTracks.length > 0 ? groupedTracks[groupIndex] : undefined;
   const activeProps: TrackProperties | undefined = active?.properties as TrackProperties | undefined;
-  const displayTitle = currentLanguage === 'ja' ? activeProps?.nameJp : activeProps?.name;
-  const displayDescription = currentLanguage === 'ja' ? activeProps?.descriptionJp : activeProps?.description;
+  const displayTitle = i18n.language === 'ja' ? activeProps?.nameJp : activeProps?.name;
+  const displayDescription = i18n.language === 'ja' ? activeProps?.descriptionJp : activeProps?.description;
   const displayImages = activeProps?.images ?? [];
   const displayTweets = activeProps?.tweets ?? [];
 

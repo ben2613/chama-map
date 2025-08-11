@@ -4,9 +4,9 @@ import { Popup } from 'react-leaflet';
 import type { FeatureCollection, Point, MultiPolygon } from 'geojson';
 import type { TrackMarkerHandle } from './TrackMarker';
 import { TrackProperties, PrefectureProperties } from '@/types/map';
-import { useAppTranslation } from '@/hooks/useAppTranslation';
 import type { Feature } from 'geojson';
 import { getGroupingKeyForFeature } from '@/utils/groupTrackFeatures';
+import { useTranslation } from 'react-i18next';
 
 interface PrefecturePopupProps {
   selectedPrefecture: string;
@@ -25,7 +25,7 @@ const PrefecturePopup = ({
   popupRef,
   groupedMap
 }: PrefecturePopupProps) => {
-  const { t, currentLanguage } = useAppTranslation();
+  const { t, i18n } = useTranslation();
 
   const tracks = chamaTrack.features.filter((f) => f.properties.prefecture === selectedPrefecture);
 
@@ -55,13 +55,13 @@ const PrefecturePopup = ({
     >
       <div style={{ minWidth: 200 }}>
         <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>
-          {currentLanguage === 'ja' ? feature?.properties.nam_ja : feature?.properties.nam}
+          {i18n.language === 'ja' ? feature?.properties.nam_ja : feature?.properties.nam}
         </div>
         {(groupedList ? groupedList.length > 0 : tracks.length > 0) ? (
           <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
             {(groupedList ?? tracks.map((f) => [f] as Feature<Point, TrackProperties>[])).map((group, idx: number) => {
               const rep = group[0];
-              const label = currentLanguage === 'ja' ? rep.properties.nameJp : rep.properties.name;
+              const label = i18n.language === 'ja' ? rep.properties.nameJp : rep.properties.name;
               const groupCount = group.length;
               const key = getGroupingKeyForFeature(rep, 6);
               return (

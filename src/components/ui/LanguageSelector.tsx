@@ -1,13 +1,14 @@
 'use client';
-import { useLanguage } from '@/hooks/useLanguage';
+
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export default function LanguageSelector() {
-  const { currentLanguage, changeLanguage } = useLanguage();
-  const isEnglish = currentLanguage.includes('en');
+  const { i18n } = useTranslation();
+  const isEnglish = i18n.language.includes('en');
 
   const toggleLanguage = () => {
-    changeLanguage(isEnglish ? 'ja' : 'en');
+    i18n.changeLanguage(isEnglish ? 'ja' : 'en');
   };
 
   return (

@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 import React from 'react';
-import { useAppTranslation } from '@/hooks/useAppTranslation';
+import { useTranslation } from 'react-i18next';
 
 const SplashScreen: React.FC = () => {
-  const { tt } = useAppTranslation();
-  const title = tt('meta.title');
-  const description = tt('meta.description');
+  const { t } = useTranslation();
+  const title = t('meta.title');
+  const description = t('meta.description');
   return (
     <motion.div
       initial={{ opacity: 1, scale: 1 }}
