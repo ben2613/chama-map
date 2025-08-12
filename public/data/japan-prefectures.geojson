@@ -363,7 +363,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Kyoto Fu", "nam_ja": "京都府", "id": 26 }
+      "properties": {
+        "nam": "Kyoto Fu",
+        "nam_ja": "京都府",
+        "id": 26,
+        "center": [35.250769735483026, 135.44379187950722]
+      }
     },
     {
       "type": "Feature",
@@ -648,7 +653,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Saga Ken", "nam_ja": "佐賀県", "id": 41 }
+      "properties": {
+        "nam": "Saga Ken",
+        "nam_ja": "佐賀県",
+        "id": 41,
+        "center": [33.293332685123794, 130.10242158716378]
+      }
     },
     {
       "type": "Feature",
@@ -1484,7 +1494,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Kumamoto Ken", "nam_ja": "熊本県", "id": 43 }
+      "properties": {
+        "nam": "Kumamoto Ken",
+        "nam_ja": "熊本県",
+        "id": 43,
+        "center": [32.62387648750754, 130.79234992756565]
+      }
     },
     {
       "type": "Feature",
@@ -2158,7 +2173,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Kagawa Ken", "nam_ja": "香川県", "id": 37 }
+      "properties": {
+        "nam": "Kagawa Ken",
+        "nam_ja": "香川県",
+        "id": 37,
+        "center": [34.21965408325196, 133.9941412233839]
+      }
     },
     {
       "type": "Feature",
@@ -2568,7 +2588,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Aichi Ken", "nam_ja": "愛知県", "id": 23 }
+      "properties": {
+        "nam": "Aichi Ken",
+        "nam_ja": "愛知県",
+        "id": 23,
+        "center": [34.99649820501154, 137.1966472833807]
+      }
     },
     {
       "type": "Feature",
@@ -2788,7 +2813,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Tochigi Ken", "nam_ja": "栃木県", "id": 9 }
+      "properties": {
+        "nam": "Tochigi Ken",
+        "nam_ja": "栃木県",
+        "id": 9,
+        "center": [36.68851991133256, 139.81679064006897]
+      }
     },
     {
       "type": "Feature",
@@ -2964,7 +2994,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Yamanashi Ken", "nam_ja": "山梨県", "id": 19 }
+      "properties": {
+        "nam": "Yamanashi Ken",
+        "nam_ja": "山梨県",
+        "id": 19,
+        "center": [35.595832870945785, 138.58889169404003]
+      }
     },
     {
       "type": "Feature",
@@ -3166,7 +3201,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Shiga Ken", "nam_ja": "滋賀県", "id": 25 }
+      "properties": {
+        "nam": "Shiga Ken",
+        "nam_ja": "滋賀県",
+        "id": 25,
+        "center": [35.21953035524378, 136.11634802693473]
+      }
     },
     {
       "type": "Feature",
@@ -3450,7 +3490,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Gunma Ken", "nam_ja": "群馬県", "id": 10 }
+      "properties": {
+        "nam": "Gunma Ken",
+        "nam_ja": "群馬県",
+        "id": 10,
+        "center": [36.50292258908897, 139.0226588546138]
+      }
     },
     {
       "type": "Feature",
@@ -4099,7 +4144,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Miyagi Ken", "nam_ja": "宮城県", "id": 4 }
+      "properties": {
+        "nam": "Miyagi Ken",
+        "nam_ja": "宮城県",
+        "id": 4,
+        "center": [38.476095378248, 141.04575925416583]
+      }
     },
     {
       "type": "Feature",
@@ -4486,7 +4536,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Shizuoka Ken", "nam_ja": "静岡県", "id": 22 }
+      "properties": {
+        "nam": "Shizuoka Ken",
+        "nam_ja": "静岡県",
+        "id": 22,
+        "center": [35.06777823656455, 138.4248846207542]
+      }
     },
     {
       "type": "Feature",
@@ -4740,7 +4795,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Ibaraki Ken", "nam_ja": "茨城県", "id": 8 }
+      "properties": {
+        "nam": "Ibaraki Ken",
+        "nam_ja": "茨城県",
+        "id": 8,
+        "center": [36.362275970851925, 140.3239569930048]
+      }
     },
     {
       "type": "Feature",
@@ -6073,7 +6133,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Okinawa Ken", "nam_ja": "沖縄県", "id": 47 }
+      "properties": {
+        "nam": "Okinawa Ken",
+        "nam_ja": "沖縄県",
+        "id": 47,
+        "center": [26.484564539013224, 127.94783532226523]
+      }
     },
     {
       "type": "Feature",
@@ -6371,7 +6436,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Yamagata Ken", "nam_ja": "山形県", "id": 6 }
+      "properties": {
+        "nam": "Yamagata Ken",
+        "nam_ja": "山形県",
+        "id": 6,
+        "center": [38.395683954412284, 140.10002657803625]
+      }
     },
     {
       "type": "Feature",
@@ -6857,7 +6927,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Wakayama Ken", "nam_ja": "和歌山県", "id": 30 }
+      "properties": {
+        "nam": "Wakayama Ken",
+        "nam_ja": "和歌山県",
+        "id": 30,
+        "center": [33.94046904294545, 135.49838996479534]
+      }
     },
     {
       "type": "Feature",
@@ -9380,7 +9455,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Nagasaki Ken", "nam_ja": "長崎県", "id": 42 }
+      "properties": {
+        "nam": "Nagasaki Ken",
+        "nam_ja": "長崎県",
+        "id": 42,
+        "center": [32.94731407755612, 129.87926730080883]
+      }
     },
     {
       "type": "Feature",
@@ -9761,7 +9841,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Akita Ken", "nam_ja": "秋田県", "id": 5 }
+      "properties": {
+        "nam": "Akita Ken",
+        "nam_ja": "秋田県",
+        "id": 5,
+        "center": [39.753669119814795, 140.4464315506084]
+      }
     },
     {
       "type": "Feature",
@@ -10356,7 +10441,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Okayama Ken", "nam_ja": "岡山県", "id": 33 }
+      "properties": {
+        "nam": "Okayama Ken",
+        "nam_ja": "岡山県",
+        "id": 33,
+        "center": [34.88211992925795, 133.86720600980254]
+      }
     },
     {
       "type": "Feature",
@@ -10850,7 +10940,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Fukuoka Ken", "nam_ja": "福岡県", "id": 40 }
+      "properties": {
+        "nam": "Fukuoka Ken",
+        "nam_ja": "福岡県",
+        "id": 40,
+        "center": [33.51747467193096, 130.58841058978211]
+      }
     },
     {
       "type": "Feature",
@@ -11228,7 +11323,7 @@
           ]
         ]
       },
-      "properties": { "nam": "Gifu Ken", "nam_ja": "岐阜県", "id": 21 }
+      "properties": { "nam": "Gifu Ken", "nam_ja": "岐阜県", "id": 21, "center": [35.7657852380737, 137.0290432963774] }
     },
     {
       "type": "Feature",
@@ -11639,7 +11734,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Aomori Ken", "nam_ja": "青森県", "id": 2 }
+      "properties": {
+        "nam": "Aomori Ken",
+        "nam_ja": "青森県",
+        "id": 2,
+        "center": [40.811317978276925, 140.82486698092487]
+      }
     },
     {
       "type": "Feature",
@@ -11930,7 +12030,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Osaka Fu", "nam_ja": "大阪府", "id": 27 }
+      "properties": {
+        "nam": "Osaka Fu",
+        "nam_ja": "大阪府",
+        "id": 27,
+        "center": [34.640586830810626, 135.45261714135236]
+      }
     },
     {
       "type": "Feature",
@@ -12355,7 +12460,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Nagano Ken", "nam_ja": "長野県", "id": 20 }
+      "properties": {
+        "nam": "Nagano Ken",
+        "nam_ja": "長野県",
+        "id": 20,
+        "center": [36.1167763972628, 138.07185798681877]
+      }
     },
     {
       "type": "Feature",
@@ -12831,7 +12941,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Oita Ken", "nam_ja": "大分県", "id": 44 }
+      "properties": {
+        "nam": "Oita Ken",
+        "nam_ja": "大分県",
+        "id": 44,
+        "center": [33.16302324545504, 131.52022169736097]
+      }
     },
     {
       "type": "Feature",
@@ -13548,7 +13663,7 @@
           ]
         ]
       },
-      "properties": { "nam": "Mie Ken", "nam_ja": "三重県", "id": 24 }
+      "properties": { "nam": "Mie Ken", "nam_ja": "三重県", "id": 24, "center": [34.432402958205394, 136.381438238988] }
     },
     {
       "type": "Feature",
@@ -14549,7 +14664,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Hiroshima Ken", "nam_ja": "広島県", "id": 34 }
+      "properties": {
+        "nam": "Hiroshima Ken",
+        "nam_ja": "広島県",
+        "id": 34,
+        "center": [34.60274000101156, 132.76823291911944]
+      }
     },
     {
       "type": "Feature",
@@ -16374,7 +16494,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Hokkai Do", "nam_ja": "北海道", "id": 1 }
+      "properties": {
+        "nam": "Hokkai Do",
+        "nam_ja": "北海道",
+        "id": 1,
+        "center": [43.11753939364999, 142.4034547380512]
+      }
     },
     {
       "type": "Feature",
@@ -16982,7 +17107,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Hyogo Ken", "nam_ja": "兵庫県", "id": 28 }
+      "properties": {
+        "nam": "Hyogo Ken",
+        "nam_ja": "兵庫県",
+        "id": 28,
+        "center": [35.12754079629774, 134.81400613244182]
+      }
     },
     {
       "type": "Feature",
@@ -17266,7 +17396,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Chiba Ken", "nam_ja": "千葉県", "id": 12 }
+      "properties": {
+        "nam": "Chiba Ken",
+        "nam_ja": "千葉県",
+        "id": 12,
+        "center": [35.52226695541508, 140.10524024648117]
+      }
     },
     {
       "type": "Feature",
@@ -17474,7 +17609,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Toyama Ken", "nam_ja": "富山県", "id": 16 }
+      "properties": {
+        "nam": "Toyama Ken",
+        "nam_ja": "富山県",
+        "id": 16,
+        "center": [36.61297485429018, 137.20850097346428]
+      }
     },
     {
       "type": "Feature",
@@ -18451,7 +18591,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Tokyo To", "nam_ja": "東京都", "id": 13 }
+      "properties": {
+        "nam": "Tokyo To",
+        "nam_ja": "東京都",
+        "id": 13,
+        "center": [35.70285120550192, 139.4747689684982]
+      }
     },
     {
       "type": "Feature",
@@ -18634,7 +18779,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Saitama Ken", "nam_ja": "埼玉県", "id": 11 }
+      "properties": {
+        "nam": "Saitama Ken",
+        "nam_ja": "埼玉県",
+        "id": 11,
+        "center": [35.982933776323186, 139.33988597781163]
+      }
     },
     {
       "type": "Feature",
@@ -19648,7 +19798,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Yamaguchi Ken", "nam_ja": "山口県", "id": 35 }
+      "properties": {
+        "nam": "Yamaguchi Ken",
+        "nam_ja": "山口県",
+        "id": 35,
+        "center": [34.21610811273139, 131.5438526730863]
+      }
     },
     {
       "type": "Feature",
@@ -20018,7 +20173,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Fukushima Ken", "nam_ja": "福島県", "id": 7 }
+      "properties": {
+        "nam": "Fukushima Ken",
+        "nam_ja": "福島県",
+        "id": 7,
+        "center": [37.396793535492876, 140.0957324524776]
+      }
     },
     {
       "type": "Feature",
@@ -20382,7 +20542,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Ishikawa Ken", "nam_ja": "石川県", "id": 17 }
+      "properties": {
+        "nam": "Ishikawa Ken",
+        "nam_ja": "石川県",
+        "id": 17,
+        "center": [36.85753594408827, 136.8446931253702]
+      }
     },
     {
       "type": "Feature",
@@ -20720,7 +20885,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Fukui Ken", "nam_ja": "福井県", "id": 18 }
+      "properties": {
+        "nam": "Fukui Ken",
+        "nam_ja": "福井県",
+        "id": 18,
+        "center": [35.73206313244708, 136.08376257760185]
+      }
     },
     {
       "type": "Feature",
@@ -21823,7 +21993,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Ehime Ken", "nam_ja": "愛媛県", "id": 38 }
+      "properties": {
+        "nam": "Ehime Ken",
+        "nam_ja": "愛媛県",
+        "id": 38,
+        "center": [33.514022217184156, 132.76330612879718]
+      }
     },
     {
       "type": "Feature",
@@ -22050,7 +22225,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Nara Ken", "nam_ja": "奈良県", "id": 29 }
+      "properties": {
+        "nam": "Nara Ken",
+        "nam_ja": "奈良県",
+        "id": 29,
+        "center": [34.30754370159573, 135.8709054876257]
+      }
     },
     {
       "type": "Feature",
@@ -22662,7 +22842,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Shimane Ken", "nam_ja": "島根県", "id": 32 }
+      "properties": {
+        "nam": "Shimane Ken",
+        "nam_ja": "島根県",
+        "id": 32,
+        "center": [34.97085180599524, 132.49985234470887]
+      }
     },
     {
       "type": "Feature",
@@ -23149,7 +23334,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Iwate Ken", "nam_ja": "岩手県", "id": 3 }
+      "properties": {
+        "nam": "Iwate Ken",
+        "nam_ja": "岩手県",
+        "id": 3,
+        "center": [39.4967717128674, 141.42417720077762]
+      }
     },
     {
       "type": "Feature",
@@ -23385,7 +23575,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Tottori Ken", "nam_ja": "鳥取県", "id": 31 }
+      "properties": {
+        "nam": "Tottori Ken",
+        "nam_ja": "鳥取県",
+        "id": 31,
+        "center": [35.3292138671875, 133.76556342230904]
+      }
     },
     {
       "type": "Feature",
@@ -23737,7 +23932,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Tokushima Ken", "nam_ja": "徳島県", "id": 36 }
+      "properties": {
+        "nam": "Tokushima Ken",
+        "nam_ja": "徳島県",
+        "id": 36,
+        "center": [33.920151333644945, 134.22543392318073]
+      }
     },
     {
       "type": "Feature",
@@ -25251,7 +25451,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Kagoshima Ken", "nam_ja": "鹿児島県", "id": 46 }
+      "properties": {
+        "nam": "Kagoshima Ken",
+        "nam_ja": "鹿児島県",
+        "id": 46,
+        "center": [31.551318411010406, 130.6477576408597]
+      }
     },
     {
       "type": "Feature",
@@ -25787,7 +25992,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Niigata Ken", "nam_ja": "新潟県", "id": 15 }
+      "properties": {
+        "nam": "Niigata Ken",
+        "nam_ja": "新潟県",
+        "id": 15,
+        "center": [37.4064695373062, 138.95804779289304]
+      }
     },
     {
       "type": "Feature",
@@ -26261,7 +26471,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Kochi Ken", "nam_ja": "高知県", "id": 39 }
+      "properties": {
+        "nam": "Kochi Ken",
+        "nam_ja": "高知県",
+        "id": 39,
+        "center": [33.36307493280368, 133.3395990604597]
+      }
     },
     {
       "type": "Feature",
@@ -26656,7 +26871,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Miyazaki Ken", "nam_ja": "宮崎県", "id": 45 }
+      "properties": {
+        "nam": "Miyazaki Ken",
+        "nam_ja": "宮崎県",
+        "id": 45,
+        "center": [32.18770364715471, 131.30125233234]
+      }
     },
     {
       "type": "Feature",
@@ -26948,7 +27168,12 @@
           ]
         ]
       },
-      "properties": { "nam": "Kanagawa Ken", "nam_ja": "神奈川県", "id": 14 }
+      "properties": {
+        "nam": "Kanagawa Ken",
+        "nam_ja": "神奈川県",
+        "id": 14,
+        "center": [35.40973577652385, 139.407800766236]
+      }
     }
   ]
 }

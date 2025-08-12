@@ -1,5 +1,5 @@
 import { TrackProperties, PrefectureProperties } from '@/types/map';
-import type { FeatureCollection, Feature, Point, MultiPolygon, Position } from 'geojson';
+import type { FeatureCollection, Feature, Point, MultiPolygon } from 'geojson';
 import { unzipSync, strFromU8, Unzipped } from 'fflate';
 import { DOMParser } from '@xmldom/xmldom';
 import striptags from 'striptags';
@@ -183,33 +183,5 @@ export async function getChamaTrack(): Promise<FeatureCollection<Point, TrackPro
 }
 
 export async function getJapanPrefectures(): Promise<FeatureCollection<MultiPolygon, PrefectureProperties>> {
-  const res = await fetch('data/japan-prefectures.geojson');
-  const data = await res.json();
-  // set center of each feature
-  for (const feature of data.features) {
-    let coords: Position[] | null = null;
-    if (feature.geometry.type === 'Polygon') {
-      coords = feature.geometry.coordinates[0];
-    } else if (feature.geometry.type === 'MultiPolygon') {
-      // Find the polygon (outer ring) with the most positions
-      let maxLen = 0;
-      let maxCoords: Position[] | null = null;
-      for (const polygon of feature.geometry.coordinates) {
-        // polygon[0] is the outer ring
-        if (polygon[0] && polygon[0].length > maxLen) {
-          maxLen = polygon[0].length;
-          maxCoords = polygon[0];
-        }
-      }
-      coords = maxCoords;
-    } else {
-      coords = null;
-    }
-    if (coords && coords.length > 0) {
-      // Average the coordinates for a rough center
-      const avg = coords.reduce((acc: Position, cur: Position) => [acc[0] + cur[0], acc[1] + cur[1]], [0, 0]);
-      feature.properties.center = [avg[1] / coords.length, avg[0] / coords.length];
-    }
-  }
-  return data;
+  return fetch('data/japan-prefectures.geojson').then((res) => res.json());
 }
