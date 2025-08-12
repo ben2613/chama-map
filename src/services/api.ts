@@ -1,7 +1,7 @@
 import { TrackProperties, PrefectureProperties } from '@/types/map';
 import type { FeatureCollection, Feature, Point, MultiPolygon, Position } from 'geojson';
 import { unzipSync, strFromU8, Unzipped } from 'fflate';
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import striptags from 'striptags';
 
 function getImageUrlFromFiles(files: Unzipped, iconPath: string) {

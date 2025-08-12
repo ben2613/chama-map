@@ -13,6 +13,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "@turf/boolean-point-in-polygon": "^7.2.0",
     "@types/leaflet": "^1.9.19",
+    "@xmldom/xmldom": "^0.9.8",
     "fflate": "^0.8.2",
     "framer-motion": "^12.23.0",
     "i18next": "^25.3.2",
@@ -24,8 +25,7 @@
     "react-i18next": "^15.6.1",
     "react-leaflet": "^5.0.0",
     "react-redux": "^9.2.0",
-    "striptags": "^3.2.0",
-    "xmldom": "^0.6.0"
+    "striptags": "^3.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -33,7 +33,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/xmldom": "^0.1.34",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "tailwindcss": "^4",
