@@ -187,12 +187,24 @@ export async function getJapanPrefectures(): Promise<FeatureCollection<MultiPoly
   const data = await res.json();
   // set center of each feature
   for (const feature of data.features) {
-    const coords =
-      feature.geometry.type === 'Polygon'
-        ? feature.geometry.coordinates[0]
-        : feature.geometry.type === 'MultiPolygon'
-        ? feature.geometry.coordinates[0][0]
-        : null;
+    let coords: Position[] | null = null;
+    if (feature.geometry.type === 'Polygon') {
+      coords = feature.geometry.coordinates[0];
+    } else if (feature.geometry.type === 'MultiPolygon') {
+      // Find the polygon (outer ring) with the most positions
+      let maxLen = 0;
+      let maxCoords: Position[] | null = null;
+      for (const polygon of feature.geometry.coordinates) {
+        // polygon[0] is the outer ring
+        if (polygon[0] && polygon[0].length > maxLen) {
+          maxLen = polygon[0].length;
+          maxCoords = polygon[0];
+        }
+      }
+      coords = maxCoords;
+    } else {
+      coords = null;
+    }
     if (coords && coords.length > 0) {
       // Average the coordinates for a rough center
       const avg = coords.reduce((acc: Position, cur: Position) => [acc[0] + cur[0], acc[1] + cur[1]], [0, 0]);
