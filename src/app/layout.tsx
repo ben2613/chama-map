@@ -1,4 +1,4 @@
-// import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
@@ -14,10 +14,26 @@ const geistMono = Geist_Mono({
   subsets: ['latin']
 });
 
-// export const metadata: Metadata = {
-//   title: 'Haachama Radar',
-//   description: 'Find where the Haachama are!'
-// };
+export const metadata: Metadata = {
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
+  title: 'Haachama Radar',
+  description: 'Find where the Haachama are!',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-icon.png'
+  },
+  openGraph: {
+    title: 'Haachama Radar',
+    description: 'Find where the Haachama are!',
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Haachama Radar',
+    description: 'Find where the Haachama are!'
+  }
+};
 
 export default function RootLayout({
   children
@@ -26,7 +42,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <DynamicMetadata />
+      <head>
+        <DynamicMetadata />
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <TranslationProvider>{children}</TranslationProvider>
       </body>

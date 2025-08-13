@@ -14,7 +14,6 @@ on:
 
 env:
   NEXT_PUBLIC_CORS_PROXY: https://corsanywhere.benlab.link:2083/
-  NEXT_PUBLIC_BASE_PATH: /chama-map
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -33,6 +32,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Set base path
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "NEXT_PUBLIC_SITE_URL=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.html_url')"
+          echo "NEXT_PUBLIC_SITE_URL=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.html_url')" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v4
       - name: Detect package manager

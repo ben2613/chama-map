@@ -1,6 +1,5 @@
 'use client';
 
-import Head from 'next/head';
 import { useTranslation } from 'react-i18next';
 import { useEffect } from 'react';
 
@@ -13,6 +12,27 @@ interface DynamicMetadataProps {
   url?: string;
 }
 
+/**
+ * DynamicMetadata component that updates meta tags on the client side.
+ *
+ * This component works with static site generation by:
+ * 1. Using static meta tags from Next.js metadata API in the initial HTML
+ * 2. Updating these meta tags dynamically when the component mounts or language changes
+ *
+ * Usage:
+ * ```tsx
+ * // Use default translations
+ * <DynamicMetadata />
+ *
+ * // Use custom values
+ * <DynamicMetadata
+ *   title="Custom Title"
+ *   description="Custom description"
+ *   image="/custom-image.jpg"
+ *   url="https://example.com"
+ * />
+ * ```
+ */
 export default function DynamicMetadata({ title, description, image, url }: DynamicMetadataProps) {
   const { t, i18n } = useTranslation();
 
@@ -22,28 +42,58 @@ export default function DynamicMetadata({ title, description, image, url }: Dyna
   const finalTitle = title || defaultTitle;
   const finalDescription = description || defaultDescription;
 
-  // Update document title when language changes
+  // Update meta tags when language changes or component mounts
   useEffect(() => {
+    // Update document title
     document.title = finalTitle;
-  }, [finalTitle, i18n.language]);
 
-  return (
-    <Head>
-      <title>{finalTitle}</title>
-      <meta name="description" content={finalDescription} />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    // Update meta description
+    let metaDescription = document.querySelector('meta[name="description"]') as HTMLMetaElement;
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.setAttribute('content', finalDescription);
 
-      {/* Open Graph */}
-      <meta property="og:title" content={finalTitle} />
-      <meta property="og:description" content={finalDescription} />
-      {image && <meta property="og:image" content={image} />}
-      {url && <meta property="og:url" content={url} />}
+    // Update Open Graph tags
+    const updateMetaTag = (property: string, content: string) => {
+      let metaTag = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement;
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.setAttribute('property', property);
+        document.head.appendChild(metaTag);
+      }
+      metaTag.setAttribute('content', content);
+    };
 
-      {/* Twitter Card */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={finalTitle} />
-      <meta name="twitter:description" content={finalDescription} />
-      {image && <meta name="twitter:image" content={image} />}
-    </Head>
-  );
+    updateMetaTag('og:title', finalTitle);
+    updateMetaTag('og:description', finalDescription);
+    if (image) {
+      updateMetaTag('og:image', image);
+    }
+    if (url) {
+      updateMetaTag('og:url', url);
+    }
+
+    // Update Twitter Card tags
+    const updateTwitterTag = (name: string, content: string) => {
+      let metaTag = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement;
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.setAttribute('name', name);
+        document.head.appendChild(metaTag);
+      }
+      metaTag.setAttribute('content', content);
+    };
+
+    updateTwitterTag('twitter:title', finalTitle);
+    updateTwitterTag('twitter:description', finalDescription);
+    if (image) {
+      updateTwitterTag('twitter:image', image);
+    }
+  }, [finalTitle, finalDescription, image, url, i18n.language]);
+
+  // This component doesn't render anything visible
+  return null;
 }

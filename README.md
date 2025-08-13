@@ -1,6 +1,52 @@
-# Haachama Japan Trip Fan Map
+# Haachama Radar
 
-A proof-of-concept interactive map to visualize Haachama's (Akai Haato) travels across Japan's prefectures, inspired by fan community discussions.
+Find where the Haachama are! 🗾
+
+## Dynamic Meta Tags for Static Site Generation
+
+This project uses Next.js with static site generation (`output: 'export'`). To support dynamic meta tags with i18next while ensuring proper social media embedding, we use a hybrid approach:
+
+### How it works:
+
+1. **Static Meta Tags**: The `layout.tsx` uses Next.js metadata API to generate static meta tags in the initial HTML
+2. **Dynamic Updates**: The `DynamicMetadata` component updates these meta tags on the client side when the language changes
+
+### Usage:
+
+```tsx
+// In layout.tsx - Static meta tags
+export const metadata: Metadata = {
+  metadataBase: new URL('https://your-domain.com'),
+  title: 'Haachama Radar',
+  description: 'Find where the Haachama are!',
+  // ... other meta tags
+};
+
+// In components - Dynamic updates
+<DynamicMetadata /> // Uses default translations
+<DynamicMetadata 
+  title="Custom Title"
+  description="Custom description"
+  image="/custom-image.jpg"
+  url="https://example.com"
+/>
+```
+
+### Environment Variables:
+
+Set `NEXT_PUBLIC_SITE_URL` to your production domain for proper social media image URLs:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+```
+
+### Features:
+
+- ✅ Static meta tags for social media crawlers
+- ✅ Dynamic language switching with i18next
+- ✅ Open Graph and Twitter Card support
+- ✅ PWA manifest support
+- ✅ Custom meta tag overrides
 
 ## Project Goals / Feature Targets
 
