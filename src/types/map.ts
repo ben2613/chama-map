@@ -19,5 +19,5 @@ export interface TrackProperties {
   description?: string; // from ExtendedData
   descriptionJp?: string; // from ExtendedData
   links: string[]; // space-separated URLs from ExtendedData
-  tweets: string[];
+  // tweets: string[];
 }

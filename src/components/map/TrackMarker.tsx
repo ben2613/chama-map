@@ -4,6 +4,7 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import type { Feature, Point } from 'geojson';
 import type { TrackProperties } from '@/types/map';
 import { useTranslation } from 'react-i18next';
+import { FaLink, FaTwitter, FaYoutube } from 'react-icons/fa6';
 
 export interface TrackMarkerHandle {
   openPopup: () => void;
@@ -25,6 +26,16 @@ const defaultIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41]
 });
+
+function linkText(link: string) {
+  if (link.includes('twitter') || link.includes('x.com')) {
+    return <FaTwitter className="text-blue-500 text-xl" />;
+  }
+  if (link.includes('youtube') || link.includes('youtu.be')) {
+    return <FaYoutube className="text-red-500 text-xl" />;
+  }
+  return <FaLink className="text-blue-400 text-xl" />;
+}
 
 const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coordinates, groupedTracks }, ref) => {
   const { i18n } = useTranslation();
@@ -49,7 +60,7 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
   const displayTitle = i18n.language === 'ja' ? activeProps?.nameJp : activeProps?.name;
   const displayDescription = i18n.language === 'ja' ? activeProps?.descriptionJp : activeProps?.description;
   const displayImages = activeProps?.images ?? [];
-  const displayTweets = activeProps?.tweets ?? [];
+  const displayLinks = activeProps?.links ?? [];
 
   useImperativeHandle(ref, () => ({
     openPopup: () => {
@@ -147,10 +158,10 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
               )}
             </div>
           )}
-          <div>
-            {displayTweets.map((tweet, index) => (
-              <a key={index} href={tweet} target="_blank" rel="noopener noreferrer">
-                View Link {index + 1}
+          <div className="flex flex-row gap-2 justify-center">
+            {displayLinks.map((link, index) => (
+              <a key={index} href={link} target="_blank" rel="noopener noreferrer">
+                {linkText(link)}
               </a>
             ))}
           </div>

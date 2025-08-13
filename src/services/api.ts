@@ -110,23 +110,24 @@ export async function getChamaTrack(): Promise<FeatureCollection<Point, TrackPro
       }
 
       // Descriptions from ExtendedData only
-      const description = dataMap['description'] ? striptags(dataMap['description'], undefined, ' ').trim() : '';
-      const descriptionJp = dataMap['description_jp']
-        ? striptags(dataMap['description_jp'], undefined, ' ').trim()
-        : '';
+      let description = dataMap['description'] ? striptags(dataMap['description'], undefined, ' ').trim() : '';
+      let descriptionJp = dataMap['description_jp'] ? striptags(dataMap['description_jp'], undefined, ' ').trim() : '';
+      const linksFromDescription = Array.from(`${description} ${descriptionJp}`.matchAll(/https?:\/\/\S+/g)).map(
+        (m) => m[0]
+      );
+
+      // remove links from description
+      description = description.replace(/https?:\/\/\S+/g, '').trim();
+      descriptionJp = descriptionJp.replace(/https?:\/\/\S+/g, '').trim();
 
       // Links: space-separated URLs in ExtendedData
       const linksRaw = dataMap['links'] || '';
-      const links = linksRaw
+      let links = linksRaw
         .split(/\s+/)
         .map((s) => s.trim())
         .filter((s) => s.length > 0);
-
-      // Tweets (compat for UI): prefer links; if absent, extract any URLs from descriptions
-      const tweets =
-        links.length > 0
-          ? links
-          : Array.from(`${description} ${descriptionJp}`.matchAll(/https?:\/\/\S+/g)).map((m) => m[0]);
+      // merge and deduplicate
+      links = [...new Set([...links, ...linksFromDescription])];
 
       // Image from gx_media_links
       let images: string[] = [];
@@ -168,7 +169,6 @@ export async function getChamaTrack(): Promise<FeatureCollection<Point, TrackPro
           description,
           descriptionJp,
           links,
-          tweets,
           images,
           icon,
           prefecture: ''
