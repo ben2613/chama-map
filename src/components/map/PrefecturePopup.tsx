@@ -7,6 +7,8 @@ import { TrackProperties, PrefectureProperties } from '@/types/map';
 import type { Feature } from 'geojson';
 import { getGroupingKeyForFeature } from '@/utils/groupTrackFeatures';
 import { useTranslation } from 'react-i18next';
+import { FaXmark } from 'react-icons/fa6';
+import styles from './PrefecturePopup.module.css';
 
 interface PrefecturePopupProps {
   selectedPrefecture: string;
@@ -47,28 +49,40 @@ const PrefecturePopup = ({
     <Popup
       position={center}
       autoPan={true}
+      className={styles['prefecture-popup']}
       ref={(ref) => {
         if (ref) {
           popupRef.current = ref;
         }
       }}
     >
-      <div style={{ minWidth: 200 }}>
-        <div style={{ fontWeight: 'bold', marginBottom: 8, color: '#E74C3C' }}>
-          {i18n.language === 'ja' ? feature?.properties.nam_ja : feature?.properties.nam}
+      <div className={styles['popup-container']}>
+        <div className={styles['prefecture-title']}>
+          <span>{i18n.language === 'ja' ? feature?.properties.nam_ja : feature?.properties.nam}</span>
+          <button
+            className={styles['close-button']}
+            onClick={() => {
+              if (popupRef.current) {
+                popupRef.current.close();
+              }
+            }}
+            aria-label="Close popup"
+          >
+            <FaXmark />
+          </button>
         </div>
         {(groupedList ? groupedList.length > 0 : tracks.length > 0) ? (
-          <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
+          <ul className={styles['locations-list']}>
             {(groupedList ?? tracks.map((f) => [f] as Feature<Point, TrackProperties>[])).map((group, idx: number) => {
               const rep = group[0];
               const label = i18n.language === 'ja' ? rep.properties.nameJp : rep.properties.name;
               const groupCount = group.length;
               const key = getGroupingKeyForFeature(rep, 6);
               return (
-                <li key={`${key}-${idx}`} style={{ marginBottom: 8 }}>
+                <li key={`${key}-${idx}`} className={styles['location-item']}>
                   <a
                     href="#"
-                    style={{ color: '#2980b9', textDecoration: 'underline', cursor: 'pointer' }}
+                    className={styles['location-link']}
                     onClick={(e) => {
                       e.preventDefault();
                       const originalIdx = chamaTrack.features.findIndex((f1) => f1 === rep);
@@ -81,14 +95,14 @@ const PrefecturePopup = ({
                     }}
                   >
                     {label}
-                    {groupCount > 1 ? ` (${groupCount})` : ''}
+                    {groupCount > 1 && <span className={styles['location-count']}> ({groupCount})</span>}
                   </a>
                 </li>
               );
             })}
           </ul>
         ) : (
-          <div style={{ color: '#7F8C8D' }}>{t('map.noTracks')}</div>
+          <div className={styles['no-tracks']}>{t('map.noTracks')}</div>
         )}
       </div>
     </Popup>

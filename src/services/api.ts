@@ -134,6 +134,53 @@ export async function getChamaTrack(): Promise<FeatureCollection<Point, TrackPro
       if (dataMap['gx_media_links']) {
         images = dataMap['gx_media_links'].split(' ').filter(Boolean);
       }
+      // get youtube links from links, including shorts
+      const youtubeLinks = links
+        .filter((link) => link.includes('youtube.com') || link.includes('youtu.be'))
+        .map((link) => {
+          try {
+            const url = new URL(link);
+            if (url.hostname.includes('youtube.com')) {
+              // Handle /watch?v=, /shorts/, and other paths
+              if (url.pathname.startsWith('/watch')) {
+                const v = url.searchParams.get('v');
+                if (v) {
+                  return `https://www.youtube.com/watch?v=${v}`;
+                }
+              } else if (url.pathname.startsWith('/shorts/')) {
+                // /shorts/VIDEOID
+                const videoId = url.pathname.split('/')[2];
+                if (videoId) {
+                  return `https://www.youtube.com/watch?v=${videoId}`;
+                }
+              }
+            } else if (url.hostname.includes('youtu.be')) {
+              // youtu.be short link, keep only the path (video id)
+              const videoId = url.pathname.replace('/', '');
+              if (videoId) {
+                return `https://youtu.be/${videoId}`;
+              }
+            }
+            // fallback: return original link
+            return link;
+          } catch {
+            // fallback: return original link if URL parsing fails
+            return link;
+          }
+        });
+      // grab thumbnail from youtube links (handles watch, youtu.be, and shorts)
+      const youtubeThumbnails = youtubeLinks
+        .map((link) => {
+          let videoId = '';
+          if (link.includes('v=')) {
+            videoId = link.split('v=')[1].split('&')[0];
+          } else if (link.includes('youtu.be/')) {
+            videoId = link.split('youtu.be/')[1].split(/[?&]/)[0];
+          }
+          return videoId ? `https://img.youtube.com/vi/${videoId}/0.jpg` : '';
+        })
+        .filter(Boolean);
+      images = [...images, ...youtubeThumbnails];
 
       // Icon from styleUrl, StyleMap, and Style
       let icon = '';

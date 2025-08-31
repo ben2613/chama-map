@@ -4,7 +4,8 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import type { Feature, Point } from 'geojson';
 import type { TrackProperties } from '@/types/map';
 import { useTranslation } from 'react-i18next';
-import { FaLink, FaTwitter, FaYoutube } from 'react-icons/fa6';
+import { FaLink, FaTwitter, FaYoutube, FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
+import styles from './TrackMarker.module.css';
 
 export interface TrackMarkerHandle {
   openPopup: () => void;
@@ -96,91 +97,99 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
         <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent={false}>
           {displayTitle}
         </Tooltip>
-        <Popup>
-          <div style={{ textAlign: 'center', minWidth: 200 }}>
+        <Popup className={styles['custom-popup']}>
+          <div className={styles['popup-container']}>
             {/* Group navigation if multiple tracks share this marker */}
             {groupedTracks && groupedTracks.length > 1 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                <button onClick={() => setGroupIndex((i) => (i > 0 ? i - 1 : groupedTracks.length - 1))}>Prev</button>
-                <span>
+              <div className={styles['group-navigation']}>
+                <button
+                  className={styles['nav-button']}
+                  onClick={() => setGroupIndex((i) => (i > 0 ? i - 1 : groupedTracks.length - 1))}
+                >
+                  <FaChevronLeft />
+                </button>
+                <span className={styles['group-counter']}>
                   {groupIndex + 1} / {groupedTracks.length}
                 </span>
-                <button onClick={() => setGroupIndex((i) => (i < groupedTracks.length - 1 ? i + 1 : 0))}>Next</button>
+                <button
+                  className={styles['nav-button']}
+                  onClick={() => setGroupIndex((i) => (i < groupedTracks.length - 1 ? i + 1 : 0))}
+                >
+                  <FaChevronRight />
+                </button>
               </div>
             )}
-            <div style={{ fontWeight: 'bold', marginBottom: 8 }}>
+
+            {/* Title section */}
+            <div className={styles['title-section']}>
               {displayTitle && (
-                <a
-                  className="underline !text-red-600 hover:!text-red-800 visited:!text-yellow-600"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={displayLink}
-                >
+                <a className={styles['location-title']} target="_blank" rel="noopener noreferrer" href={displayLink}>
                   {displayTitle}
                 </a>
               )}
             </div>
-            {displayDescription && <div style={{ marginBottom: 8 }}>{displayDescription}</div>}
+
+            {/* Description */}
+            {displayDescription && <div className={styles.description}>{displayDescription}</div>}
+
+            {/* Image gallery */}
             {displayImages && displayImages.length > 0 && (
-              <div
-                style={{
-                  position: 'relative',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: 8
-                }}
-              >
+              <div className={styles['image-gallery']}>
                 {displayImages.length > 1 && (
                   <button
-                    style={{
-                      position: 'absolute',
-                      left: 0,
-                      zIndex: 2,
-                      background: 'rgba(255,255,255,0.7)',
-                      border: 'none',
-                      cursor: 'pointer',
-                      height: '100%'
-                    }}
+                    className={`${styles['gallery-nav']} ${styles['prev-gallery']}`}
                     onClick={handlePrev}
                     disabled={imgIndex === 0}
                     aria-label="Previous image"
                   >
-                    &#8592;
+                    <FaChevronLeft />
                   </button>
                 )}
-                <img
-                  src={process.env.NEXT_PUBLIC_CORS_PROXY + displayImages[imgIndex]}
-                  alt={displayTitle}
-                  style={{ width: '100%', maxWidth: 250, borderRadius: 8, display: 'block' }}
-                />
+                <div className={styles['image-container']}>
+                  <img
+                    src={
+                      displayImages[imgIndex].includes('youtube.com') || displayImages[imgIndex].includes('youtu.be')
+                        ? displayImages[imgIndex]
+                        : process.env.NEXT_PUBLIC_CORS_PROXY + displayImages[imgIndex]
+                    }
+                    alt={displayTitle}
+                    className={styles['gallery-image']}
+                  />
+                  {displayImages.length > 1 && (
+                    <div className={styles['image-counter']}>
+                      {imgIndex + 1} / {displayImages.length}
+                    </div>
+                  )}
+                </div>
                 {displayImages.length > 1 && (
                   <button
-                    style={{
-                      position: 'absolute',
-                      right: 0,
-                      zIndex: 2,
-                      background: 'rgba(255,255,255,0.7)',
-                      border: 'none',
-                      cursor: 'pointer',
-                      height: '100%'
-                    }}
+                    className={`${styles['gallery-nav']} ${styles['next-gallery']}`}
                     onClick={handleNext}
                     disabled={imgIndex === displayImages.length - 1}
                     aria-label="Next image"
                   >
-                    &#8594;
+                    <FaChevronRight />
                   </button>
                 )}
               </div>
             )}
-            <div className="flex flex-row gap-2 justify-center">
-              {displayLinks.map((link, index) => (
-                <a key={index} href={link} target="_blank" rel="noopener noreferrer">
-                  {linkText(link)}
-                </a>
-              ))}
-            </div>
+
+            {/* Social links */}
+            {displayLinks.length > 0 && (
+              <div className={styles['social-links']}>
+                {displayLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles['social-link']}
+                  >
+                    {linkText(link)}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </Popup>
       </Marker>
