@@ -88,7 +88,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
           mapRef={mapRef}
         />
 
-        {i18n.language === 'en' ? (
+        {i18n.language.startsWith('en') ? (
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
