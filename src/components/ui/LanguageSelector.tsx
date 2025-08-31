@@ -2,13 +2,48 @@
 
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
 
 export default function LanguageSelector() {
   const { i18n } = useTranslation();
-  const isEnglish = i18n.language.includes('en');
+  const [isReady, setIsReady] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<string>('en');
+
+  useEffect(() => {
+    const updateLanguage = () => {
+      setCurrentLanguage(i18n.language);
+    };
+
+    if (i18n.isInitialized) {
+      setIsReady(true);
+      updateLanguage();
+    } else {
+      const handleInitialized = () => {
+        setIsReady(true);
+        updateLanguage();
+      };
+      i18n.on('initialized', handleInitialized);
+      i18n.on('languageChanged', updateLanguage);
+      
+      return () => {
+        i18n.off('initialized', handleInitialized);
+        i18n.off('languageChanged', updateLanguage);
+      };
+    }
+  }, [i18n]);
+
+  // Don't render until i18n is ready
+  if (!isReady) {
+    return null;
+  }
+
+  // More robust language detection
+  const isEnglish = currentLanguage.startsWith('en');
+  const isJapanese = currentLanguage.startsWith('ja');
 
   const toggleLanguage = () => {
-    i18n.changeLanguage(isEnglish ? 'ja' : 'en');
+    const newLanguage = isEnglish ? 'ja' : 'en';
+    i18n.changeLanguage(newLanguage);
   };
 
   return (
@@ -24,11 +59,7 @@ export default function LanguageSelector() {
         rotate: { type: 'spring', duration: 0.5 }
       }}
     >
-      <div
-        className="flex items-center text-lg font-bold"
-        // animate={{ rotate: isEnglish ? 0 : 180 }}
-        // transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      >
+      <div className="flex items-center text-lg font-bold">
         <motion.span
           className={`${isEnglish ? 'text-red-500' : 'text-yellow-400'}`}
           animate={{
