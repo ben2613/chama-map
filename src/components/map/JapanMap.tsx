@@ -125,6 +125,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
               icon={feature.properties.icon}
               groupedKey={key}
               groupedTracks={group}
+              prefecture={feature.properties.prefecture}
             />
           );
         })}
