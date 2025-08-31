@@ -39,7 +39,6 @@ export default function LanguageSelector() {
 
   // More robust language detection
   const isEnglish = currentLanguage.startsWith('en');
-  const isJapanese = currentLanguage.startsWith('ja');
 
   const toggleLanguage = () => {
     const newLanguage = isEnglish ? 'ja' : 'en';
