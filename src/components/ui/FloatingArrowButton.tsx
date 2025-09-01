@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaInfo } from 'react-icons/fa6';
 
 interface FloatingArrowButtonProps {
   open: boolean;
@@ -15,7 +16,9 @@ const FloatingArrowButton: React.FC<FloatingArrowButtonProps> = ({ open, onClick
     onClick={onClick}
     aria-label={open ? 'Hide info' : 'Show info'}
   >
-    <span className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`}>▼</span>
+    <span className={`text-gray-500 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}>
+      <FaInfo />
+    </span>
   </button>
 );
 
