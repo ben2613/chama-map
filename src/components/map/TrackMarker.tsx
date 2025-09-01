@@ -46,7 +46,7 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
     const markerIcon = icon
       ? new L.Icon({
           iconUrl: icon,
-          shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+          // shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
           iconSize: [28, 28],
           iconAnchor: [14, 28],
           popupAnchor: [0, -35],
@@ -65,7 +65,7 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
     const displayImages = activeProps?.images ?? [];
     const displayLinks = activeProps?.links ?? [];
     const displayLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      `${prefecture} ${displayTitle}`
+      `${prefecture?.replace('Tokyo To', 'Tokyo')} ${displayTitle}`
     )}`;
 
     useImperativeHandle(ref, () => ({
