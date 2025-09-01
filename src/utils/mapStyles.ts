@@ -27,6 +27,6 @@ export const getFeatureStyle = (
 export const getHoverStyle = () => ({
   weight: 5,
   color: '#FF6F61',
-  fillOpacity: 0.9,
+  fillOpacity: 0.2,
   dashArray: ''
 });
