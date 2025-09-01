@@ -23,11 +23,11 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
           exit="exit"
           variants={panelVariants}
           transition={{ duration: 0.4, ease: 'easeInOut' }}
-          className={`fixed top-45 left-2 z-[10000] max-w-lg opacity-100 group ${className || ''}`}
+          className={`fixed top-20 left-5 z-[10000] max-w-lg opacity-100 group ${className || ''}`}
           style={{ pointerEvents: 'auto' }}
         >
           <div
-            className="overflow-hidden bg-white/95 rounded-xl shadow-xl border border-gray-200 px-6 py-4 transition-all duration-300 max-h-[600px] opacity-100"
+            className="overflow-hidden bg-white/95 rounded-xl shadow-xl border-2 border-[#87cefa] px-6 py-4 transition-all duration-300 max-h-[600px] opacity-100"
             style={{ minWidth: 280 }}
           >
             <div className="text-center mb-4">
