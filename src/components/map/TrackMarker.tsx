@@ -40,7 +40,7 @@ function linkText(link: string) {
 }
 
 const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
-  ({ icon, coordinates, groupedTracks, prefecture }, ref) => {
+  ({ icon, coordinates, groupedTracks }, ref) => {
     const { i18n } = useTranslation();
 
     const markerIcon = icon
