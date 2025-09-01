@@ -64,9 +64,7 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
     const displayDescription = i18n.language === 'ja' ? activeProps?.descriptionJp : activeProps?.description;
     const displayImages = activeProps?.images ?? [];
     const displayLinks = activeProps?.links ?? [];
-    const displayLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      `${prefecture?.replace('Tokyo To', 'Tokyo')} ${displayTitle}`
-    )}`;
+    const displayLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayTitle || '')}`;
 
     useImperativeHandle(ref, () => ({
       openPopup: () => {
