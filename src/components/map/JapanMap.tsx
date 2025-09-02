@@ -15,9 +15,8 @@ import { createPrefectureHandlers } from '@/utils/mapPrefectureUtils';
 // import '@/lib/SmoothWheelZoom';
 import { groupMapByNameAndCoordinates } from '@/utils/groupTrackFeatures';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/lib/store';
-import { selectMarkersOverPrefecture } from '@/lib/slices/prefectureHoverSlice';
 
 // Fix for default markers in React Leaflet
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,7 +40,6 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
   const { markerRefs, popupRef, mapRef, isPopupOpening, registerMarkerRef } = useMapRefs();
   const { i18n } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
-  const markersOverPrefecture = useSelector(selectMarkersOverPrefecture);
 
   const groupedChamaTracks = useMemo(() => {
     if (!chamaTrack) return {};
@@ -72,8 +70,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
     },
     isPopupOpening,
     chamaTrack,
-    dispatch,
-    markersOverPrefecture
+    dispatch
   );
 
   return (

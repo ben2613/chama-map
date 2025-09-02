@@ -8,7 +8,7 @@ import { FaLink, FaTwitter, FaYoutube, FaChevronLeft, FaChevronRight } from 'rea
 import styles from './TrackMarker.module.css';
 import { AppDispatch } from '@/lib/store';
 import { useDispatch } from 'react-redux';
-import { addMarkerOverPrefecture, removeMarkerOverPrefecture } from '@/lib/slices/prefectureHoverSlice';
+import { setMarkerOverPrefecture } from '@/lib/slices/prefectureHoverSlice';
 
 export interface TrackMarkerHandle {
   openPopup: () => void;
@@ -98,13 +98,13 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
     const handleMouseOver = () => {
       if (prefecture) {
         console.log('Track level: adding marker over prefecture:', prefecture);
-        dispatch(addMarkerOverPrefecture(prefecture));
+        dispatch(setMarkerOverPrefecture(prefecture));
       }
     };
     const handleMouseOut = () => {
       if (prefecture) {
         console.log('Track level: removing marker over prefecture:', prefecture);
-        dispatch(removeMarkerOverPrefecture(prefecture));
+        dispatch(setMarkerOverPrefecture(null));
       }
     };
 

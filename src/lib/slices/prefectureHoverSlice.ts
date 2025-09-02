@@ -2,12 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface PrefectureHoverState {
   hoveredPrefecture: string | null;
-  markersOverPrefecture: Set<string>;
+  markerOverPrefecture: string | null; // Changed from Set<string> to string | null
 }
 
 const initialState: PrefectureHoverState = {
   hoveredPrefecture: null,
-  markersOverPrefecture: new Set()
+  markerOverPrefecture: null
 };
 
 export const prefectureHoverSlice = createSlice({
@@ -17,26 +17,22 @@ export const prefectureHoverSlice = createSlice({
     setPrefectureHovered: (state, action: PayloadAction<string | null>) => {
       state.hoveredPrefecture = action.payload;
     },
-    addMarkerOverPrefecture: (state, action: PayloadAction<string>) => {
-      state.markersOverPrefecture.add(action.payload);
-    },
-    removeMarkerOverPrefecture: (state, action: PayloadAction<string>) => {
-      state.markersOverPrefecture.delete(action.payload);
+    setMarkerOverPrefecture: (state, action: PayloadAction<string | null>) => {
+      state.markerOverPrefecture = action.payload;
     }
   }
 });
 
-export const { setPrefectureHovered, addMarkerOverPrefecture, removeMarkerOverPrefecture } =
-  prefectureHoverSlice.actions;
+export const { setPrefectureHovered, setMarkerOverPrefecture } = prefectureHoverSlice.actions;
 
 // Selectors
 export const selectHoveredPrefecture = (state: { prefectureHover: PrefectureHoverState }) =>
   state.prefectureHover.hoveredPrefecture;
 
-export const selectMarkersOverPrefecture = (state: { prefectureHover: PrefectureHoverState }) =>
-  state.prefectureHover.markersOverPrefecture;
+export const selectMarkerOverPrefecture = (state: { prefectureHover: PrefectureHoverState }) =>
+  state.prefectureHover.markerOverPrefecture;
 
 export const selectIsPrefectureHovered = (prefecture: string) => (state: { prefectureHover: PrefectureHoverState }) =>
-  state.prefectureHover.hoveredPrefecture === prefecture || state.prefectureHover.markersOverPrefecture.has(prefecture);
+  state.prefectureHover.hoveredPrefecture === prefecture || state.prefectureHover.markerOverPrefecture === prefecture;
 
 export default prefectureHoverSlice.reducer;
