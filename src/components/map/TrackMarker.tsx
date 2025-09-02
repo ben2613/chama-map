@@ -6,6 +6,9 @@ import type { TrackProperties } from '@/types/map';
 import { useTranslation } from 'react-i18next';
 import { FaLink, FaTwitter, FaYoutube, FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import styles from './TrackMarker.module.css';
+import { AppDispatch } from '@/lib/store';
+import { useDispatch } from 'react-redux';
+import { addMarkerOverPrefecture, removeMarkerOverPrefecture } from '@/lib/slices/prefectureHoverSlice';
 
 export interface TrackMarkerHandle {
   openPopup: () => void;
@@ -40,8 +43,9 @@ function linkText(link: string) {
 }
 
 const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
-  ({ icon, coordinates, groupedTracks }, ref) => {
+  ({ icon, coordinates, groupedTracks, prefecture }, ref) => {
     const { i18n } = useTranslation();
+    const dispatch = useDispatch<AppDispatch>();
 
     const markerIcon = icon
       ? new L.Icon({
@@ -90,8 +94,31 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
       setImgIndex(0);
     }, [groupIndex]);
 
+    // Handlers for prefecture hover
+    const handleMouseOver = () => {
+      if (prefecture) {
+        console.log('Track level: adding marker over prefecture:', prefecture);
+        dispatch(addMarkerOverPrefecture(prefecture));
+      }
+    };
+    const handleMouseOut = () => {
+      if (prefecture) {
+        console.log('Track level: removing marker over prefecture:', prefecture);
+        dispatch(removeMarkerOverPrefecture(prefecture));
+      }
+    };
+
     return (
-      <Marker position={[coordinates[1], coordinates[0]]} icon={markerIcon} ref={markerRef}>
+      <Marker
+        riseOnHover
+        position={[coordinates[1], coordinates[0]]}
+        icon={markerIcon}
+        ref={markerRef}
+        eventHandlers={{
+          mouseover: handleMouseOver,
+          mouseout: handleMouseOut
+        }}
+      >
         <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent={false}>
           {displayTitle}
         </Tooltip>

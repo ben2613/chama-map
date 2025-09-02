@@ -3,6 +3,8 @@ import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Point, Position } from 'geojson';
 import L from 'leaflet';
 import { getFeatureStyle, getHoverStyle } from './mapStyles';
+import { addMarkerOverPrefecture, removeMarkerOverPrefecture } from '@/lib/slices/prefectureHoverSlice';
+import { AppDispatch } from '@/lib/store';
 
 export function getPrefectureForPoint(
   point: Position,
@@ -39,7 +41,9 @@ function getDistance(point: Position, center: Position) {
 export const createPrefectureHandlers = (
   setSelectedPrefecture: (name: string) => void,
   isPopupOpening: React.RefObject<boolean>,
-  chamaTrack?: FeatureCollection<Point, TrackProperties>
+  chamaTrack?: FeatureCollection<Point, TrackProperties>,
+  dispatch?: AppDispatch,
+  markersOverPrefecture?: Set<string>
 ) => {
   return (feature: Feature<Geometry, PrefectureProperties>, layer: L.Layer) => {
     const prefectureName = feature.properties.nam;
@@ -57,12 +61,25 @@ export const createPrefectureHandlers = (
       },
       mouseover: (e: L.LeafletMouseEvent) => {
         const layer = e.target as L.Path;
+        if (dispatch) {
+          console.log('Prefecture level: adding marker over prefecture:', prefectureName);
+          dispatch(addMarkerOverPrefecture(prefectureName));
+        }
         layer.setStyle(getHoverStyle());
         layer.bringToFront();
       },
       mouseout: (e: L.LeafletMouseEvent) => {
         const layer = e.target as L.Path;
-        layer.setStyle(getFeatureStyle(feature, chamaTrack));
+        if (dispatch && markersOverPrefecture) {
+          const hasMarkersOver = markersOverPrefecture.has(prefectureName);
+          if (!hasMarkersOver) {
+            console.log('Prefecture level: removing marker over prefecture:', prefectureName);
+            dispatch(removeMarkerOverPrefecture(prefectureName));
+            layer.setStyle(getFeatureStyle(feature, chamaTrack));
+          }
+        } else {
+          layer.setStyle(getFeatureStyle(feature, chamaTrack));
+        }
       }
     });
   };

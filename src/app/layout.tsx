@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
 import TranslationProvider from '@/components/providers/TranslationProvider';
+import ReduxProvider from '@/components/providers/ReduxProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -46,7 +47,9 @@ export default function RootLayout({
         <DynamicMetadata />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <TranslationProvider>{children}</TranslationProvider>
+        <TranslationProvider>
+          <ReduxProvider>{children}</ReduxProvider>
+        </TranslationProvider>
       </body>
     </html>
   );

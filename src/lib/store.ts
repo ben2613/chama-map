@@ -1,8 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { prefectureHoverSlice } from './slices/prefectureHoverSlice';
+import { enableMapSet } from 'immer';
 
+enableMapSet();
 export const makeStore = () => {
   return configureStore({
-    reducer: {}
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: false
+      }),
+    reducer: {
+      prefectureHover: prefectureHoverSlice.reducer
+    }
   });
 };
 
