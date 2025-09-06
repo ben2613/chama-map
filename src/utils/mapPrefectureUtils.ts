@@ -3,9 +3,6 @@ import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import type { Feature, FeatureCollection, Geometry, MultiPolygon, Point, Position } from 'geojson';
 import L from 'leaflet';
 import { getFeatureStyle, getHoverStyle } from './mapStyles';
-import { setPrefectureHovered } from '@/lib/slices/prefectureHoverSlice';
-import { AppDispatch } from '@/lib/store';
-import { store } from '@/lib/store'; // We'll need to export the store instance
 
 export function getPrefectureForPoint(
   point: Position,
@@ -42,8 +39,7 @@ function getDistance(point: Position, center: Position) {
 export const createPrefectureHandlers = (
   setSelectedPrefecture: (name: string) => void,
   isPopupOpening: React.RefObject<boolean>,
-  chamaTrack?: FeatureCollection<Point, TrackProperties>,
-  dispatch?: AppDispatch
+  chamaTrack?: FeatureCollection<Point, TrackProperties>
 ) => {
   return (feature: Feature<Geometry, PrefectureProperties>, layer: L.Layer) => {
     const prefectureName = feature.properties.nam;
@@ -61,33 +57,12 @@ export const createPrefectureHandlers = (
       },
       mouseover: (e: L.LeafletMouseEvent) => {
         const layer = e.target as L.Path;
-        if (dispatch) {
-          console.log('Prefecture level: set prefecture hover:', prefectureName);
-          dispatch(setPrefectureHovered(prefectureName));
-        }
         layer.setStyle(getHoverStyle());
         layer.bringToFront();
       },
       mouseout: (e: L.LeafletMouseEvent) => {
-        setTimeout(() => {
-          const layer = e.target as L.Path;
-          // Get current state directly from store
-          const currentState = store.getState();
-          const markerOverPrefecture = currentState.prefectureHover.markerOverPrefecture;
-          if (dispatch && markerOverPrefecture) {
-            console.log('Prefecture level: has marker over:', markerOverPrefecture);
-            const hasMarkerOver = markerOverPrefecture === prefectureName;
-            if (!hasMarkerOver) {
-              console.log('Prefecture level: reset prefecture hover:', prefectureName);
-              dispatch(setPrefectureHovered(null));
-              layer.setStyle(getFeatureStyle(feature, chamaTrack));
-            } else {
-              layer.setStyle(getHoverStyle());
-            }
-          } else {
-            layer.setStyle(getFeatureStyle(feature, chamaTrack));
-          }
-        }, 50);
+        const layer = e.target as L.Path;
+        layer.setStyle(getFeatureStyle(feature, chamaTrack));
       }
     });
   };
