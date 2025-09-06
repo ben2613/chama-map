@@ -74,6 +74,7 @@ const PrefecturePopup = ({
         {(groupedList ? groupedList.length > 0 : tracks.length > 0) ? (
           <ul className={styles['locations-list']}>
             {(groupedList ?? tracks.map((f) => [f] as Feature<Point, TrackProperties>[])).map((group, idx: number) => {
+              const icon = group[0].properties.icon || null;
               const rep = group[0];
               const label = i18n.language === 'ja' ? rep.properties.nameJp : rep.properties.name;
               const groupCount = group.length;
@@ -94,6 +95,12 @@ const PrefecturePopup = ({
                       }
                     }}
                   >
+                    {icon && (
+                      <>
+                        <img src={icon} className={'inline-block h-[1em] w-[1em] mt-[-1px] object-contain'} />
+                        &nbsp;
+                      </>
+                    )}
                     {label}
                     {groupCount > 1 && <span className={styles['location-count']}> ({groupCount})</span>}
                   </a>
