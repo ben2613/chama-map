@@ -91,7 +91,7 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
     }, [groupIndex]);
 
     return (
-      <Marker position={[coordinates[1], coordinates[0]]} icon={markerIcon} ref={markerRef}>
+      <Marker riseOnHover position={[coordinates[1], coordinates[0]]} icon={markerIcon} ref={markerRef}>
         <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent={false}>
           {displayTitle}
         </Tooltip>
