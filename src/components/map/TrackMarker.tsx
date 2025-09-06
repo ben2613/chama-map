@@ -96,27 +96,6 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
       </Tooltip>
       <Popup className={styles['custom-popup']}>
         <div className={styles['popup-container']}>
-          {/* Group navigation if multiple tracks share this marker */}
-          {groupedTracks && groupedTracks.length > 1 && (
-            <div className={styles['group-navigation']}>
-              <button
-                className={styles['nav-button']}
-                onClick={() => setGroupIndex((i) => (i > 0 ? i - 1 : groupedTracks.length - 1))}
-              >
-                <FaChevronLeft />
-              </button>
-              <span className={styles['group-counter']}>
-                {groupIndex + 1} / {groupedTracks.length}
-              </span>
-              <button
-                className={styles['nav-button']}
-                onClick={() => setGroupIndex((i) => (i < groupedTracks.length - 1 ? i + 1 : 0))}
-              >
-                <FaChevronRight />
-              </button>
-            </div>
-          )}
-
           {/* Title section */}
           <div className={styles['title-section']}>
             {displayTitle && (
@@ -179,6 +158,27 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
                   {linkText(link)}
                 </a>
               ))}
+            </div>
+          )}
+
+          {/* Group navigation if multiple tracks share this marker */}
+          {groupedTracks && groupedTracks.length > 1 && (
+            <div className={styles['group-navigation']}>
+              <button
+                className={styles['nav-button']}
+                onClick={() => setGroupIndex((i) => (i > 0 ? i - 1 : groupedTracks.length - 1))}
+              >
+                <FaChevronLeft />
+              </button>
+              <span className={styles['group-counter']}>
+                {groupIndex + 1} / {groupedTracks.length}
+              </span>
+              <button
+                className={styles['nav-button']}
+                onClick={() => setGroupIndex((i) => (i < groupedTracks.length - 1 ? i + 1 : 0))}
+              >
+                <FaChevronRight />
+              </button>
             </div>
           )}
         </div>
