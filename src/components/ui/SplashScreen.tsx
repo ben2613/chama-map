@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import styles from './SplashScreen.module.css';
 
 const SplashScreen: React.FC = () => {
   const { t } = useTranslation();
@@ -20,7 +22,15 @@ const SplashScreen: React.FC = () => {
         transition={{ duration: 0.7, delay: 0.1, type: 'spring' }}
         className="flex flex-col items-center"
       >
-        <span className="text-5xl md:text-7xl mb-4 animate-bounce">🗾</span>
+        <div className={styles.container}>
+          <Image
+            src={process.env.NEXT_PUBLIC_BASE_PATH + 'chamapoint.png'}
+            className="rounded-full"
+            alt="Chama"
+            width={100}
+            height={100}
+          />
+        </div>
         <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-2 drop-shadow-lg">{title}</h1>
         <p className="text-lg text-gray-600 mb-4">{description}</p>
       </motion.div>
