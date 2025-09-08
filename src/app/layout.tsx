@@ -18,10 +18,10 @@ export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
   title: 'Haachama Radar',
   description: 'Find where the Haachama are!',
-  manifest: '/chama-map/manifest.json',
+  manifest: `${process.env.NEXT_PUBLIC_BASE_PATH}manifest.json`,
   icons: {
-    icon: '/chama-map/favicon.ico',
-    apple: '/chama-map/apple-icon.png'
+    icon: `${process.env.NEXT_PUBLIC_BASE_PATH}favicon.ico`,
+    apple: `${process.env.NEXT_PUBLIC_BASE_PATH}apple-icon.png`
   },
   openGraph: {
     title: 'Haachama Radar',
