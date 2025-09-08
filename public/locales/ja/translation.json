@@ -25,6 +25,9 @@
   },
   "meta": {
     "title": "はあちゃまレーダー",
-    "description": "はあちゃまがどこにいるか見つけよう！"
+    "description": "はあちゃまどこ？"
+  },
+  "infoPanel": {
+    "description": "はあちゃまの行った場所を探せるマップ"
   }
 }
