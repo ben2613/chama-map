@@ -58,6 +58,7 @@ const PrefecturePopup = ({
     >
       <div className={styles['popup-container']}>
         <div className={styles['prefecture-title']}>
+          <span />
           <span>{i18n.language === 'ja' ? feature?.properties.nam_ja : feature?.properties.nam}</span>
           <button
             className={styles['close-button']}
