@@ -6,6 +6,7 @@ import type { TrackProperties } from '@/types/map';
 import { useTranslation } from 'react-i18next';
 import { FaLink, FaTwitter, FaYoutube, FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import styles from './TrackMarker.module.css';
+import Image from '@/components/ui/Image';
 
 export interface TrackMarkerHandle {
   openPopup: () => void;
@@ -122,7 +123,7 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
                 </button>
               )}
               <div className={styles['image-container']}>
-                <img
+                <Image
                   src={
                     displayImages[imgIndex].includes('youtube.com') ||
                     displayImages[imgIndex].includes('youtu.be') ||
