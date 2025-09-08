@@ -124,7 +124,9 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
               <div className={styles['image-container']}>
                 <img
                   src={
-                    displayImages[imgIndex].includes('youtube.com') || displayImages[imgIndex].includes('youtu.be')
+                    displayImages[imgIndex].includes('youtube.com') ||
+                    displayImages[imgIndex].includes('youtu.be') ||
+                    displayImages[imgIndex].includes('fxtwitter.com')
                       ? displayImages[imgIndex]
                       : process.env.NEXT_PUBLIC_CORS_PROXY + displayImages[imgIndex]
                   }

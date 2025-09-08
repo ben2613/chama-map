@@ -182,6 +182,15 @@ export async function getChamaTrack(): Promise<FeatureCollection<Point, TrackPro
         .filter(Boolean);
       images = [...images, ...youtubeThumbnails];
 
+      // grab twitter embed image with fxembed (handle twitter.com and x.com)
+      const twitterLinks = links.filter((link) => link.includes('twitter.com') || link.includes('x.com'));
+      const twitterImages = twitterLinks.map((link) => {
+        const url = new URL(link);
+        // replace host with https://d.fxtwitter.com
+        return `https://d.fxtwitter.com${url.pathname}`;
+      });
+      images = [...images, ...twitterImages];
+
       // Icon from styleUrl, StyleMap, and Style
       let icon = '';
       const styleUrl = placemark.getElementsByTagName('styleUrl')[0]?.textContent || '';
