@@ -1,6 +1,12 @@
 # Haachama Radar
 
-Find where the Haachama are! 🗾
+Track the Chama are! 🗾
+
+## Disclaimer
+```
+This project and README contains code and text AI generated.
+Please assume they are misleading or features are not implemented.
+```
 
 ## Dynamic Meta Tags for Static Site Generation
 
