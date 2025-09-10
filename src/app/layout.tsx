@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
 import TranslationProvider from '@/components/providers/TranslationProvider';
+import translation from '@/../public/locales/en/translation.json';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -16,22 +17,22 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
-  title: "Haachama's Journey",
-  description: 'Track the Chama!',
+  title: translation.meta.title,
+  description: translation.meta.description,
   manifest: `${process.env.NEXT_PUBLIC_BASE_PATH}manifest.json`,
   icons: {
     icon: `${process.env.NEXT_PUBLIC_BASE_PATH}favicon.ico`,
     apple: `${process.env.NEXT_PUBLIC_BASE_PATH}apple-icon.png`
   },
   openGraph: {
-    title: "Haachama's Journey",
-    description: 'Track the Chama!',
+    title: translation.meta.title,
+    description: translation.meta.description,
     type: 'website'
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Haachama's Journey",
-    description: 'Track the Chama!'
+    title: translation.meta.title,
+    description: translation.meta.description
   }
 };
 

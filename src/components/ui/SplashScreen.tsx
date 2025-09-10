@@ -31,7 +31,7 @@ const SplashScreen: React.FC = () => {
             height={100}
           />
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-2 drop-shadow-lg">{title}</h1>
+        <h1 className="text-xl md:text-4xl font-bold text-gray-800 mb-2 drop-shadow-lg">{title}</h1>
         <p className="text-lg text-gray-600 mb-4">{description}</p>
       </motion.div>
     </motion.div>
