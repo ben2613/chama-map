@@ -14,7 +14,7 @@ const SplashScreen: React.FC = () => {
     <motion.div
       initial={{ opacity: 1, scale: 1 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      exit={{ opacity: 0, scale: 1.05 }}
       transition={{ duration: 0.6, ease: 'easeInOut' }}
       className="h-full fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-blue-500 relative overflow-hidden"
     >
