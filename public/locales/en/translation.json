@@ -6,7 +6,7 @@
     "open": "Open"
   },
   "map": {
-    "title": "Haachama's Travel Map",
+    "title": "Akai Travel Map",
     "description": "Explore Haachama's journey across Japan",
     "prefecture": "Prefecture",
     "location": "Location",
@@ -24,7 +24,7 @@
     "switchTo": "Switch to {{language}}"
   },
   "meta": {
-    "title": "Haachama's Journey: Chama Travel Log",
+    "title": "Akai Journey: Chama Travel Log",
     "description": "Track the Chama!"
   },
   "infoPanel": {
