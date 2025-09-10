@@ -11,7 +11,7 @@
     "prefecture": "Prefecture",
     "location": "Location",
     "date": "Date",
-    "noTracks": "No Haachama tracks found for this prefecture"
+    "noTracks": "No Haachama tracks found in this prefecture"
   },
   "navigation": {
     "home": "Home",
@@ -24,8 +24,8 @@
     "switchTo": "Switch to {{language}}"
   },
   "meta": {
-    "title": "Haachama Radar",
-    "description": "Where's Haachama?"
+    "title": "Haachama's Journey",
+    "description": "Track the Chama"
   },
   "infoPanel": {
     "description": "Interactive map for finding where Chama has been!"

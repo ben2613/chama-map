@@ -1,7 +1,7 @@
 {
-  "name": "Haachama Radar",
-  "short_name": "Haachama Radar",
-  "description": "Find where the Haachama are!",
+  "name": "Haachama's Journey",
+  "short_name": "Haachama's Journey",
+  "description": "Track the Chama!",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

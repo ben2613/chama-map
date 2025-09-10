@@ -24,8 +24,8 @@
     "switchTo": "{{language}}に切り替え"
   },
   "meta": {
-    "title": "はあちゃまレーダー",
-    "description": "はあちゃまどこ？"
+    "title": "赤井旅ログ",
+    "description": "ちゃまどこ？"
   },
   "infoPanel": {
     "description": "はあちゃまの行った場所を探せるマップ"

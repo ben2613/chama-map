@@ -16,22 +16,22 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
-  title: 'Haachama Radar',
-  description: 'Find where the Haachama are!',
+  title: "Haachama's Journey",
+  description: 'Track the Chama!',
   manifest: `${process.env.NEXT_PUBLIC_BASE_PATH}manifest.json`,
   icons: {
     icon: `${process.env.NEXT_PUBLIC_BASE_PATH}favicon.ico`,
     apple: `${process.env.NEXT_PUBLIC_BASE_PATH}apple-icon.png`
   },
   openGraph: {
-    title: 'Haachama Radar',
-    description: 'Find where the Haachama are!',
+    title: "Haachama's Journey",
+    description: 'Track the Chama!',
     type: 'website'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Haachama Radar',
-    description: 'Find where the Haachama are!'
+    title: "Haachama's Journey",
+    description: 'Track the Chama!'
   }
 };
 
