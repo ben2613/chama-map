@@ -24,8 +24,8 @@
     "switchTo": "Switch to {{language}}"
   },
   "meta": {
-    "title": "Akai Journey: Chama Travel Log",
-    "description": "Track the Chama!"
+    "title": "Akai Journey",
+    "description": "Chama Travel Log"
   },
   "infoPanel": {
     "description": "Interactive map for finding where Chama has been!"
