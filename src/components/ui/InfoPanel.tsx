@@ -1,6 +1,7 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { FaGithub, FaTwitter } from 'react-icons/fa6';
 
 interface InfoPanelProps {
   open: boolean;
@@ -37,8 +38,20 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
               <p className="text-base text-gray-600">{t('infoPanel.description')}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-1">Created by ♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡</h3>
-              <span className="text-xs text-gray-500">Suggestion / Issue report: Pending</span>
+              <h3 className="text-sm font-medium text-gray-700 mb-1">{t('infoPanel.createdBy')}</h3>
+              <div className="mt-2 text-xs text-gray-500">
+                {t('infoPanel.comments')}
+                <div>
+                  <a href="https://x.com/intent/post?&text=%23AkaiJourney" target="_blank" rel="noopener noreferrer">
+                    <FaTwitter className="inline-block text-blue-500" />
+                    <span className="ml-1 mr-2 text-blue-500">#AkaiJourney</span>
+                  </a>
+                  <a href="https://github.com/ben2613/chama-map/issues" target="_blank" rel="noopener noreferrer">
+                    <FaGithub className="inline-block text-gray-500" />
+                    <span className="ml-1 text-gray-500">Github Issues</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

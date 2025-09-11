@@ -28,6 +28,8 @@
     "description": "Chama Travel Log"
   },
   "infoPanel": {
-    "description": "Interactive map for finding where Chama has been!"
+    "description": "Interactive map for finding where Chama has been!",
+    "createdBy": "Created by ♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡",
+    "comments": "Comments / Issue report:"
   }
 }

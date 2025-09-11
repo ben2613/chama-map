@@ -28,6 +28,8 @@
     "description": "ちゃまの足跡"
   },
   "infoPanel": {
-    "description": "はあちゃまの行った場所を探せるマップ"
+    "description": "はあちゃまの行った場所を探せるマップ",
+    "createdBy": "♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡ による制作",
+    "comments": "コメント / 不具合報告:"
   }
 }
