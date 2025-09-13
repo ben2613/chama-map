@@ -59,7 +59,7 @@ export default function Guideline() {
 
               <div className="px-6 flex items-center justify-center">
                 <div className="text-gray-600 text-center max-h-[50vh] overflow-y-auto">
-                  <p className="text-lg text-left">
+                  <p className="text-left">
                     {
                       <Trans i18nKey="guideline.body.p1">
                         Text
@@ -85,8 +85,8 @@ export default function Guideline() {
                     }
                   </p>
                   <br />
-                  <p className="text-lg text-left">{<Trans i18nKey="guideline.body.p2" />}</p>
-                  <ul className="text-lg text-left list-disc list-inside">
+                  <p className="text-left">{<Trans i18nKey="guideline.body.p2" />}</p>
+                  <ul className="text-left list-disc list-inside">
                     <li>{t('guideline.body.li1')}</li>
                     <li>{t('guideline.body.li2')}</li>
                   </ul>
@@ -103,14 +103,14 @@ export default function Guideline() {
                   <>
                     <button
                       onClick={handleDecline}
-                      className="relative group px-6 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-400 transition-colors duration-200 font-medium shadow-sm"
+                      className="text-sm relative group px-6 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-400 transition-colors duration-200 font-medium shadow-sm"
                     >
                       {t('guideline.decline')}
                     </button>
 
                     <button
                       onClick={handleAccept}
-                      className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition-colors duration-200 font-medium shadow-sm"
+                      className="text-sm px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition-colors duration-200 font-medium shadow-sm"
                     >
                       {t('guideline.accept')}
                     </button>
