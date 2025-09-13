@@ -57,9 +57,8 @@ export default function Guideline() {
                 <h2 className="text-2xl font-semibold text-gray-800 text-center">{t('guideline.title')}</h2>
               </div>
 
-              {/* Body - Empty for now as requested */}
-              <div className="p-6 min-h-[400px] flex items-center justify-center">
-                <div className="text-gray-600 text-center">
+              <div className="px-6 flex items-center justify-center">
+                <div className="text-gray-600 text-center max-h-[50vh] overflow-y-auto">
                   <p className="text-lg text-left">
                     {
                       <Trans i18nKey="guideline.body.p1">
