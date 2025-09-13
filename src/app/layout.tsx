@@ -4,6 +4,7 @@ import './globals.css';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
 import TranslationProvider from '@/components/providers/TranslationProvider';
 import translation from '@/../public/locales/en/translation.json';
+import StoreProvider from '@/components/providers/StoreProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -54,7 +55,9 @@ export default function RootLayout({
         <DynamicMetadata />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <TranslationProvider>{children}</TranslationProvider>
+        <StoreProvider>
+          <TranslationProvider>{children}</TranslationProvider>
+        </StoreProvider>
       </body>
     </html>
   );

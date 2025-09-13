@@ -6,12 +6,16 @@ import { motion } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 import LanguageSelector from './LanguageSelector';
 import { Trans, useTranslation } from 'react-i18next';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { hideGuideline } from '@/lib/slices/guidelineSlice';
 
 export default function Guideline() {
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [tosAccepted, setTosAccepted] = useCookie('tosAccepted', 'false');
   const { t } = useTranslation();
+  const isVisibleState = useAppSelector((state) => state.guideline.isVisible);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (tosAccepted === 'false') {
@@ -31,7 +35,7 @@ export default function Guideline() {
     // Redirect to Google
     window.location.href = 'https://www.google.com';
   };
-  const isShow = isLoading || isVisible;
+  const isShow = isLoading || isVisible || isVisibleState;
   return (
     <AnimatePresence>
       {isShow && (
@@ -92,20 +96,28 @@ export default function Guideline() {
 
               {/* Footer with buttons */}
               <div className="bg-gray-50/80 px-6 py-4 border-t border-gray-200/50 flex justify-center space-x-4">
-                <button
-                  onClick={handleDecline}
-                  className="relative group px-6 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-400 transition-colors duration-200 font-medium shadow-sm"
-                >
-                  {t('guideline.decline')}
-                </button>
+                {isVisibleState ? (
+                  <button className="block w-full text-gray-700" onClick={() => dispatch(hideGuideline())}>
+                    {t('common.close')}
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleDecline}
+                      className="relative group px-6 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-400 transition-colors duration-200 font-medium shadow-sm"
+                    >
+                      {t('guideline.decline')}
+                    </button>
 
-                <button
-                  onClick={handleAccept}
-                  className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition-colors duration-200 font-medium shadow-sm"
-                >
-                  {t('guideline.accept')}
-                </button>
-                <LanguageSelector className="animate-pulse" />
+                    <button
+                      onClick={handleAccept}
+                      className="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-400 transition-colors duration-200 font-medium shadow-sm"
+                    >
+                      {t('guideline.accept')}
+                    </button>
+                    <LanguageSelector className="animate-pulse" />
+                  </>
+                )}
               </div>
             </div>
           </div>

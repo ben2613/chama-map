@@ -1,8 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
+import guidelineReducer from './slices/guidelineSlice';
 
 export const makeStore = () => {
   return configureStore({
-    reducer: {}
+    reducer: {
+      guideline: guidelineReducer
+    }
   });
 };
 

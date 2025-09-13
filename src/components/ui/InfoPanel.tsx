@@ -2,6 +2,8 @@ import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FaGithub, FaTwitter } from 'react-icons/fa6';
+import { showGuideline } from '@/lib/slices/guidelineSlice';
+import { useAppDispatch } from '@/lib/hooks';
 
 interface InfoPanelProps {
   open: boolean;
@@ -15,6 +17,7 @@ const panelVariants = {
 };
 
 const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   return (
     <AnimatePresence>
@@ -38,7 +41,12 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
               <p className="text-base text-gray-600">{t('infoPanel.description')}</p>
             </div>
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-1">{t('infoPanel.createdBy')}</h3>
+              <h3 className="text-sm font-medium text-gray-900 mb-1">{t('infoPanel.createdBy')}</h3>
+              <div>
+                <a className="cursor-help underline" onClick={() => dispatch(showGuideline())}>
+                  <span className="text-sm text-gray-700">{t('guideline.title')}</span>
+                </a>
+              </div>
               <div className="mt-2 text-xs text-gray-500">
                 {t('infoPanel.comments')}
                 <div>
