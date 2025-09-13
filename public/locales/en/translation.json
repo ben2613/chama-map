@@ -31,5 +31,17 @@
     "description": "Interactive map for finding where Chama has been!",
     "createdBy": "Created by ♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡",
     "comments": "Comments / Issue report:"
+  },
+  "guideline": {
+    "title": "Guideline",
+    "wiki_seichi_junrei": "https://en.wikipedia.org/wiki/Seichi_junrei",
+    "body": {
+      "p1": "Haachama-chama~! This site tries to map the locations of posts with photos by \"Akai Haato\" from various prefectures across Japan. We aim to support fans in their <1>Seichi-junrei</1>, allowing them to explore and connect with the real-world locations featured in her content. You may also post your own photos using her fan-activity tag <3>#推し活はあとん日記</3>!",
+      "p2": "This site displays geographic data and map tiles from third-party sources. By using this site, users agree to the following:",
+      "li1": "The geographic labels shown on maps and in content are provided \"as is\" from third-party sources and may not reflect all viewpoints.",
+      "li2": "Users are expected to engage respectfully and refrain from using the platform to promote political disputes or nationalistic rhetoric."
+    },
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

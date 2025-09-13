@@ -3,6 +3,7 @@
 Track the Chama are! 🗾
 
 ## Disclaimer
+
 ```
 This project and README contains code and text AI generated.
 Please assume they are misleading or features are not implemented.
@@ -11,6 +12,10 @@ Please assume they are misleading or features are not implemented.
 ## Dynamic Meta Tags for Static Site Generation
 
 This project uses Next.js with static site generation (`output: 'export'`). To support dynamic meta tags with i18next while ensuring proper social media embedding, we use a hybrid approach:
+
+## About Map Data
+
+This site displays geographic data and map tiles from third-party sources. The developer picks these providers only because they are free to use.
 
 ### How it works:
 
@@ -30,7 +35,7 @@ export const metadata: Metadata = {
 
 // In components - Dynamic updates
 <DynamicMetadata /> // Uses default translations
-<DynamicMetadata 
+<DynamicMetadata
   title="Custom Title"
   description="Custom description"
   image="/custom-image.jpg"
@@ -68,11 +73,11 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.com
 **Current Status:**
 
 - [x] Interactive, cartoon-style map of Japan's prefectures
-- [ ] Visited status/highlighting for prefectures
-- [ ] Trip details and media links per prefecture
+- [x] Visited status/highlighting for prefectures
+- [x] Trip details and media links per prefecture
 - [ ] Checklist/progress visualization
-- [ ] Fan content submission/embedding
-- [ ] Manual content management interface
+- [ ] Fan content submission/embedding (should we?)
+- [x] Manual content management interface (Google My Map as backend)
 
 ## Getting Started
 
