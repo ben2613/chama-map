@@ -30,16 +30,19 @@
   "infoPanel": {
     "description": "Interactive map for finding where Chama has been!",
     "createdBy": "Created by ♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡",
-    "comments": "Comments / Issue report:"
+    "comments": "Comments / Contact:"
   },
   "guideline": {
     "title": "Guideline",
     "wiki_seichi_junrei": "https://en.wikipedia.org/wiki/Seichi_junrei",
+    "site_manner": "https://www.japan.travel/en/guide/japanese-manners-dos-and-donts/",
     "body": {
-      "p1": "Haachama-chama~!<br />This site tries to map the locations of posts with photos by \"Akai Haato\" from various prefectures across Japan.<br />We aim to support fans in their <1>Seichi-junrei</1>, allowing them to explore and connect with the real-world locations featured in her content.<br />You may also post your own photos using her fan-activity tag <3>#推し活はあとん日記</3>!",
-      "p2": "This site displays geographic data and map tiles from third-party sources.<br />By using this site, users agree to the following:",
-      "li1": "The geographic labels shown on maps and in content are provided \"as is\" from third-party sources and may not reflect all viewpoints.",
-      "li2": "Users are expected to engage respectfully and refrain from using the platform to promote political disputes or nationalistic rhetoric."
+      "p1": "Haachama-chama~!",
+      "p2": "This site displays the locations of photos posted by \"<1>Akai Haato</1>\" across various prefectures in Japan, helping fans to enjoy their <2>Seichi-junrei</2> even more.<br />You may also share your own photos using her fan-activity tag <3>#推し活はあとん日記</3>!",
+      "p3": "Please enjoy sightseeing respectfully by following proper <1>Japanese manners</1>.<br />We ask that you engage with others courteously, without promoting political debates or nationalistic claims.",
+      "li1": "This is an unofficial fan site for Akai Haato, a VTuber affiliated with Hololive. We are not affiliated with Cover Corp or Hololive Production in any way.",
+      "li2": "The place names shown are based on geographic data and map tiles provided by third parties, and may not reflect all perspectives.",
+      "li3": "Also while we strive to provide accurate information, errors may occur."
     },
     "accept": "Accept",
     "decline": "Decline"

@@ -59,19 +59,28 @@ export default function Guideline() {
 
               <div className="px-6 flex items-center justify-center">
                 <div className="text-gray-600 text-center max-h-[50vh] overflow-y-auto">
+                  <p className="text-left">{<Trans i18nKey="guideline.body.p1"> </Trans>}</p>
+                  <br />
                   <p className="text-left">
                     {
-                      <Trans i18nKey="guideline.body.p1">
+                      <Trans i18nKey="guideline.body.p2">
                         Text
+                        <a
+                          className="underline"
+                          href="https://x.com/akaihaato"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          赤井はあと
+                        </a>
                         <a
                           className="underline"
                           href={t('guideline.wiki_seichi_junrei')}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          Seichi-junrei
+                          聖地巡礼
                         </a>
-                        Text
                         <a
                           className="underline"
                           href="https://x.com/search?q=%23%E6%8E%A8%E3%81%97%E6%B4%BB%E3%81%AF%E3%81%82%E3%81%A8%E3%82%93%E6%97%A5%E8%A8%98&src=typed_query"
@@ -85,10 +94,27 @@ export default function Guideline() {
                     }
                   </p>
                   <br />
-                  <p className="text-left">{<Trans i18nKey="guideline.body.p2" />}</p>
-                  <ul className="text-left list-disc list-inside">
+                  <p className="text-left">
+                    {
+                      <Trans i18nKey="guideline.body.p3">
+                        Text
+                        <a
+                          className="underline"
+                          href={t('guideline.site_manner')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          マナー
+                        </a>
+                        Text
+                      </Trans>
+                    }
+                  </p>
+                  <br />
+                  <ul className="text-left list-disc list-inside text-xs">
                     <li>{t('guideline.body.li1')}</li>
                     <li>{t('guideline.body.li2')}</li>
+                    <li>{t('guideline.body.li3')}</li>
                   </ul>
                 </div>
               </div>
