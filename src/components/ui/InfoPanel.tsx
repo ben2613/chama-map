@@ -50,6 +50,10 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
               <div className="mt-2 text-xs text-gray-500">
                 {t('infoPanel.comments')}
                 <div>
+                  <a href="https://x.com/HaachamaLand" target="_blank" rel="noopener noreferrer">
+                    <FaTwitter className="inline-block text-blue-500" />
+                    <span className="ml-1 mr-2 text-blue-500">@HaachamaLand</span>
+                  </a>
                   <a href="https://x.com/intent/post?&text=%23AkaiJourney" target="_blank" rel="noopener noreferrer">
                     <FaTwitter className="inline-block text-blue-500" />
                     <span className="ml-1 mr-2 text-blue-500">#AkaiJourney</span>
