@@ -46,5 +46,20 @@
     },
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "otherProject": {
+    "title": "Other Projects",
+    "link1": {
+      "title": "Chamacord videos",
+      "url": "https://www.youtube.com/@chamacord6326/videos"
+    },
+    "link2": {
+      "title": "WWS Haato videos",
+      "url": "https://www.youtube.com/@WWSHaato/videos"
+    },
+    "link3": {
+      "title": "Haato's Diary Visual Novel",
+      "url": "https://wws-haato.itch.io/haatos-diary"
+    }
   }
 }

@@ -46,6 +46,20 @@
     },
     "accept": "同意する",
     "decline": "同意しない"
+  },
+  "otherProject": {
+    "title": "その他のプロジェクト",
+    "link1": {
+      "title": "Chamacord 動画",
+      "url": "https://www.youtube.com/@chamacord6326/videos"
+    },
+    "link2": {
+      "title": "WWS Haato 動画",
+      "url": "https://www.youtube.com/@WWSHaato/videos"
+    },
+    "link3": {
+      "title": "はあとの日記",
+      "url": "https://wws-haato.itch.io/haatos-diary"
+    }
   }
 }
-

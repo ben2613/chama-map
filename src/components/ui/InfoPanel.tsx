@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { FaGithub, FaTwitter } from 'react-icons/fa6';
 import { showGuideline } from '@/lib/slices/guidelineSlice';
+import { showOtherProject } from '@/lib/slices/otherProjectSlice';
 import { useAppDispatch } from '@/lib/hooks';
 
 interface InfoPanelProps {
@@ -43,8 +44,12 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
             <div>
               <h3 className="text-sm font-medium text-gray-900 mb-1">{t('infoPanel.createdBy')}</h3>
               <div>
-                <a className="cursor-help underline" onClick={() => dispatch(showGuideline())}>
+                <a className="cursor-help underline decoration-stone-950" onClick={() => dispatch(showGuideline())}>
                   <span className="text-sm text-gray-700">{t('guideline.title')}</span>
+                </a>
+                &nbsp;
+                <a className="cursor-help underline decoration-stone-950" onClick={() => dispatch(showOtherProject())}>
+                  <span className="text-sm text-gray-700">{t('otherProject.title')}</span>
                 </a>
               </div>
               <div className="mt-2 text-xs text-gray-500">

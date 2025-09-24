@@ -11,6 +11,7 @@ import { getPrefectureForPoint } from '../utils/mapPrefectureUtils';
 import { getChamaTrack, getJapanPrefectures } from '../services/api';
 import LanguageSelector from '@/components/ui/LanguageSelector';
 import Guideline from '@/components/ui/Guideline';
+import OtherProject from '@/components/ui/OtherProject';
 
 const JapanMap = dynamic(() => import('@/components/map/JapanMap'), {
   ssr: false,
@@ -51,6 +52,8 @@ export default function Home() {
       {!showSplash && <LanguageSelector />}
       {/* Terms of Service Modal */}
       {!showSplash && <Guideline />}
+      {/* Other Project Modal */}
+      {!showSplash && <OtherProject />}
     </div>
   );
 }

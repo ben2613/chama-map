@@ -35,6 +35,13 @@ export default function Guideline() {
     // Redirect to Google
     window.location.href = 'https://www.google.com';
   };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    // Only allow backdrop click when in isVisibleState (programmatically shown)
+    if (isVisibleState && e.target === e.currentTarget) {
+      dispatch(hideGuideline());
+    }
+  };
   const isShow = isLoading || isVisible || isVisibleState;
   return (
     <AnimatePresence>
@@ -47,10 +54,10 @@ export default function Guideline() {
           className="fixed inset-0 z-[10002] flex items-center justify-center"
         >
           {/* Full-screen modal backdrop */}
-          <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)]" />
+          <div className="fixed inset-0 bg-[rgba(0,0,0,0.6)]" onClick={handleBackdropClick} />
 
           {/* Modal content */}
-          <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-8">
+          <div className="relative z-10 flex items-center justify-center p-8">
             <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
               {/* Header */}
               <div className="bg-gray-50/80 px-6 py-4 border-b border-gray-200/50">
