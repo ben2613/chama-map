@@ -59,7 +59,7 @@ const PrefecturePopup = ({
       <div className={styles['popup-container']}>
         <div className={styles['prefecture-title']}>
           <span />
-          <span>{i18n.language === 'ja' ? feature?.properties.nam_ja : feature?.properties.nam}</span>
+          <span>{i18n.language.startsWith('ja') ? feature?.properties.nam_ja : feature?.properties.nam}</span>
           <button
             className={styles['close-button']}
             onClick={() => {
@@ -77,7 +77,7 @@ const PrefecturePopup = ({
             {(groupedList ?? tracks.map((f) => [f] as Feature<Point, TrackProperties>[])).map((group, idx: number) => {
               const icon = group[0].properties.icon || null;
               const rep = group[0];
-              const label = i18n.language === 'ja' ? rep.properties.nameJp : rep.properties.name;
+              const label = i18n.language.startsWith('ja') ? rep.properties.nameJp : rep.properties.name;
               const groupCount = group.length;
               const key = getGroupingKeyForFeature(rep, 6);
               return (

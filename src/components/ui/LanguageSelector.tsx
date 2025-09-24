@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function LanguageSelector({ className }: { className?: string }) {
   const { i18n } = useTranslation();
-  const isEnglish = i18n.language.includes('en');
+  const isEnglish = !i18n.language.startsWith('ja');
 
   const toggleLanguage = () => {
     i18n.changeLanguage(isEnglish ? 'ja' : 'en');

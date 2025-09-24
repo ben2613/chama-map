@@ -60,8 +60,8 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
 
   const active = groupedTracks && groupedTracks.length > 0 ? groupedTracks[groupIndex] : undefined;
   const activeProps: TrackProperties | undefined = active?.properties as TrackProperties | undefined;
-  const displayTitle = i18n.language === 'ja' ? activeProps?.nameJp : activeProps?.name;
-  const displayDescription = i18n.language === 'ja' ? activeProps?.descriptionJp : activeProps?.description;
+  const displayTitle = i18n.language.startsWith('ja') ? activeProps?.nameJp : activeProps?.name;
+  const displayDescription = i18n.language.startsWith('ja') ? activeProps?.descriptionJp : activeProps?.description;
   const displayImages = activeProps?.images ?? [];
   const displayLinks = activeProps?.links ?? [];
   const displayLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayTitle || '')}`;
