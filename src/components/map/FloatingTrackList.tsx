@@ -30,6 +30,7 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
   onTrackClick
 }) => {
   const [expandedLayers, setExpandedLayers] = useState<Set<string>>(new Set());
+  const [isListCollapsed, setIsListCollapsed] = useState(true);
   const { i18n } = useTranslation();
 
   // Group tracks by layerName
@@ -83,20 +84,40 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
     onTrackClick(coordinates, groupKey);
   };
 
+  const toggleListCollapse = () => {
+    setIsListCollapsed(!isListCollapsed);
+  };
+
   return (
     <div className="absolute top-20 left-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 max-w-sm max-h-96 overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
-      <div className="p-4 border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-indigo-50">
-        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
-          <FaMapMarkerAlt className="text-blue-500 animate-pulse" />
+      <button 
+        onClick={toggleListCollapse}
+        className="w-full p-4 border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 flex items-center gap-2"
+        aria-label={i18n.t('map.trackList.toggle')}
+      >
+        <FaMapMarkerAlt className="text-blue-500 animate-pulse" />
+        <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2 flex-1">
           {i18n.t('map.trackList.title')}
           <span className="text-xs text-gray-500 font-normal">
             ({layerGroups.reduce((sum, layer) => sum + layer.tracks.length, 0)})
           </span>
         </h3>
-      </div>
+        <div className="flex-shrink-0 transition-transform duration-200">
+          {isListCollapsed ? (
+            <FaChevronRight className="w-3 h-3 text-gray-500" />
+          ) : (
+            <FaChevronDown className="w-3 h-3 text-gray-500" />
+          )}
+        </div>
+      </button>
 
-      <div className={`max-h-80 overflow-y-auto ${styles.scrollbarThin}`}>
-        {layerGroups.map((layer) => (
+      <div className={`overflow-hidden transition-all duration-300 ${
+        isListCollapsed 
+          ? 'max-h-0 opacity-0' 
+          : 'max-h-80 opacity-100'
+      }`}>
+        <div className={`max-h-80 overflow-y-auto ${styles.scrollbarThin}`}>
+          {layerGroups.map((layer) => (
           <div key={layer.layerName} className="border-b border-gray-100/50 last:border-b-0">
             <button
               onClick={() => toggleLayer(layer.layerName)}
@@ -150,6 +171,7 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
             </div>
           </div>
         ))}
+        </div>
       </div>
     </div>
   );
