@@ -8,6 +8,7 @@ import TrackMarker from './TrackMarker';
 import MapEventHandler from './MapEventHandler';
 import PrefecturePopup from './PrefecturePopup';
 import MapStyles from './MapStyles';
+import FloatingTrackList from './FloatingTrackList';
 import { TrackProperties, PrefectureProperties } from '@/types/map';
 import { useMapRefs } from '@/hooks/useMapRefs';
 import { getFeatureStyle } from '@/utils/mapStyles';
@@ -43,6 +44,25 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
     return groupMapByNameAndCoordinates(chamaTrack, 6);
   }, [chamaTrack]);
 
+  const handleTrackListClick = (coordinates: [number, number], groupKey: string) => {
+    // Find the marker ref and open its popup
+    const group = groupedChamaTracks[groupKey];
+    if (group && group.length > 0) {
+      const originalIdx = chamaTrack.features.findIndex((f1) => f1 === group[0]);
+      const ref = markerRefs.current[group[0].properties.prefecture]?.[originalIdx];
+      if (ref && ref.current) {
+        // Pan to the marker location
+        if (mapRef.current) {
+          mapRef.current.setView([coordinates[1], coordinates[0]], Math.max(mapRef.current.getZoom(), 10));
+        }
+        // Open the popup after a short delay to allow panning
+        setTimeout(() => {
+          ref.current?.openPopup();
+        }, 300);
+      }
+    }
+  };
+
   // Create prefecture interaction handlers
   const onEachFeature = createPrefectureHandlers(
     (name: string) => {
@@ -77,11 +97,11 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
         style={{ height: '100%', width: '100%' }}
         className="rounded-lg shadow-lg"
         zoomControl={false}
-        // scrollWheelZoom={false}
-        // zoomSnap={1}
-        // /** @ts-expect-error smoothWheelZoom is not a valid prop */
-        // smoothWheelZoom={true}
-        // smoothSensitivity={1}
+      // scrollWheelZoom={false}
+      // zoomSnap={1}
+      // /** @ts-expect-error smoothWheelZoom is not a valid prop */
+      // smoothWheelZoom={true}
+      // smoothSensitivity={1}
       >
         <ZoomControl position="bottomright" />
         <MapEventHandler
@@ -99,7 +119,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
           <TileLayer
             url="https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png"
             attribution='出典: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院（地理院タイル）</a>'
-            // updateWhenZooming={false}
+          // updateWhenZooming={false}
           />
         )}
 
@@ -145,6 +165,13 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
           />
         )}
       </MapContainer>
+
+      {/* Floating Track List */}
+      <FloatingTrackList
+        chamaTrack={chamaTrack.features}
+        groupedTracks={groupedChamaTracks}
+        onTrackClick={handleTrackListClick}
+      />
 
       <MapStyles />
     </div>
