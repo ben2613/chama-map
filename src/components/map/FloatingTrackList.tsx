@@ -84,7 +84,7 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
   };
 
   return (
-    <div className="absolute top-4 left-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 max-w-sm max-h-96 overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+    <div className="absolute top-20 left-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 max-w-sm max-h-96 overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
       <div className="p-4 border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-indigo-50">
         <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
           <FaMapMarkerAlt className="text-blue-500 animate-pulse" />
