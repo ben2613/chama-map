@@ -95,7 +95,7 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
   };
 
   return (
-    <div className="absolute top-20 left-4 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 max-w-sm max-h-96 overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
+    <div className="absolute top-4 left-20 z-[1000] bg-white/95 backdrop-blur-md rounded-xl shadow-xl border border-gray-200/50 max-w-sm max-h-96 overflow-hidden transform transition-all duration-300 hover:shadow-2xl">
       <button 
         onClick={toggleListCollapse}
         className="w-full p-4 border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-all duration-200 flex items-center gap-2"
