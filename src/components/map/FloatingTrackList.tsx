@@ -87,6 +87,7 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
 
   const handleTrackClick = (coordinates: [number, number], groupKey: string) => {
     onTrackClick(coordinates, groupKey);
+    setIsListCollapsed(true);
   };
 
   const toggleListCollapse = () => {
