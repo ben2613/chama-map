@@ -11,7 +11,11 @@
     "prefecture": "都道府県",
     "location": "場所",
     "date": "日付",
-    "noTracks": "この地域にははあちゃまがいません"
+    "noTracks": "この地域にははあちゃまがいません",
+    "trackList": {
+      "title": "トラック場所",
+      "toggle": "トラックリストの切り替え"
+    }
   },
   "navigation": {
     "home": "ホーム",

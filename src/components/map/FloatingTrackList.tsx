@@ -88,7 +88,7 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
       <div className="p-4 border-b border-gray-200/50 bg-gradient-to-r from-blue-50 to-indigo-50">
         <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
           <FaMapMarkerAlt className="text-blue-500 animate-pulse" />
-          Track Locations
+          {i18n.t('map.trackList.title')}
           <span className="text-xs text-gray-500 font-normal">
             ({layerGroups.reduce((sum, layer) => sum + layer.tracks.length, 0)})
           </span>
