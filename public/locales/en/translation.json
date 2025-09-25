@@ -15,6 +15,17 @@
     "trackList": {
       "title": "Track Locations",
       "toggle": "Toggle Track List"
+    },
+    "layers": {
+      "attraction": "Attractions",
+      "cafe": "Cafes",
+      "horror": "Horror",
+      "hotel": "Hotels",
+      "others": "Others",
+      "restaurant": "Restaurants",
+      "sail": "Sailing",
+      "shop": "Shops",
+      "station": "Stations"
     }
   },
   "navigation": {

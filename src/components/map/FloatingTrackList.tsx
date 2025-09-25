@@ -39,11 +39,11 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
 
     Object.entries(groupedTracks).forEach(([groupKey, tracks]) => {
       if (tracks.length === 0) return;
-
+      
       const firstTrack = tracks[0];
       const layerName = firstTrack.properties.layerName;
       const icon = firstTrack.properties.icon;
-
+      
       if (!layerMap.has(layerName)) {
         layerMap.set(layerName, {
           layerName,
@@ -52,10 +52,10 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
         });
       }
 
-      const displayName = i18n.language.startsWith('ja')
+      const displayName = i18n.language.startsWith('ja') 
         ? (firstTrack.properties.nameJp || firstTrack.properties.name || firstTrack.properties.title || '')
         : (firstTrack.properties.name || firstTrack.properties.nameJp || firstTrack.properties.title || '');
-
+      
       layerMap.get(layerName)!.tracks.push({
         key: groupKey,
         name: displayName,
@@ -65,7 +65,12 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
       });
     });
 
-    return Array.from(layerMap.values()).sort((a, b) => a.layerName.localeCompare(b.layerName));
+    // Sort layers with "others" at the end
+    return Array.from(layerMap.values()).sort((a, b) => {
+      if (a.layerName === 'others') return 1;
+      if (b.layerName === 'others') return -1;
+      return a.layerName.localeCompare(b.layerName);
+    });
   }, [groupedTracks, i18n.language]);
 
   const toggleLayer = (layerName: string) => {
@@ -131,7 +136,7 @@ const FloatingTrackList: React.FC<FloatingTrackListProps> = ({
                 />
               )}
               <span className="text-sm font-medium text-gray-700 flex-1 truncate group-hover:text-gray-900">
-                {layer.layerName}
+                {i18n.t(`map.layers.${layer.layerName}`) || layer.layerName}
               </span>
               <span className="text-xs text-gray-500 bg-gray-200/80 px-2 py-1 rounded-full flex-shrink-0">
                 {layer.tracks.length}

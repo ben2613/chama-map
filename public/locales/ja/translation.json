@@ -15,6 +15,17 @@
     "trackList": {
       "title": "トラック場所",
       "toggle": "トラックリストの切り替え"
+    },
+    "layers": {
+      "attraction": "観光地",
+      "cafe": "カフェ",
+      "horror": "ホラー",
+      "hotel": "ホテル",
+      "others": "その他",
+      "restaurant": "レストラン",
+      "sail": "セーリング",
+      "shop": "ショップ",
+      "station": "駅"
     }
   },
   "navigation": {
