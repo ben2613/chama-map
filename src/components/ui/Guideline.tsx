@@ -27,7 +27,7 @@ export default function Guideline() {
 
   const handleAccept = () => {
     // Set cookie to remember user's acceptance
-    setTosAccepted('true');
+    setTosAccepted('true', { days: 365 });
     setIsVisible(false);
   };
 
