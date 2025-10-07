@@ -5,7 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { hideOtherProject } from '@/lib/slices/otherProjectSlice';
-import { FaItchIo, FaYoutube } from 'react-icons/fa';
+import { FaHeart, FaItchIo, FaYoutube } from 'react-icons/fa';
 
 export default function OtherProject() {
   const { t } = useTranslation();
@@ -84,6 +84,17 @@ export default function OtherProject() {
                   >
                     <h3 className="font-medium text-gray-800 mb-1">
                       <FaItchIo className="inline-block text-gray-500 mr-1" /> {t('otherProject.link3.title')}
+                    </h3>
+                  </a>
+
+                  <a
+                    href={t('otherProject.link4.url')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors duration-200 border border-gray-200"
+                  >
+                    <h3 className="font-medium text-gray-800 mb-1">
+                      <FaHeart className="inline-block text-red-500 mr-1" /> {t('otherProject.link4.title')}
                     </h3>
                   </a>
                 </div>
