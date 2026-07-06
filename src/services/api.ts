@@ -241,5 +241,5 @@ export async function getChamaTrack(): Promise<FeatureCollection<Point, TrackPro
 }
 
 export async function getJapanPrefectures(): Promise<FeatureCollection<MultiPolygon, PrefectureProperties>> {
-  return fetch('data/japan-prefectures.geojson').then((res) => res.json());
+  return fetch('data/japan-prefectures.geojson?v=1.0.1').then((res) => res.json());
 }
