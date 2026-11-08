@@ -247,6 +247,8 @@ const JapanMap: React.FC<JapanMapProps> = ({
         }}
         style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
         renderWorldCopies
+        maxPitch={0}
+        touchPitch={false}
         interactiveLayerIds={showPrefectureOverlay ? [PREFECTURE_FILL_LAYER_ID] : []}
         onClick={onMapClick}
         onMouseMove={onMouseMove}
