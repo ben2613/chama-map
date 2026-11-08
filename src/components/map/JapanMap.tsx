@@ -8,7 +8,9 @@ import PrefecturePopup from './PrefecturePopup';
 import CurrentPositionMarker from './CurrentPositionMarker';
 import MapControlStack from './MapControlStack';
 import MapRefBinder from './MapRefBinder';
+import MapTestOverlay from './MapTestOverlay';
 import MapMoveHandler from './MapMoveHandler';
+import { isMapTestOverlayEnabled, isPrefectureOverlaySkipped } from '@/map/mapTestOverlay';
 import { TrackProperties, PrefectureProperties, SmartPositionConfig } from '@/types/map';
 import { useMapRefs } from '@/hooks/useMapRefs';
 import { useGeolocation } from '@/hooks/useGeolocation';
@@ -19,6 +21,7 @@ import { groupMapByNameAndCoordinates } from '@/utils/groupTrackFeatures';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { useTranslation } from 'react-i18next';
 import { createBasemapStyle } from '@/map/basemapStyle';
+import maplibregl from '@/map/maplibreSetup';
 import {
   PREFECTURE_FILL_LAYER_ID,
   PREFECTURE_LINE_LAYER_ID,
@@ -63,6 +66,14 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
 
   const useJapaneseSource = i18n.language.startsWith('ja');
   const basemapStyle = useMemo(() => createBasemapStyle(), []);
+
+  const devMapOverlayFlags = useMemo(() => {
+    const search = typeof window !== 'undefined' ? window.location.search : '';
+    return {
+      showTestOverlay: isMapTestOverlayEnabled(search),
+      skipPrefectureOverlay: isPrefectureOverlaySkipped(search),
+    };
+  }, []);
 
   const prefecturesWithTracks = useMemo(() => {
     const names = new Set<string>();
@@ -212,6 +223,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
       )}
 
       <MapGL
+        mapLib={maplibregl}
         id="japan-map"
         mapStyle={basemapStyle}
         initialViewState={{
@@ -229,7 +241,9 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
         <MapRefBinder mapRef={mapRef} />
         <MapMoveHandler useJapaneseSource={useJapaneseSource} />
 
-        {japanData && (
+        {devMapOverlayFlags.showTestOverlay && <MapTestOverlay />}
+
+        {japanData && !devMapOverlayFlags.skipPrefectureOverlay && (
           <Source id={PREFECTURE_SOURCE_ID} type="geojson" data={japanData} promoteId="nam">
             <Layer
               id={PREFECTURE_FILL_LAYER_ID}

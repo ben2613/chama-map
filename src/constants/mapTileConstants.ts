@@ -48,10 +48,10 @@ export function buildCartoTileUrl(coords: { x: number; y: number; z: number }): 
 
 /** Carto raster tile URL for MapLibre raster sources ({x}/{y} template). */
 export const CARTO_RASTER_TILES = [
-  'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-  'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-  'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-  'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+  'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+  'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+  'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+  'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
 ];
 
 export const GSI_RASTER_TILES = [GSI_PALE_TILE_URL];

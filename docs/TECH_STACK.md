@@ -59,4 +59,5 @@ Access in app code: `import.meta.env.VITE_*`.
 ## Vite notes
 
 - `optimizeDeps.include` must list **`react-map-gl/maplibre`**, not `react-map-gl` (v8 has no package root export).
+- MapLibre’s GeoJSON worker: `src/map/maplibreSetup.ts` calls `setWorkerUrl()` via `maplibre-gl/dist/maplibre-gl-worker.mjs?url` (import from `main.tsx` before the app mounts).
 - Optional: set `"type": "module"` in `package.json` or use `vite.config.mjs` to silence native config-loader warnings.

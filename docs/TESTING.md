@@ -8,6 +8,15 @@
 
 Config: `vitest.config.ts` (10s timeout for property tests).
 
+## Manual map overlay check (dev)
+
+While debugging MapLibre GeoJSON layers, load the app with:
+
+- `?testOverlay=1` — hot-pink Kantō test polygon (GeoJSON sanity check)
+- `?noPrefecture=1` — skip the real prefecture layer (combine with `testOverlay=1` to isolate basemap vs GeoJSON)
+
+Example: `http://localhost:3000/?testOverlay=1&noPrefecture=1`
+
 ## Running tests
 
 ```bash
