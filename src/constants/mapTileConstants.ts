@@ -2,19 +2,25 @@ import { geoBounds, type GeoBounds } from '@/map/geoBounds';
 import { MapProjection } from '@/map/mapProjection';
 import { JAPAN_BOUNDS } from '@/constants/japanMapConstants';
 
-export const CARTO_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-export const CARTO_TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+/**
+ * English (Latin) place labels in Japan — verified vs Wikimedia osm-intl (still Japanese there).
+ * Esri tile scheme is `{z}/{y}/{x}` (note y/x order).
+ * Terms: https://developers.arcgis.com/documentation/mapping-apis-and-services/deployment/terms-of-use/
+ */
+export const WORLD_BASEMAP_TILE_URL =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
+export const WORLD_BASEMAP_ATTRIBUTION =
+  'Tiles &copy; <a href="https://www.esri.com/">Esri</a>';
 
 export const GSI_PALE_TILE_URL = 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png';
 export const GSI_PALE_TILE_ATTRIBUTION =
   '出典: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院（地理院タイル）</a>';
 
 /**
- * Ja locale + viewport outside Japan: switch to Carto only when zoom >= this level.
+ * Ja locale + viewport outside Japan: switch to world basemap only when zoom >= this level.
  * Below threshold, keep GSI (e.g. wide world pan). Tweak for testing.
  */
-export const OUTSIDE_JAPAN_CARTO_MIN_ZOOM = 8;
+export const OUTSIDE_JAPAN_WORLD_BASEMAP_MIN_ZOOM = 8;
 
 function japanTileBounds(): GeoBounds {
   return geoBounds(
@@ -27,31 +33,19 @@ export function isMapViewOverJapan(map: MapProjection): boolean {
   return map.getBounds().intersects(japanTileBounds());
 }
 
-/** Whether to use GSI pale tiles (false = Carto). */
+/** Whether to use GSI pale tiles (false = Esri world street / English labels). */
 export function shouldUseJapaneseBasemap(map: MapProjection, useJapaneseSource: boolean): boolean {
   if (!useJapaneseSource) return false;
   if (isMapViewOverJapan(map)) return true;
-  return map.getZoom() < OUTSIDE_JAPAN_CARTO_MIN_ZOOM;
+  return map.getZoom() < OUTSIDE_JAPAN_WORLD_BASEMAP_MIN_ZOOM;
 }
 
-export function buildCartoTileUrl(coords: { x: number; y: number; z: number }): string {
-  const subdomain = ['a', 'b', 'c', 'd'][Math.abs(coords.x) % 4];
-  const retina =
-    typeof window !== 'undefined' &&
-    window.devicePixelRatio > 1;
-  return CARTO_TILE_URL.replace('{s}', subdomain)
-    .replace('{z}', String(coords.z))
-    .replace('{x}', String(coords.x))
+export function buildWorldBasemapTileUrl(coords: { x: number; y: number; z: number }): string {
+  return WORLD_BASEMAP_TILE_URL.replace('{z}', String(coords.z))
     .replace('{y}', String(coords.y))
-    .replace('{r}', retina ? '@2x' : '');
+    .replace('{x}', String(coords.x));
 }
 
-/** Carto raster tile URL for MapLibre raster sources ({x}/{y} template). */
-export const CARTO_RASTER_TILES = [
-  'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-  'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-  'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-  'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-];
+export const WORLD_RASTER_TILES = [WORLD_BASEMAP_TILE_URL];
 
 export const GSI_RASTER_TILES = [GSI_PALE_TILE_URL];

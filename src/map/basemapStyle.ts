@@ -1,12 +1,12 @@
 import type { StyleSpecification } from 'maplibre-gl';
 import {
-  CARTO_RASTER_TILES,
-  CARTO_TILE_ATTRIBUTION,
+  WORLD_RASTER_TILES,
+  WORLD_BASEMAP_ATTRIBUTION,
   GSI_RASTER_TILES,
   GSI_PALE_TILE_ATTRIBUTION,
 } from '@/constants/mapTileConstants';
 
-export const CARTO_LAYER_ID = 'carto-layer';
+export const WORLD_LAYER_ID = 'world-layer';
 export const GSI_LAYER_ID = 'gsi-layer';
 
 export function createBasemapStyle(): StyleSpecification {
@@ -14,11 +14,11 @@ export function createBasemapStyle(): StyleSpecification {
     version: 8,
     glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
     sources: {
-      carto: {
+      world: {
         type: 'raster',
-        tiles: CARTO_RASTER_TILES,
+        tiles: WORLD_RASTER_TILES,
         tileSize: 256,
-        attribution: CARTO_TILE_ATTRIBUTION,
+        attribution: WORLD_BASEMAP_ATTRIBUTION,
       },
       gsi: {
         type: 'raster',
@@ -29,9 +29,9 @@ export function createBasemapStyle(): StyleSpecification {
     },
     layers: [
       {
-        id: CARTO_LAYER_ID,
+        id: WORLD_LAYER_ID,
         type: 'raster',
-        source: 'carto',
+        source: 'world',
         layout: { visibility: 'visible' },
       },
       {

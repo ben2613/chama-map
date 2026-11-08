@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { geoBounds, type GeoBounds } from '@/map/geoBounds';
 import type { MapProjection } from '@/map/mapProjection';
-import { buildCartoTileUrl, isMapViewOverJapan, shouldUseJapaneseBasemap } from './mapTileConstants';
+import { buildWorldBasemapTileUrl, isMapViewOverJapan, shouldUseJapaneseBasemap } from './mapTileConstants';
 
 function mockMap(bounds: GeoBounds, zoom = 10): MapProjection {
   return {
@@ -43,17 +43,16 @@ describe('mapTileConstants', () => {
       expect(shouldUseJapaneseBasemap(outsideJapanMap(7), true)).toBe(true);
     });
 
-    it('switches to Carto outside Japan at or above zoom threshold', () => {
+    it('switches to world basemap outside Japan at or above zoom threshold', () => {
       expect(shouldUseJapaneseBasemap(outsideJapanMap(8), true)).toBe(false);
       expect(shouldUseJapaneseBasemap(outsideJapanMap(12), true)).toBe(false);
     });
   });
 
-  describe('buildCartoTileUrl', () => {
-    it('builds a Carto tile URL for the given coordinates', () => {
-      vi.stubGlobal('window', { devicePixelRatio: 1 });
-      expect(buildCartoTileUrl({ x: 10, y: 20, z: 6 })).toBe(
-        'https://c.basemaps.cartocdn.com/light_all/6/10/20.png'
+  describe('buildWorldBasemapTileUrl', () => {
+    it('builds an Esri world street tile URL (z/y/x order)', () => {
+      expect(buildWorldBasemapTileUrl({ x: 227, y: 101, z: 8 })).toBe(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/8/101/227'
       );
     });
   });

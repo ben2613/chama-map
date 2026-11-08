@@ -3,7 +3,7 @@ import { useMap } from 'react-map-gl/maplibre';
 import { shouldUseJapaneseBasemap } from '@/constants/mapTileConstants';
 import { normalizeLongitude } from '@/constants/japanMapConstants';
 import { MapProjection } from '@/map/mapProjection';
-import { CARTO_LAYER_ID, GSI_LAYER_ID } from '@/map/basemapStyle';
+import { WORLD_LAYER_ID, GSI_LAYER_ID } from '@/map/basemapStyle';
 import { MAP_ID } from '@/map/useMapProjection';
 
 interface MapMoveHandlerProps {
@@ -43,8 +43,8 @@ const MapMoveHandler = ({ useJapaneseSource }: MapMoveHandlerProps) => {
       if (map.getLayer(GSI_LAYER_ID)) {
         map.setLayoutProperty(GSI_LAYER_ID, 'visibility', useGsi ? 'visible' : 'none');
       }
-      if (map.getLayer(CARTO_LAYER_ID)) {
-        map.setLayoutProperty(CARTO_LAYER_ID, 'visibility', useGsi ? 'none' : 'visible');
+      if (map.getLayer(WORLD_LAYER_ID)) {
+        map.setLayoutProperty(WORLD_LAYER_ID, 'visibility', useGsi ? 'none' : 'visible');
       }
     };
 

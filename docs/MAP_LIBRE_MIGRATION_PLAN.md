@@ -9,7 +9,7 @@ Project documentation (product, structure, features, testing) lives in [docs/REA
 ## Goals
 
 - Replace `leaflet` / `react-leaflet` with MapLibre for basemap, GeoJSON, markers, and popups.
-- Preserve smart prefecture popup positioning (`ViewportCalculator`) and GSI/Carto basemap switching.
+- Preserve smart prefecture popup positioning (`ViewportCalculator`) and GSI / Esri World Street (English labels) basemap switching.
 - Keep GPS, return-to-Japan, and track marker behavior.
 
 ## Non-goals (this PR)
@@ -25,7 +25,7 @@ Project documentation (product, structure, features, testing) lives in [docs/REA
 | 0 | Migration plan + `MapProjection` adapter | ✅ |
 | 1 | Dependencies, Vite chunks, global CSS | ✅ |
 | 2 | `JapanMap` shell (Map, controls layout, longitude wrap) | ✅ |
-| 3 | Raster basemaps (Carto / GSI, locale + viewport rules) | ✅ |
+| 3 | Raster basemaps (Esri World Street / GSI, locale + viewport rules) | ✅ |
 | 4 | Prefecture GeoJSON (hover via feature-state, click → smart popup) | ✅ |
 | 5 | Track markers + prefecture popup (HTML Marker / Popup) | ✅ |
 | 6 | GPS + geolocation marker + accuracy circle | ✅ |
@@ -37,7 +37,7 @@ Project documentation (product, structure, features, testing) lives in [docs/REA
 
 ```
 JapanMap (react-map-gl Map)
-  ├── BasemapSource (raster: gsi | carto)
+  ├── BasemapSource (raster: gsi | world)
   ├── PrefectureLayers (fill + line, feature-state hover)
   ├── TrackMarkerOverlay[] (Marker + Popup)
   ├── PrefecturePopupOverlay
@@ -59,7 +59,7 @@ GeoBounds — LatLngBounds-like type (contains, intersects, N/S/E/W)
 
 - [ ] Prefecture click popup placement (corners, mobile)
 - [ ] Bottom-right control stack (zoom, GPS, home)
-- [ ] GSI when ja + over Japan; Carto when zoomed out abroad
+- [ ] GSI when ja + over Japan; Esri World Street when English or zoomed out abroad
 - [ ] Fly-to GPS and return-to-Japan
 - [ ] Track marker popups + single-track prefecture shortcut
 - [ ] Geolocation accuracy circle
