@@ -1,5 +1,7 @@
 # Leaflet → MapLibre GL JS migration plan
 
+Project documentation (product, structure, features, testing) lives in [docs/README.md](./README.md).
+
 **Branch:** `cursor/maplibre-revamp-6938`  
 **Stack:** `maplibre-gl` + `react-map-gl` (MapLibre backend)  
 **Status:** Core port on branch — build green; legacy Leaflet tests excluded pending MapLibre harness; **UI QA in local IDE**.
