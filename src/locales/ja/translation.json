@@ -13,7 +13,8 @@
     "date": "日付",
     "noTracks": "この地域にははあちゃまがいません",
     "prefectureOverlayShow": "都道府県オーバーレイを表示",
-    "prefectureOverlayHide": "都道府県オーバーレイを非表示"
+    "prefectureOverlayHide": "都道府県オーバーレイを非表示",
+    "resetNorth": "北向きに戻す"
   },
   "navigation": {
     "home": "ホーム",

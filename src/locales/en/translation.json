@@ -13,7 +13,8 @@
     "date": "Date",
     "noTracks": "No Haachama tracks found in this prefecture",
     "prefectureOverlayShow": "Show prefecture overlay",
-    "prefectureOverlayHide": "Hide prefecture overlay"
+    "prefectureOverlayHide": "Hide prefecture overlay",
+    "resetNorth": "Reset map to north"
   },
   "navigation": {
     "home": "Home",
