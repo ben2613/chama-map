@@ -1,13 +1,15 @@
-import L from 'leaflet';
+import { GeoBounds, geoBounds } from '@/map/geoBounds';
+import { MapProjection } from '@/map/mapProjection';
+import { latLng, pixelBounds, point, type LatLng, type PixelBounds, type Point } from '@/map/geoTypes';
 
 /**
  * Interface for viewport information containing bounds, center, zoom, and pixel bounds
  */
 export interface ViewportInfo {
-  bounds: L.LatLngBounds;
-  center: L.LatLng;
+  bounds: GeoBounds;
+  center: LatLng;
   zoom: number;
-  pixelBounds: L.Bounds;
+  pixelBounds: PixelBounds;
 }
 
 /**
@@ -25,7 +27,7 @@ export interface SmartPositionConfig {
   prefectureCenter: [number, number];
   clickPosition: [number, number];
   useClickPosition: boolean;
-  viewportBounds: L.LatLngBounds;
+  viewportBounds: GeoBounds;
   adjustedPosition?: [number, number];
 }
 
@@ -80,7 +82,7 @@ export class ViewportCalculator {
    * @param map - The Leaflet map instance
    * @returns ViewportInfo containing bounds, center, zoom, and pixel bounds
    */
-  static getViewportInfo(map: L.Map): ViewportInfo {
+  static getViewportInfo(map: MapProjection): ViewportInfo {
     try {
       const cacheKey = ViewportCalculator.generateCacheKey(map);
       const now = Date.now();
@@ -134,7 +136,7 @@ export class ViewportCalculator {
    * @param bounds - Leaflet LatLngBounds object
    * @returns true if point is within bounds, false otherwise
    */
-  static isPointInViewport(point: [number, number], bounds: L.LatLngBounds): boolean {
+  static isPointInViewport(point: [number, number], bounds: GeoBounds): boolean {
     try {
       // Validate inputs
       if (!Array.isArray(point) || point.length !== 2) {
@@ -156,7 +158,7 @@ export class ViewportCalculator {
         return false;
       }
 
-      return bounds.contains(L.latLng(lat, lng));
+      return bounds.contains(latLng(lat, lng));
     } catch (error) {
       console.error('Error checking point in viewport:', error, { point, bounds });
       return false; // Safe fallback - assume point is not in viewport
@@ -173,9 +175,9 @@ export class ViewportCalculator {
    */
   static adjustPositionForVisibility(
     position: [number, number],
-    _bounds: L.LatLngBounds,
+    _bounds: GeoBounds,
     popupSize: PopupSize,
-    map: L.Map
+    map: MapProjection
   ): [number, number] {
     try {
       // Validate inputs
@@ -199,7 +201,7 @@ export class ViewportCalculator {
       let adjustedLng = position[1];
 
       // Convert position to pixel coordinates
-      const positionPoint = map.latLngToContainerPoint(L.latLng(position[0], position[1]));
+      const positionPoint = map.latLngToContainerPoint(latLng(position[0], position[1]));
 
       // Get container size
       const containerSize = map.getSize();
@@ -213,12 +215,12 @@ export class ViewportCalculator {
       // Adjust horizontally if popup extends beyond viewport
       if (popupLeft < padding) {
         const adjustment = padding - popupLeft;
-        const adjustedPoint = L.point(positionPoint.x + adjustment, positionPoint.y);
+        const adjustedPoint = point(positionPoint.x + adjustment, positionPoint.y);
         const adjustedLatLng = map.containerPointToLatLng(adjustedPoint);
         adjustedLng = adjustedLatLng.lng;
       } else if (popupRight > containerSize.x - padding) {
         const adjustment = popupRight - (containerSize.x - padding);
-        const adjustedPoint = L.point(positionPoint.x - adjustment, positionPoint.y);
+        const adjustedPoint = point(positionPoint.x - adjustment, positionPoint.y);
         const adjustedLatLng = map.containerPointToLatLng(adjustedPoint);
         adjustedLng = adjustedLatLng.lng;
       }
@@ -226,12 +228,12 @@ export class ViewportCalculator {
       // Adjust vertically if popup extends beyond viewport
       if (popupTop < padding) {
         const adjustment = padding - popupTop;
-        const adjustedPoint = L.point(positionPoint.x, positionPoint.y + adjustment);
+        const adjustedPoint = point(positionPoint.x, positionPoint.y + adjustment);
         const adjustedLatLng = map.containerPointToLatLng(adjustedPoint);
         adjustedLat = adjustedLatLng.lat;
       } else if (popupBottom > containerSize.y - padding) {
         const adjustment = popupBottom - (containerSize.y - padding);
-        const adjustedPoint = L.point(positionPoint.x, positionPoint.y - adjustment);
+        const adjustedPoint = point(positionPoint.x, positionPoint.y - adjustment);
         const adjustedLatLng = map.containerPointToLatLng(adjustedPoint);
         adjustedLat = adjustedLatLng.lat;
       }
@@ -267,8 +269,8 @@ export class ViewportCalculator {
   static determineSmartPosition(
     prefectureCenter: [number, number],
     clickPosition: [number, number],
-    viewportBounds: L.LatLngBounds,
-    map?: L.Map
+    viewportBounds: GeoBounds,
+    map?: MapProjection
   ): SmartPositionConfig {
     try {
       // Invalidate cache if map state changed significantly
@@ -349,7 +351,7 @@ export class ViewportCalculator {
   private static determinePositioningWithConsistency(
     prefectureCenter: [number, number],
     clickPosition: [number, number],
-    viewportBounds: L.LatLngBounds,
+    viewportBounds: GeoBounds,
     mapState: { zoom: number; size: { x: number; y: number } } | null
   ): { useClickPosition: boolean; adjustedPosition?: [number, number] } {
     // Basic visibility check
@@ -506,8 +508,8 @@ export class ViewportCalculator {
    * @param map - Leaflet map instance
    * @returns Array of control bounds information
    */
-  static getControlBounds(map: L.Map): ControlBounds[] {
-    const controlContainers = map.getContainer().querySelectorAll('.leaflet-control');
+  static getControlBounds(map: MapProjection): ControlBounds[] {
+    const controlContainers = map.getContainer().querySelectorAll('.maplibregl-ctrl, .chama-map-control');
     const mapRect = map.getContainer().getBoundingClientRect();
     const controls: ControlBounds[] = [];
 
@@ -548,27 +550,46 @@ export class ViewportCalculator {
       return 'unknown';
     }
 
+    const dataPosition = control.getAttribute('data-control-position');
+    if (dataPosition) {
+      return dataPosition;
+    }
+
+    const ctrl = control.closest('.maplibregl-ctrl-top-left, .maplibregl-ctrl-top-right, .maplibregl-ctrl-bottom-left, .maplibregl-ctrl-bottom-right');
+    if (ctrl) {
+      if (ctrl.classList.contains('maplibregl-ctrl-top-right')) return 'topright';
+      if (ctrl.classList.contains('maplibregl-ctrl-bottom-right')) return 'bottomright';
+      if (ctrl.classList.contains('maplibregl-ctrl-top-left')) return 'topleft';
+      if (ctrl.classList.contains('maplibregl-ctrl-bottom-left')) return 'bottomleft';
+    }
+
+    // Legacy Leaflet class names (unit tests)
     if (classList.contains('leaflet-top') && classList.contains('leaflet-right')) {
       return 'topright';
-    } else if (classList.contains('leaflet-bottom') && classList.contains('leaflet-right')) {
+    }
+    if (classList.contains('leaflet-bottom') && classList.contains('leaflet-right')) {
       return 'bottomright';
-    } else if (classList.contains('leaflet-top') && classList.contains('leaflet-left')) {
+    }
+    if (classList.contains('leaflet-top') && classList.contains('leaflet-left')) {
       return 'topleft';
-    } else if (classList.contains('leaflet-bottom') && classList.contains('leaflet-left')) {
+    }
+    if (classList.contains('leaflet-bottom') && classList.contains('leaflet-left')) {
       return 'bottomleft';
     }
 
-    // Fallback: try to determine from parent container
     const parent = control.parentElement;
-    if (parent && parent.classList && typeof parent.classList.contains === 'function') {
+    if (parent?.classList) {
       const parentClassList = parent.classList;
       if (parentClassList.contains('leaflet-top') && parentClassList.contains('leaflet-right')) {
         return 'topright';
-      } else if (parentClassList.contains('leaflet-bottom') && parentClassList.contains('leaflet-right')) {
+      }
+      if (parentClassList.contains('leaflet-bottom') && parentClassList.contains('leaflet-right')) {
         return 'bottomright';
-      } else if (parentClassList.contains('leaflet-top') && parentClassList.contains('leaflet-left')) {
+      }
+      if (parentClassList.contains('leaflet-top') && parentClassList.contains('leaflet-left')) {
         return 'topleft';
-      } else if (parentClassList.contains('leaflet-bottom') && parentClassList.contains('leaflet-left')) {
+      }
+      if (parentClassList.contains('leaflet-bottom') && parentClassList.contains('leaflet-left')) {
         return 'bottomleft';
       }
     }
@@ -585,8 +606,8 @@ export class ViewportCalculator {
    * @returns true if position would collide with controls, false otherwise
    */
   static checkControlCollision(
-    map: L.Map,
-    position: L.Point,
+    map: MapProjection,
+    position: Point,
     popupSize: PopupSize,
     padding: number = 10
   ): boolean {
@@ -630,12 +651,12 @@ export class ViewportCalculator {
    * @returns Adjusted position that avoids control collisions, or original if no better position found
    */
   static findCollisionFreePosition(
-    map: L.Map,
+    map: MapProjection,
     originalPosition: [number, number],
     popupSize: PopupSize,
     padding: number = 10
   ): [number, number] {
-    const originalPoint = map.latLngToContainerPoint(L.latLng(originalPosition[0], originalPosition[1]));
+    const originalPoint = map.latLngToContainerPoint(latLng(originalPosition[0], originalPosition[1]));
 
     // If no collision, return original position
     if (!ViewportCalculator.checkControlCollision(map, originalPoint, popupSize, padding)) {
@@ -658,7 +679,7 @@ export class ViewportCalculator {
     ];
 
     for (const offset of offsetStrategies) {
-      const testPoint = L.point(originalPoint.x + offset.x, originalPoint.y + offset.y);
+      const testPoint = point(originalPoint.x + offset.x, originalPoint.y + offset.y);
 
       // Ensure the test point is within the container bounds
       if (testPoint.x < 0 || testPoint.x > containerSize.x ||
@@ -678,7 +699,7 @@ export class ViewportCalculator {
     let minOverlapArea = Number.MAX_VALUE;
 
     for (const offset of offsetStrategies) {
-      const testPoint = L.point(originalPoint.x + offset.x, originalPoint.y + offset.y);
+      const testPoint = point(originalPoint.x + offset.x, originalPoint.y + offset.y);
 
       if (testPoint.x < 0 || testPoint.x > containerSize.x ||
         testPoint.y < 0 || testPoint.y > containerSize.y) {
@@ -705,7 +726,7 @@ export class ViewportCalculator {
    * @returns Total overlap area in square pixels
    */
   private static calculateOverlapArea(
-    position: L.Point,
+    position: Point,
     popupSize: PopupSize,
     controls: ControlBounds[],
     padding: number
@@ -754,9 +775,9 @@ export class ViewportCalculator {
    */
   static adjustPositionForVisibilityAndControls(
     position: [number, number],
-    bounds: L.LatLngBounds,
+    bounds: GeoBounds,
     popupSize: PopupSize,
-    map: L.Map
+    map: MapProjection
   ): [number, number] {
     try {
       // Validate inputs
@@ -828,9 +849,9 @@ export class ViewportCalculator {
    */
   private static adjustPositionWithMapStateAwareness(
     position: [number, number],
-    bounds: L.LatLngBounds,
+    bounds: GeoBounds,
     popupSize: PopupSize,
-    map: L.Map,
+    map: MapProjection,
     mapState: { zoom: number; size: { x: number; y: number } } | null
   ): [number, number] {
     // Start with basic visibility adjustment
@@ -851,7 +872,7 @@ export class ViewportCalculator {
 
       // For small viewports, use more aggressive centering to ensure visibility
       const containerSize = mapState.size;
-      const centerPoint = L.point(containerSize.x / 2, containerSize.y / 2);
+      const centerPoint = point(containerSize.x / 2, containerSize.y / 2);
 
       // Adjust popup size for small viewports if needed
       const adjustedPopupSize = {
@@ -919,9 +940,9 @@ export class ViewportCalculator {
    */
   private static adjustPositionForVisibilityWithPadding(
     position: [number, number],
-    _bounds: L.LatLngBounds,
+    _bounds: GeoBounds,
     popupSize: PopupSize,
-    map: L.Map,
+    map: MapProjection,
     padding: number
   ): [number, number] {
     try {
@@ -929,7 +950,7 @@ export class ViewportCalculator {
       let adjustedLng = position[1];
 
       // Convert position to pixel coordinates
-      const positionPoint = map.latLngToContainerPoint(L.latLng(position[0], position[1]));
+      const positionPoint = map.latLngToContainerPoint(latLng(position[0], position[1]));
 
       // Get container size
       const containerSize = map.getSize();
@@ -943,12 +964,12 @@ export class ViewportCalculator {
       // Adjust horizontally if popup extends beyond viewport
       if (popupLeft < padding) {
         const adjustment = padding - popupLeft;
-        const adjustedPoint = L.point(positionPoint.x + adjustment, positionPoint.y);
+        const adjustedPoint = point(positionPoint.x + adjustment, positionPoint.y);
         const adjustedLatLng = map.containerPointToLatLng(adjustedPoint);
         adjustedLng = adjustedLatLng.lng;
       } else if (popupRight > containerSize.x - padding) {
         const adjustment = popupRight - (containerSize.x - padding);
-        const adjustedPoint = L.point(positionPoint.x - adjustment, positionPoint.y);
+        const adjustedPoint = point(positionPoint.x - adjustment, positionPoint.y);
         const adjustedLatLng = map.containerPointToLatLng(adjustedPoint);
         adjustedLng = adjustedLatLng.lng;
       }
@@ -956,12 +977,12 @@ export class ViewportCalculator {
       // Adjust vertically if popup extends beyond viewport
       if (popupTop < padding) {
         const adjustment = padding - popupTop;
-        const adjustedPoint = L.point(positionPoint.x, positionPoint.y + adjustment);
+        const adjustedPoint = point(positionPoint.x, positionPoint.y + adjustment);
         const adjustedLatLng = map.containerPointToLatLng(adjustedPoint);
         adjustedLat = adjustedLatLng.lat;
       } else if (popupBottom > containerSize.y - padding) {
         const adjustment = popupBottom - (containerSize.y - padding);
-        const adjustedPoint = L.point(positionPoint.x, positionPoint.y - adjustment);
+        const adjustedPoint = point(positionPoint.x, positionPoint.y - adjustment);
         const adjustedLatLng = map.containerPointToLatLng(adjustedPoint);
         adjustedLat = adjustedLatLng.lat;
       }
@@ -1015,7 +1036,7 @@ export class ViewportCalculator {
    * Invalidates cache when map state changes significantly
    * @param map - The Leaflet map instance
    */
-  static invalidateCacheOnMapStateChange(map: L.Map): void {
+  static invalidateCacheOnMapStateChange(map: MapProjection): void {
     try {
       const currentMapStateHash = ViewportCalculator.generateMapStateHash(map);
 
@@ -1048,7 +1069,7 @@ export class ViewportCalculator {
    * @param map - Leaflet map instance
    * @returns Cleanup function to remove event listeners
    */
-  static setupAutomaticCacheInvalidation(map: L.Map): () => void {
+  static setupAutomaticCacheInvalidation(map: MapProjection): () => void {
     const invalidateCache = () => {
       ViewportCalculator.invalidateCacheOnMapStateChange(map);
     };
@@ -1079,7 +1100,7 @@ export class ViewportCalculator {
    * @param map - Leaflet map instance
    * @param commonPositions - Array of common positions to preload
    */
-  static preloadCache(map: L.Map, commonPositions?: [number, number][]): void {
+  static preloadCache(map: MapProjection, commonPositions?: [number, number][]): void {
     try {
       // Preload current viewport
       ViewportCalculator.getViewportInfo(map);
@@ -1100,7 +1121,7 @@ export class ViewportCalculator {
         });
 
         // Restore original view
-        map.setView(currentCenter, currentZoom, { animate: false });
+        map.setView([currentCenter.lat, currentCenter.lng], currentZoom, { animate: false });
       }
     } catch (error) {
       console.error('Error preloading cache:', error);
@@ -1111,7 +1132,7 @@ export class ViewportCalculator {
    * Optimizes cache for mobile devices by adjusting TTL and size limits
    * @param map - The Leaflet map instance
    */
-  static optimizeForMobile(map: L.Map): void {
+  static optimizeForMobile(map: MapProjection): void {
     if (ViewportCalculator.isMobileDevice(map)) {
       // For mobile devices, be more aggressive about cache cleanup
       // to preserve memory
@@ -1126,7 +1147,7 @@ export class ViewportCalculator {
    * @param map - Leaflet map instance
    * @returns Cache key string
    */
-  private static generateCacheKey(map: L.Map): string {
+  private static generateCacheKey(map: MapProjection): string {
     try {
       const center = map.getCenter();
       const zoom = map.getZoom();
@@ -1147,7 +1168,7 @@ export class ViewportCalculator {
    * @param map - Leaflet map instance
    * @returns Map state hash string
    */
-  private static generateMapStateHash(map: L.Map): string {
+  private static generateMapStateHash(map: MapProjection): string {
     try {
       const center = map.getCenter();
       const zoom = map.getZoom();
@@ -1167,7 +1188,7 @@ export class ViewportCalculator {
    * @param map - Leaflet map instance
    * @returns true if mobile device
    */
-  private static isMobileDevice(map: L.Map): boolean {
+  private static isMobileDevice(map: MapProjection): boolean {
     try {
       const size = map.getSize();
       const isMobileSize = size.x <= 768 || size.y <= 768;
@@ -1305,16 +1326,16 @@ export class ViewportCalculator {
    */
   private static getFallbackViewportInfo(): ViewportInfo {
     // Japan bounding box coordinates
-    const japanBounds = L.latLngBounds(
+    const japanBounds = geoBounds(
       [24.0, 123.0], // Southwest corner
       [46.0, 146.0]  // Northeast corner
     );
 
     return {
       bounds: japanBounds,
-      center: L.latLng(35.6762, 139.6503), // Tokyo coordinates
+      center: latLng(35.6762, 139.6503), // Tokyo coordinates
       zoom: 6, // Reasonable zoom level for Japan
-      pixelBounds: L.bounds([0, 0], [800, 600]) // Default pixel bounds
+      pixelBounds: pixelBounds(point(0, 0), point(800, 600)) // Default pixel bounds
     };
   }
 
@@ -1350,7 +1371,7 @@ export class ViewportCalculator {
    * @param position - Position to center the bounds around
    * @returns Fallback LatLngBounds
    */
-  static createFallbackBounds(position: [number, number]): L.LatLngBounds {
+  static createFallbackBounds(position: [number, number]): GeoBounds {
     try {
       const [lat, lng] = ViewportCalculator.validatePositionInput(position)
         ? position
@@ -1359,14 +1380,14 @@ export class ViewportCalculator {
       // Create bounds with ~50km radius around the position
       const offset = 0.5; // degrees (approximately 55km at equator)
 
-      return L.latLngBounds(
+      return geoBounds(
         [lat - offset, lng - offset], // Southwest
         [lat + offset, lng + offset]  // Northeast
       );
     } catch (error) {
       console.error('Error creating fallback bounds:', error);
       // Return Japan-wide bounds as ultimate fallback
-      return L.latLngBounds([24.0, 123.0], [46.0, 146.0]);
+      return geoBounds([24.0, 123.0], [46.0, 146.0]);
     }
   }
 
@@ -1382,7 +1403,7 @@ export class ViewportCalculator {
     adjustedPosition: [number, number],
     originalPosition: [number, number],
     mapState: { zoom: number; size: { x: number; y: number } },
-    viewportBounds: L.LatLngBounds
+    viewportBounds: GeoBounds
   ): [number, number] {
     try {
       let finalPosition = adjustedPosition;

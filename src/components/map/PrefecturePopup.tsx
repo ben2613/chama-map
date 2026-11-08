@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
-import { Popup, useMap } from 'react-leaflet';
-import L from 'leaflet';
+import React, { useEffect, useMemo } from 'react';
+import { Popup } from 'react-map-gl/maplibre';
 import type { FeatureCollection, Point, MultiPolygon } from 'geojson';
 import type { TrackMarkerHandle } from './TrackMarker';
 import { TrackProperties, PrefectureProperties, SmartPositionConfig } from '@/types/map';
@@ -9,6 +8,8 @@ import { getGroupingKeyForFeature } from '@/utils/groupTrackFeatures';
 import { useTranslation } from 'react-i18next';
 import { FaXmark } from 'react-icons/fa6';
 import { ViewportCalculator, PopupSize } from '@/utils/ViewportCalculator';
+import { useMapProjection } from '@/map/useMapProjection';
+import type { MapPopupHandle } from '@/hooks/useMapRefs';
 import styles from './PrefecturePopup.module.css';
 
 interface PrefecturePopupProps {
@@ -17,12 +18,13 @@ interface PrefecturePopupProps {
   chamaTrack: FeatureCollection<Point, TrackProperties>;
   japanData: FeatureCollection<MultiPolygon, PrefectureProperties>;
   markerRefs: React.RefObject<Record<string, React.RefObject<TrackMarkerHandle | null>[]>>;
-  popupRef: React.RefObject<L.Popup | null>;
+  popupRef: React.RefObject<MapPopupHandle | null>;
   groupedMap?: Record<string, Feature<Point, TrackProperties>[]>;
+  onClose: () => void;
 }
 
 function computePopupPosition(
-  map: L.Map | undefined,
+  map: ReturnType<typeof useMapProjection>,
   positionConfig: SmartPositionConfig
 ): [number, number] {
   if (!map || !positionConfig) {
@@ -30,79 +32,50 @@ function computePopupPosition(
   }
 
   try {
-    const defaultPopupSize: PopupSize = {
-      width: 300,
-      height: 200
+    const defaultPopupSize: PopupSize = { width: 300, height: 200 };
+
+    const mapState = {
+      zoom: map.getZoom(),
+      size: map.getSize(),
     };
 
-    let mapState: { zoom: number; size: { x: number; y: number } } | null = null;
-    try {
-      mapState = {
-        zoom: map.getZoom(),
-        size: map.getSize()
-      };
-    } catch (mapStateError) {
-      console.warn('Could not get map state:', mapStateError);
-    }
-
     let basePosition: [number, number];
-    try {
-      if (positionConfig.useClickPosition) {
-        const isValidClick = ViewportCalculator.validateClickPosition(
-          positionConfig.clickPosition,
-          positionConfig.prefectureCenter
-        );
-        basePosition = isValidClick ? positionConfig.clickPosition : positionConfig.prefectureCenter;
-      } else {
-        basePosition = positionConfig.prefectureCenter;
-      }
-
-      if (!ViewportCalculator.validateClickPosition(basePosition, positionConfig.prefectureCenter)) {
-        basePosition = positionConfig.prefectureCenter;
-      }
-    } catch (positionError) {
-      console.error('Error determining base position:', positionError);
-      basePosition = positionConfig.prefectureCenter;
-    }
-
-    let adjustedPos: [number, number];
-    try {
-      adjustedPos = ViewportCalculator.adjustPositionForVisibilityAndControls(
-        basePosition,
-        positionConfig.viewportBounds,
-        defaultPopupSize,
-        map
-      );
-
-      if (mapState) {
-        adjustedPos = ViewportCalculator.applyMapStateSpecificAdjustments(
-          adjustedPos,
-          basePosition,
-          mapState,
-          positionConfig.viewportBounds
-        );
-      }
-
-      if (ViewportCalculator.validateClickPosition(adjustedPos, positionConfig.prefectureCenter)) {
-        return adjustedPos;
-      }
-    } catch (adjustmentError) {
-      console.error('Error adjusting position for visibility and controls:', adjustmentError);
-    }
-
     if (positionConfig.useClickPosition) {
       const isValidClick = ViewportCalculator.validateClickPosition(
         positionConfig.clickPosition,
         positionConfig.prefectureCenter
       );
-      return isValidClick ? positionConfig.clickPosition : positionConfig.prefectureCenter;
+      basePosition = isValidClick ? positionConfig.clickPosition : positionConfig.prefectureCenter;
+    } else {
+      basePosition = positionConfig.prefectureCenter;
     }
 
-    return positionConfig.prefectureCenter;
+    if (!ViewportCalculator.validateClickPosition(basePosition, positionConfig.prefectureCenter)) {
+      basePosition = positionConfig.prefectureCenter;
+    }
+
+    let adjustedPos = ViewportCalculator.adjustPositionForVisibilityAndControls(
+      basePosition,
+      positionConfig.viewportBounds,
+      defaultPopupSize,
+      map
+    );
+
+    adjustedPos = ViewportCalculator.applyMapStateSpecificAdjustments(
+      adjustedPos,
+      basePosition,
+      mapState,
+      positionConfig.viewportBounds
+    );
+
+    if (ViewportCalculator.validateClickPosition(adjustedPos, positionConfig.prefectureCenter)) {
+      return adjustedPos;
+    }
   } catch (error) {
     console.error('Unexpected error in PrefecturePopup positioning:', error);
-    return positionConfig.prefectureCenter;
   }
+
+  return positionConfig.prefectureCenter;
 }
 
 const PrefecturePopup = ({
@@ -112,52 +85,44 @@ const PrefecturePopup = ({
   japanData,
   markerRefs,
   popupRef,
-  groupedMap
+  groupedMap,
+  onClose,
 }: PrefecturePopupProps) => {
   const { t, i18n } = useTranslation();
-  const map = useMap();
+  const map = useMapProjection();
 
   const tracks = chamaTrack.features.filter((f) => f.properties.prefecture === selectedPrefecture);
-
-  // Find the center of the prefecture for popup placement
   const feature = japanData?.features.find((f) => f.properties!.nam === selectedPrefecture);
 
-  const popupPosition = useMemo(
-    () => computePopupPosition(map, positionConfig),
-    [map, positionConfig]
-  );
+  const [lat, lng] = useMemo(() => computePopupPosition(map, positionConfig), [map, positionConfig]);
 
-  // Deduplicated groups for the selected prefecture when groupedMap is provided
+  useEffect(() => {
+    popupRef.current = { close: onClose };
+    return () => {
+      popupRef.current = null;
+    };
+  }, [onClose, popupRef]);
+
   const groupedList: Feature<Point, TrackProperties>[][] | null = groupedMap
     ? Object.values(groupedMap).filter(
-      (group) => group.length > 0 && group[0].properties.prefecture === selectedPrefecture
-    )
+        (group) => group.length > 0 && group[0].properties.prefecture === selectedPrefecture
+      )
     : null;
 
   return (
     <Popup
-      position={popupPosition}
-      autoPan={false} // Disable autoPan since we're handling positioning manually
+      longitude={lng}
+      latitude={lat}
+      closeOnClick={false}
+      onClose={onClose}
       className={styles['prefecture-popup']}
-      ref={(ref) => {
-        if (ref) {
-          popupRef.current = ref;
-        }
-      }}
+      maxWidth="320px"
     >
       <div className={styles['popup-container']}>
         <div className={styles['prefecture-title']}>
           <span />
           <span>{i18n.language.startsWith('ja') ? feature?.properties.nam_ja : feature?.properties.nam}</span>
-          <button
-            className={styles['close-button']}
-            onClick={() => {
-              if (popupRef.current) {
-                popupRef.current.close();
-              }
-            }}
-            aria-label="Close popup"
-          >
+          <button className={styles['close-button']} onClick={onClose} aria-label="Close popup" type="button">
             <FaXmark />
           </button>
         </div>
@@ -178,16 +143,14 @@ const PrefecturePopup = ({
                       e.preventDefault();
                       const originalIdx = chamaTrack.features.findIndex((f1) => f1 === rep);
                       const ref = markerRefs.current[selectedPrefecture]?.[originalIdx];
-                      if (ref && ref.current) {
-                        setTimeout(() => {
-                          ref.current?.openPopup();
-                        }, 100);
+                      if (ref?.current) {
+                        setTimeout(() => ref.current?.openPopup(), 100);
                       }
                     }}
                   >
                     {icon && (
                       <>
-                        <img src={icon} className={'inline-block h-[1em] w-[1em] mt-[-1px] object-contain'} />
+                        <img src={icon} className={'inline-block h-[1em] w-[1em] mt-[-1px] object-contain'} alt="" />
                         &nbsp;
                       </>
                     )}

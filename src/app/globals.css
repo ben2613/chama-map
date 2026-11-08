@@ -39,8 +39,9 @@ body {
   left: 0;
 }
 
-/* Leaflet control positioning adjustments for mobile */
-.leaflet-control-container .leaflet-bottom.leaflet-right {
+/* Map control positioning adjustments for mobile */
+.chama-map-control,
+.maplibregl-ctrl-bottom-right {
   /* Add safe area padding for mobile devices */
   padding-bottom: env(safe-area-inset-bottom, 10px);
   padding-right: env(safe-area-inset-right, 10px);
@@ -48,14 +49,14 @@ body {
 
 /* Additional mobile-specific adjustments */
 @media (max-width: 768px) {
-  .leaflet-control-container .leaflet-bottom.leaflet-right {
+  .maplibregl-ctrl-bottom-right,
+  .absolute.bottom-3.right-3 {
     /* Extra padding on mobile to account for browser UI */
     padding-bottom: max(env(safe-area-inset-bottom, 10px), 20px);
   }
   
   /* Ensure controls don't overlap with mobile browser UI */
-  .leaflet-control-zoom,
-  .leaflet-control-custom {
+  .chama-map-control {
     margin-bottom: 10px !important;
   }
 }

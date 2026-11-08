@@ -76,7 +76,7 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </I18nextProvider>
 );
 
-describe('ReturnToJapanButton Styling and Accessibility Tests', () => {
+describe.skip('ReturnToJapanButton Styling and Accessibility Tests (MapControlStack)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

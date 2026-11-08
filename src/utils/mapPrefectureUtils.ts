@@ -1,14 +1,10 @@
-import { PrefectureProperties, TrackProperties, SmartPositionConfig, PopupOpeningControl } from '@/types/map';
+import { PrefectureProperties, SmartPositionConfig, PopupOpeningControl } from '@/types/map';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import type { Feature, FeatureCollection, Geometry, MultiPolygon, Point, Position } from 'geojson';
-import L from 'leaflet';
-import { getFeatureStyle, getHoverStyle } from './mapStyles';
+import type { Feature, FeatureCollection, Geometry, MultiPolygon, Position } from 'geojson';
+import type { MapProjection } from '@/map/mapProjection';
+import type { GeoBounds } from '@/map/geoBounds';
 import { ViewportCalculator } from './ViewportCalculator';
 import { ClickPositionManager } from './ClickPositionManager';
-
-interface LayerWithFeature extends L.Layer {
-  feature: FeatureCollection<MultiPolygon, PrefectureProperties>;
-}
 
 export function getPrefectureForPoint(
   point: Position,
@@ -136,8 +132,9 @@ function validatePrefectureCenter(
  * Captures and validates click position with boundary analysis
  */
 function captureClickPosition(
-  e: L.LeafletMouseEvent,
-  prefectureCenter: [number, number]
+  clickLatLng: { lat: number; lng: number },
+  prefectureCenter: [number, number],
+  prefectureData?: FeatureCollection<MultiPolygon, PrefectureProperties>
 ): {
   clickPosition: [number, number];
   boundaryInfo: { isNearBoundary: boolean; confidence: number };
@@ -149,42 +146,27 @@ function captureClickPosition(
   };
 
   try {
-    if (!e.latlng || typeof e.latlng.lat !== 'number' || typeof e.latlng.lng !== 'number') {
+    if (typeof clickLatLng.lat !== 'number' || typeof clickLatLng.lng !== 'number') {
       throw new Error('Invalid click event coordinates');
     }
-    clickPosition = [e.latlng.lat, e.latlng.lng];
+    clickPosition = [clickLatLng.lat, clickLatLng.lng];
     console.log('click position captured:', clickPosition);
 
-    // Enhanced boundary detection for clicks near prefecture boundaries
-    try {
-      const clickPoint: Position = [clickPosition[1], clickPosition[0]]; // GeoJSON uses [lng, lat]
-      const prefectureData = e.target._map?._layers ?
-        Object.values(e.target._map._layers).find((layer: unknown): layer is LayerWithFeature =>
-          typeof layer === 'object' && layer !== null && 'feature' in layer &&
-          (layer as LayerWithFeature).feature && (layer as LayerWithFeature).feature.type === 'FeatureCollection'
-        )?.feature : null;
-
+  try {
+      const clickPoint: Position = [clickPosition[1], clickPosition[0]];
       if (prefectureData) {
-        const boundaryResult = getPrefectureForPointWithBoundaryTolerance(
-          clickPoint,
-          prefectureData as FeatureCollection<MultiPolygon, PrefectureProperties>
-        );
-
+        const boundaryResult = getPrefectureForPointWithBoundaryTolerance(clickPoint, prefectureData);
         boundaryInfo = {
           isNearBoundary: boundaryResult.isNearBoundary,
           confidence: boundaryResult.confidence
         };
-
         console.log('Boundary analysis result:', boundaryResult);
       }
     } catch (boundaryError) {
       console.warn('Could not perform boundary analysis:', boundaryError);
-      // Continue with default boundary info
     }
-
   } catch (clickError) {
     console.error('Error capturing click position:', clickError);
-    // Fall back to prefecture center for click position
     clickPosition = prefectureCenter;
     boundaryInfo = { isNearBoundary: false, confidence: 0.5 };
     console.warn('Using prefecture center as click position fallback:', clickPosition);
@@ -197,36 +179,27 @@ function captureClickPosition(
  * Gets map instance and viewport information with error handling
  */
 function getMapAndViewportInfo(
-  e: L.LeafletMouseEvent,
+  map: MapProjection | null,
   prefectureCenter: [number, number]
 ): {
-  map: L.Map | null;
-  viewportBounds: L.LatLngBounds;
+  map: MapProjection | null;
+  viewportBounds: GeoBounds;
   mapState: { zoom: number; size: { x: number; y: number } } | null;
 } {
-  let map: L.Map | null = null;
-  let viewportBounds: L.LatLngBounds;
+  let viewportBounds: GeoBounds;
   let mapState: { zoom: number; size: { x: number; y: number } } | null = null;
 
   try {
-    map = e.target._map as L.Map;
-    if (!map || typeof map.getBounds !== 'function') {
+    if (!map) {
       throw new Error('Invalid map instance');
     }
     viewportBounds = map.getBounds();
-    if (!viewportBounds || typeof viewportBounds.contains !== 'function') {
-      throw new Error('Invalid viewport bounds');
-    }
-
-    // Get map state for small viewport handling
     mapState = {
       zoom: map.getZoom(),
       size: map.getSize()
     };
-
   } catch (mapError) {
     console.error('Error getting map instance or viewport bounds:', mapError);
-    // Create fallback bounds around prefecture center
     viewportBounds = ViewportCalculator.createFallbackBounds(prefectureCenter);
     console.warn('Using fallback viewport bounds');
   }
@@ -353,8 +326,8 @@ function validateClickPosition(
 function determineSmartPositioning(
   prefectureCenter: [number, number],
   finalClickPosition: [number, number],
-  viewportBounds: L.LatLngBounds,
-  map: L.Map | null,
+  viewportBounds: GeoBounds,
+  map: MapProjection | null,
   mapState: { zoom: number; size: { x: number; y: number } } | null
 ): SmartPositionConfig {
   try {
@@ -465,25 +438,28 @@ function emergencyFallback(
 /**
  * Main click handler for prefecture interactions
  */
-function handlePrefectureClick(
-  e: L.LeafletMouseEvent,
+export function handlePrefectureMapClick(
   prefectureName: string,
   feature: Feature<Geometry, PrefectureProperties>,
+  clickLatLng: { lat: number; lng: number },
+  map: MapProjection,
+  japanData: FeatureCollection<MultiPolygon, PrefectureProperties>,
   setSelectedPrefecture: (name: string, positionConfig: SmartPositionConfig) => void,
   isPopupOpening: PopupOpeningControl,
-  clickManager: ClickPositionManager
+  clickManager: ClickPositionManager = ClickPositionManager.getInstance()
 ): void {
   try {
     console.log('prefecture clicked:', prefectureName);
 
-    // Step 1: Validate prefecture center
     const validatedPrefectureCenter = validatePrefectureCenter(feature.properties.center, feature);
 
-    // Step 2: Capture and analyze click position
-    const { clickPosition, boundaryInfo } = captureClickPosition(e, validatedPrefectureCenter);
+    const { clickPosition, boundaryInfo } = captureClickPosition(
+      clickLatLng,
+      validatedPrefectureCenter,
+      japanData
+    );
 
-    // Step 3: Get map and viewport information
-    const { map, viewportBounds, mapState } = getMapAndViewportInfo(e, validatedPrefectureCenter);
+    const { map: mapInstance, viewportBounds, mapState } = getMapAndViewportInfo(map, validatedPrefectureCenter);
 
     // Step 4: Handle rapid clicks and state management
     const { finalClickPosition, finalBoundaryInfo } = handleClickState(
@@ -506,7 +482,7 @@ function handlePrefectureClick(
       validatedPrefectureCenter,
       validatedClickPosition,
       viewportBounds,
-      map,
+      mapInstance,
       mapState
     );
 
@@ -532,46 +508,9 @@ function handlePrefectureClick(
   }
 }
 
-export const createPrefectureHandlers = (
-  setSelectedPrefecture: (name: string, positionConfig: SmartPositionConfig) => void,
-  isPopupOpening: PopupOpeningControl,
-  chamaTrack?: FeatureCollection<Point, TrackProperties>
-) => {
-  const clickManager = ClickPositionManager.getInstance();
-
-  return (feature: Feature<Geometry, PrefectureProperties>, layer: L.Layer) => {
-    const prefectureName = feature.properties.nam;
-
-    layer.on({
-      click: (e: L.LeafletMouseEvent) => {
-        handlePrefectureClick(
-          e,
-          prefectureName,
-          feature,
-          setSelectedPrefecture,
-          isPopupOpening,
-          clickManager
-        );
-      },
-      mouseover: (e: L.LeafletMouseEvent) => {
-        try {
-          const layer = e.target as L.Path;
-          layer.setStyle(getHoverStyle());
-          layer.bringToFront();
-        } catch (error) {
-          console.error('Error in mouseover handler:', error);
-          // Silently fail for hover effects - not critical functionality
-        }
-      },
-      mouseout: (e: L.LeafletMouseEvent) => {
-        try {
-          const layer = e.target as L.Path;
-          layer.setStyle(getFeatureStyle(feature, chamaTrack));
-        } catch (error) {
-          console.error('Error in mouseout handler:', error);
-          // Silently fail for hover effects - not critical functionality
-        }
-      }
-    });
+/** @deprecated Leaflet-only; MapLibre uses `handlePrefectureMapClick` from layer click handlers. */
+export const createPrefectureHandlers = () => {
+  return () => {
+    /* no-op — retained for legacy test imports until mocks are updated */
   };
 };

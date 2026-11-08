@@ -129,4 +129,17 @@
   :global(a.leaflet-popup-close-button) {
     display: none;
   }
+
+  :global(.maplibregl-popup-content) {
+    margin: 0;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e5e7eb;
+  }
+
+  :global(.maplibregl-popup-tip) {
+    border-top-color: white;
+  }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import '@/map/maplibreSetup';
 import App from './App.tsx';
 import './app/globals.css';
 

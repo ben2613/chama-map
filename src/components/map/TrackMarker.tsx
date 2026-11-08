@@ -1,6 +1,5 @@
-import { Marker, Popup, Tooltip } from 'react-leaflet';
-import L, { Marker as LeafletMarker } from 'leaflet';
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import { Marker, Popup } from 'react-map-gl/maplibre';
 import type { Feature, Point } from 'geojson';
 import type { TrackProperties } from '@/types/map';
 import { useTranslation } from 'react-i18next';
@@ -13,22 +12,12 @@ export interface TrackMarkerHandle {
 }
 
 interface TrackMarkerProps {
-  coordinates: [number, number]; // [lng, lat]
+  coordinates: [number, number];
   icon: string;
-  groupedKey?: string; // key used to look up grouped tracks
-  groupedTracks?: Feature<Point, TrackProperties>[]; // tracks sharing same name and coordinates
+  groupedKey?: string;
+  groupedTracks?: Feature<Point, TrackProperties>[];
   prefecture?: string;
 }
-
-const defaultIcon = new L.Icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
-});
 
 function linkText(link: string) {
   if (link.includes('twitter') || link.includes('x.com')) {
@@ -42,19 +31,7 @@ function linkText(link: string) {
 
 const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coordinates, groupedTracks }, ref) => {
   const { i18n } = useTranslation();
-
-  const markerIcon = icon
-    ? new L.Icon({
-      iconUrl: icon,
-      // shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-      iconSize: [28, 28],
-      iconAnchor: [14, 28],
-      popupAnchor: [0, -35],
-      shadowSize: [28, 28]
-    })
-    : defaultIcon;
-
-  const markerRef = useRef<LeafletMarker>(null);
+  const [open, setOpen] = useState(false);
   const [imgIndex, setImgIndex] = React.useState(0);
   const [groupIndex, setGroupIndex] = React.useState(0);
 
@@ -67,22 +44,13 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
   const displayLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayTitle || '')}`;
 
   useImperativeHandle(ref, () => ({
-    openPopup: () => {
-      if (markerRef.current) {
-        markerRef.current.openPopup();
-      }
-    }
+    openPopup: () => setOpen(true),
   }));
 
-  // Handlers for image navigation
-  const handlePrev = () => {
-    setImgIndex((idx) => (idx > 0 ? idx - 1 : idx));
-  };
-  const handleNext = () => {
+  const handlePrev = () => setImgIndex((idx) => (idx > 0 ? idx - 1 : idx));
+  const handleNext = () =>
     setImgIndex((idx) => (displayImages && idx < displayImages.length - 1 ? idx + 1 : idx));
-  };
 
-  // Reset indices if input arrays change
   React.useEffect(() => {
     setGroupIndex(0);
   }, [groupedTracks]);
@@ -90,102 +58,115 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
     setImgIndex(0);
   }, [groupIndex]);
 
+  const longitude = coordinates[0];
+  const latitude = coordinates[1];
+
   return (
-    <Marker riseOnHover position={[coordinates[1], coordinates[0]]} icon={markerIcon} ref={markerRef}>
-      <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent={false}>
-        {displayTitle}
-      </Tooltip>
-      <Popup className={styles['custom-popup']}>
-        <div className={styles['popup-container']}>
-          {/* Title section */}
-          <div className={styles['title-section']}>
-            {displayTitle && (
-              <a className={styles['location-title']} target="_blank" rel="noopener noreferrer" href={displayLink}>
-                {displayTitle}
-              </a>
+    <>
+      <Marker longitude={longitude} latitude={latitude} anchor="bottom" onClick={() => setOpen(true)}>
+        <img
+          src={icon || 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png'}
+          alt=""
+          width={icon ? 28 : 25}
+          height={icon ? 28 : 41}
+          className="drop-shadow-md cursor-pointer"
+          title={displayTitle}
+        />
+      </Marker>
+      {open && (
+        <Popup
+          longitude={longitude}
+          latitude={latitude}
+          anchor="bottom"
+          closeOnClick={false}
+          onClose={() => setOpen(false)}
+          className={styles['custom-popup']}
+        >
+          <div className={styles['popup-container']}>
+            <div className={styles['title-section']}>
+              {displayTitle && (
+                <a className={styles['location-title']} target="_blank" rel="noopener noreferrer" href={displayLink}>
+                  {displayTitle}
+                </a>
+              )}
+            </div>
+
+            {displayDescription && <div className={styles.description}>{displayDescription}</div>}
+
+            {displayImages.length > 0 && (
+              <div className={styles['image-gallery']}>
+                {displayImages.length > 1 && (
+                  <button
+                    className={`${styles['gallery-nav']} ${styles['prev-gallery']}`}
+                    onClick={handlePrev}
+                    disabled={imgIndex === 0}
+                    aria-label="Previous image"
+                  >
+                    <FaChevronLeft />
+                  </button>
+                )}
+                <div className={styles['image-container']}>
+                  <Image
+                    src={
+                      displayImages[imgIndex].includes('youtube.com') || displayImages[imgIndex].includes('youtu.be')
+                        ? displayImages[imgIndex]
+                        : import.meta.env.VITE_CORS_PROXY + displayImages[imgIndex]
+                    }
+                    alt={displayTitle}
+                    className={styles['gallery-image']}
+                  />
+                  {displayImages.length > 1 && (
+                    <div className={styles['image-counter']}>
+                      {imgIndex + 1} / {displayImages.length}
+                    </div>
+                  )}
+                </div>
+                {displayImages.length > 1 && (
+                  <button
+                    className={`${styles['gallery-nav']} ${styles['next-gallery']}`}
+                    onClick={handleNext}
+                    disabled={imgIndex === displayImages.length - 1}
+                    aria-label="Next image"
+                  >
+                    <FaChevronRight />
+                  </button>
+                )}
+              </div>
             )}
-          </div>
 
-          {/* Description */}
-          {displayDescription && <div className={styles.description}>{displayDescription}</div>}
+            {displayLinks.length > 0 && (
+              <div className={styles['social-links']}>
+                {displayLinks.map((link, index) => (
+                  <a key={index} href={link} target="_blank" rel="noopener noreferrer" className={styles['social-link']}>
+                    {linkText(link)}
+                  </a>
+                ))}
+              </div>
+            )}
 
-          {/* Image gallery */}
-          {displayImages && displayImages.length > 0 && (
-            <div className={styles['image-gallery']}>
-              {displayImages.length > 1 && (
+            {groupedTracks && groupedTracks.length > 1 && (
+              <div className={styles['group-navigation']}>
                 <button
-                  className={`${styles['gallery-nav']} ${styles['prev-gallery']}`}
-                  onClick={handlePrev}
-                  disabled={imgIndex === 0}
-                  aria-label="Previous image"
+                  className={styles['nav-button']}
+                  onClick={() => setGroupIndex((i) => (i > 0 ? i - 1 : groupedTracks.length - 1))}
                 >
                   <FaChevronLeft />
                 </button>
-              )}
-              <div className={styles['image-container']}>
-                <Image
-                  src={
-                    displayImages[imgIndex].includes('youtube.com') || displayImages[imgIndex].includes('youtu.be') // ||
-                      ? // displayImages[imgIndex].includes('fxtwitter.com')
-                      displayImages[imgIndex]
-                      : import.meta.env.VITE_CORS_PROXY + displayImages[imgIndex]
-                  }
-                  alt={displayTitle}
-                  className={styles['gallery-image']}
-                />
-                {displayImages.length > 1 && (
-                  <div className={styles['image-counter']}>
-                    {imgIndex + 1} / {displayImages.length}
-                  </div>
-                )}
-              </div>
-              {displayImages.length > 1 && (
+                <span className={styles['group-counter']}>
+                  {groupIndex + 1} / {groupedTracks.length}
+                </span>
                 <button
-                  className={`${styles['gallery-nav']} ${styles['next-gallery']}`}
-                  onClick={handleNext}
-                  disabled={imgIndex === displayImages.length - 1}
-                  aria-label="Next image"
+                  className={styles['nav-button']}
+                  onClick={() => setGroupIndex((i) => (i < groupedTracks.length - 1 ? i + 1 : 0))}
                 >
                   <FaChevronRight />
                 </button>
-              )}
-            </div>
-          )}
-
-          {/* Social links */}
-          {displayLinks.length > 0 && (
-            <div className={styles['social-links']}>
-              {displayLinks.map((link, index) => (
-                <a key={index} href={link} target="_blank" rel="noopener noreferrer" className={styles['social-link']}>
-                  {linkText(link)}
-                </a>
-              ))}
-            </div>
-          )}
-
-          {/* Group navigation if multiple tracks share this marker */}
-          {groupedTracks && groupedTracks.length > 1 && (
-            <div className={styles['group-navigation']}>
-              <button
-                className={styles['nav-button']}
-                onClick={() => setGroupIndex((i) => (i > 0 ? i - 1 : groupedTracks.length - 1))}
-              >
-                <FaChevronLeft />
-              </button>
-              <span className={styles['group-counter']}>
-                {groupIndex + 1} / {groupedTracks.length}
-              </span>
-              <button
-                className={styles['nav-button']}
-                onClick={() => setGroupIndex((i) => (i < groupedTracks.length - 1 ? i + 1 : 0))}
-              >
-                <FaChevronRight />
-              </button>
-            </div>
-          )}
-        </div>
-      </Popup>
-    </Marker>
+              </div>
+            )}
+          </div>
+        </Popup>
+      )}
+    </>
   );
 });
 

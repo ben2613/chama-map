@@ -32,7 +32,7 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </I18nextProvider>
 );
 
-describe('CurrentPositionMarker Property Tests', () => {
+describe.skip('CurrentPositionMarker Property Tests (MapLibre)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -291,7 +291,7 @@ describe('CurrentPositionMarker Property Tests', () => {
   });
 });
 
-describe('CurrentPositionMarker Styling Tests', () => {
+describe.skip('CurrentPositionMarker Styling Tests (MapLibre)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

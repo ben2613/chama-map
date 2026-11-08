@@ -203,6 +203,11 @@
     border-left: none;
   }
 
+  :global(.maplibregl-popup-content) {
+    margin: 0;
+    padding: 0;
+  }
+
   :global(a.leaflet-popup-close-button) {
     color: #a24242;
     background: #ffdf41;
