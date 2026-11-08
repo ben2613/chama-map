@@ -50,19 +50,18 @@ const MapCompass = () => {
   const offNorth = Math.abs(bearing) > 0.5 || isTilted;
 
   return (
-    <div className="absolute top-3 right-3 z-10 pointer-events-auto chama-map-control">
-      <button
-        type="button"
-        onClick={resetNorth}
-        title={t('map.resetNorth')}
-        aria-label={t('map.resetNorth')}
-        className={`w-11 h-11 shrink-0 p-0 flex items-center justify-center leading-none rounded-sm bg-white border-2 transition-colors duration-150 ${
-          offNorth ? 'border-red-500 text-red-500' : 'border-gray-300 text-gray-500'
-        } hover:bg-gray-50 active:bg-gray-100`}
-      >
-        <NorthArrow bearing={bearing} />
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={resetNorth}
+      title={t('map.resetNorth')}
+      aria-label={t('map.resetNorth')}
+      data-control-position="topright"
+      className={`w-11 h-11 shrink-0 p-0 flex items-center justify-center leading-none rounded-sm bg-white border-2 transition-colors duration-150 ${
+        offNorth ? 'border-red-500 text-red-500' : 'border-gray-300 text-gray-500'
+      } hover:bg-gray-50 active:bg-gray-100`}
+    >
+      <NorthArrow bearing={bearing} />
+    </button>
   );
 };
 

@@ -40,8 +40,13 @@ body {
 }
 
 /* Safe-area on control stack; bottom offset lives on .map-control-stack (above attribution). */
-.chama-map-control.map-control-stack {
+.chama-map-control.map-control-stack,
+.chama-map-control.map-secondary-control-stack {
   padding-right: env(safe-area-inset-right, 0px);
+}
+
+.chama-map-control.map-secondary-control-stack {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 .maplibregl-ctrl-bottom-right {

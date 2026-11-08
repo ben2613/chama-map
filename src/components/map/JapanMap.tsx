@@ -10,7 +10,7 @@ import MapControlStack from './MapControlStack';
 import MapRefBinder from './MapRefBinder';
 import MapTestOverlay from './MapTestOverlay';
 import MapMoveHandler from './MapMoveHandler';
-import MapCompass from './MapCompass';
+import MapTopControlStack from './MapTopControlStack';
 import { isMapTestOverlayEnabled, isPrefectureOverlaySkipped } from '@/map/mapTestOverlay';
 import { TrackProperties, PrefectureProperties, SmartPositionConfig } from '@/types/map';
 import { useMapRefs } from '@/hooks/useMapRefs';
@@ -299,7 +299,14 @@ const JapanMap: React.FC<JapanMapProps> = ({
       >
         <MapRefBinder mapRef={mapRef} />
         <MapMoveHandler useJapaneseSource={useJapaneseSource} />
-        <MapCompass />
+        <MapTopControlStack
+          onLocate={handleGPSClick}
+          gpsLoading={isLoading}
+          gpsDisabled={!navigator.geolocation || error?.code === 'PERMISSION_DENIED'}
+          position={position}
+          prefectureOverlayVisible={showPrefectureOverlay}
+          onPrefectureOverlayToggle={onPrefectureOverlayToggle ?? (() => undefined)}
+        />
 
         {devMapOverlayFlags.showTestOverlay && <MapTestOverlay />}
 
@@ -389,14 +396,8 @@ const JapanMap: React.FC<JapanMapProps> = ({
           }
         >
           <MapControlStack
-            onLocate={handleGPSClick}
-            gpsLoading={isLoading}
-            gpsDisabled={!navigator.geolocation || error?.code === 'PERMISSION_DENIED'}
-            position={position}
             onReturnToJapan={handleReturnToJapan}
             returnAnimating={isAnimatingToJapan}
-            prefectureOverlayVisible={showPrefectureOverlay}
-            onPrefectureOverlayToggle={onPrefectureOverlayToggle ?? (() => undefined)}
           />
         </ErrorBoundary>
       </MapGL>

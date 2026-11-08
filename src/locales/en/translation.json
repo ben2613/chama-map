@@ -35,7 +35,7 @@
     "mapUpgradeTitle": "Map update",
     "mapUpgradeIntro": "The site map was rebuilt on MapLibre GL (replacing Leaflet) for smoother panning and overlays.",
     "mapUpgradeBulletBasemap": "English UI uses Esri World Street labels; Japanese UI uses GSI pale tiles over Japan.",
-    "mapUpgradeBulletControls": "Map controls are in one stack on the bottom right (zoom, GPS, home, overlay, language).",
+    "mapUpgradeBulletControls": "Zoom and return-to-Japan are bottom-right; overlay, language, GPS, and north are top-right under the compass.",
     "mapUpgradeBulletPopups": "Tap the map background to close popups; tap the same prefecture again to dismiss its list.",
     "createdBy": "Created by ♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡",
     "comments": "Comments / Contact:"

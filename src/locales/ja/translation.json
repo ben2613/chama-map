@@ -35,7 +35,7 @@
     "mapUpgradeTitle": "地図のアップデート",
     "mapUpgradeIntro": "Leaflet から MapLibre GL に作り替え、地図の操作とオーバーレイを快適にしました。",
     "mapUpgradeBulletBasemap": "英語表示は Esri の英語ラベル、日本語表示は日本域で GSI 淡色タイルを使います。",
-    "mapUpgradeBulletControls": "右下に操作をまとめました（拡大・縮小・現在地・日本全体・都道府県・言語）。",
+    "mapUpgradeBulletControls": "拡大・縮小・日本全体は右下、オーバーレイ・言語・現在地・北向きは右上（コンパスの下）です。",
     "mapUpgradeBulletPopups": "地図の余白をタップでポップアップを閉じられます。同じ都道府県をもう一度タップすると一覧も閉じます。",
     "createdBy": "♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡ による制作",
     "comments": "コメント / お問い合わせ:"
