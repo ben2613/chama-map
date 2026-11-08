@@ -35,9 +35,15 @@ interface JapanMapProps {
   className?: string;
   japanData: FeatureCollection<MultiPolygon, PrefectureProperties>;
   chamaTrack: FeatureCollection<Point, TrackProperties>;
+  showPrefectureOverlay?: boolean;
 }
 
-const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack }) => {
+const JapanMap: React.FC<JapanMapProps> = ({
+  className,
+  japanData,
+  chamaTrack,
+  showPrefectureOverlay = true,
+}) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
   const [positionConfig, setPositionConfig] = useState<SmartPositionConfig | null>(null);
   const [popupKey, setPopupKey] = useState<number>(0);
@@ -207,6 +213,13 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
     setPositionConfig(null);
   }, [selectedPrefecture]);
 
+  React.useEffect(() => {
+    if (!showPrefectureOverlay) {
+      closePrefecturePopup();
+      hoveredPrefectureRef.current = null;
+    }
+  }, [showPrefectureOverlay, closePrefecturePopup]);
+
   return (
     <div className={className} style={{ position: 'relative', height: '100%', width: '100%' }}>
       {error && (
@@ -233,7 +246,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
         }}
         style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
         renderWorldCopies
-        interactiveLayerIds={[PREFECTURE_FILL_LAYER_ID]}
+        interactiveLayerIds={showPrefectureOverlay ? [PREFECTURE_FILL_LAYER_ID] : []}
         onClick={onMapClick}
         onMouseMove={onMouseMove}
         onMouseLeave={onMouseLeave}
@@ -243,7 +256,7 @@ const JapanMap: React.FC<JapanMapProps> = ({ className, japanData, chamaTrack })
 
         {devMapOverlayFlags.showTestOverlay && <MapTestOverlay />}
 
-        {japanData && !devMapOverlayFlags.skipPrefectureOverlay && (
+        {japanData && showPrefectureOverlay && !devMapOverlayFlags.skipPrefectureOverlay && (
           <Source id={PREFECTURE_SOURCE_ID} type="geojson" data={japanData} promoteId="nam">
             <Layer
               id={PREFECTURE_FILL_LAYER_ID}

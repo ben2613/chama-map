@@ -6,7 +6,7 @@ import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
 import SplashScreen from '@/components/ui/SplashScreen';
 import FloatingArrowButton from '@/components/ui/FloatingArrowButton';
 import InfoPanel from '@/components/ui/InfoPanel';
-import LanguageSelector from '@/components/ui/LanguageSelector';
+import MapFloatingControls from '@/components/ui/MapFloatingControls';
 import Guideline from '@/components/ui/Guideline';
 import OtherProject from '@/components/ui/OtherProject';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
@@ -54,6 +54,7 @@ function AppContent() {
   const [showSplash, setShowSplash] = useState(true);
   const [japanData, setJapanData] = useState<FeatureCollection<MultiPolygon, PrefectureProperties> | null>(null);
   const [chamaTrack, setChamaTrack] = useState<FeatureCollection<Point, TrackProperties> | null>(null);
+  const [prefectureOverlayVisible, setPrefectureOverlayVisible] = useState(true);
 
   // Handle dynamic viewport height for mobile browsers
   useViewportHeight();
@@ -78,7 +79,12 @@ function AppContent() {
       <AnimatePresence>{showSplash && <SplashScreen key="splash" />}</AnimatePresence>
       {!showSplash && japanData && chamaTrack && (
         <Suspense fallback={<div className="flex items-center justify-center h-96">Loading map...</div>}>
-          <JapanMap className="w-full h-full" japanData={japanData} chamaTrack={chamaTrack} />
+          <JapanMap
+            className="w-full h-full"
+            japanData={japanData}
+            chamaTrack={chamaTrack}
+            showPrefectureOverlay={prefectureOverlayVisible}
+          />
         </Suspense>
       )}
       {/* Floating Arrow Button */}
@@ -86,7 +92,12 @@ function AppContent() {
       {/* Info Panel */}
       {!showSplash && <InfoPanel open={infoOpen} />}
       {/* Language Selector */}
-      {!showSplash && <LanguageSelector />}
+      {!showSplash && (
+        <MapFloatingControls
+          prefectureOverlayVisible={prefectureOverlayVisible}
+          onPrefectureOverlayToggle={() => setPrefectureOverlayVisible((v) => !v)}
+        />
+      )}
       {/* Terms of Service Modal */}
       {!showSplash && <Guideline />}
       {/* Other Project Modal */}

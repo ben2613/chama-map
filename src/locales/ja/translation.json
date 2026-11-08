@@ -11,7 +11,9 @@
     "prefecture": "都道府県",
     "location": "場所",
     "date": "日付",
-    "noTracks": "この地域にははあちゃまがいません"
+    "noTracks": "この地域にははあちゃまがいません",
+    "prefectureOverlayShow": "都道府県オーバーレイを表示",
+    "prefectureOverlayHide": "都道府県オーバーレイを非表示"
   },
   "navigation": {
     "home": "ホーム",

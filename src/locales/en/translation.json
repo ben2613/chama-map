@@ -11,7 +11,9 @@
     "prefecture": "Prefecture",
     "location": "Location",
     "date": "Date",
-    "noTracks": "No Haachama tracks found in this prefecture"
+    "noTracks": "No Haachama tracks found in this prefecture",
+    "prefectureOverlayShow": "Show prefecture overlay",
+    "prefectureOverlayHide": "Hide prefecture overlay"
   },
   "navigation": {
     "home": "Home",
