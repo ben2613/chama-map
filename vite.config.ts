@@ -21,7 +21,7 @@ export default defineConfig({
         codeSplitting: {
           groups: [
             { name: 'vendor', test: /node_modules[\\/](react|react-dom)[\\/]/, priority: 30 },
-            { name: 'leaflet', test: /node_modules[\\/](leaflet|react-leaflet)[\\/]/, priority: 25 },
+            { name: 'maplibre', test: /node_modules[\\/](maplibre-gl|react-map-gl)[\\/]/, priority: 25 },
             { name: 'redux', test: /node_modules[\\/](@reduxjs\/toolkit|react-redux)[\\/]/, priority: 20 },
             {
               name: 'i18n',
@@ -56,8 +56,8 @@ export default defineConfig({
     include: [
       'react',
       'react-dom',
-      'leaflet',
-      'react-leaflet',
+      'maplibre-gl',
+      'react-map-gl',
       '@reduxjs/toolkit',
       'react-redux',
       'i18next',

@@ -1,4 +1,5 @@
-import L from 'leaflet';
+import { geoBounds, type GeoBounds } from '@/map/geoBounds';
+import { MapProjection } from '@/map/mapProjection';
 import { JAPAN_BOUNDS } from '@/constants/japanMapConstants';
 
 export const CARTO_TILE_URL = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
@@ -15,25 +16,42 @@ export const GSI_PALE_TILE_ATTRIBUTION =
  */
 export const OUTSIDE_JAPAN_CARTO_MIN_ZOOM = 8;
 
-export function isMapViewOverJapan(map: L.Map): boolean {
-  const japanTileBounds = L.latLngBounds(
+function japanTileBounds(): GeoBounds {
+  return geoBounds(
     [JAPAN_BOUNDS.south, JAPAN_BOUNDS.west],
     [JAPAN_BOUNDS.north, JAPAN_BOUNDS.east]
   );
-  return map.getBounds().intersects(japanTileBounds);
+}
+
+export function isMapViewOverJapan(map: MapProjection): boolean {
+  return map.getBounds().intersects(japanTileBounds());
 }
 
 /** Whether to use GSI pale tiles (false = Carto). */
-export function shouldUseJapaneseBasemap(map: L.Map, useJapaneseSource: boolean): boolean {
+export function shouldUseJapaneseBasemap(map: MapProjection, useJapaneseSource: boolean): boolean {
   if (!useJapaneseSource) return false;
   if (isMapViewOverJapan(map)) return true;
   return map.getZoom() < OUTSIDE_JAPAN_CARTO_MIN_ZOOM;
 }
 
 export function buildCartoTileUrl(coords: { x: number; y: number; z: number }): string {
-  return L.Util.template(CARTO_TILE_URL, {
-    ...coords,
-    s: ['a', 'b', 'c', 'd'][Math.abs(coords.x) % 4],
-    r: L.Browser.retina ? '@2x' : ''
-  });
+  const subdomain = ['a', 'b', 'c', 'd'][Math.abs(coords.x) % 4];
+  const retina =
+    typeof window !== 'undefined' &&
+    window.devicePixelRatio > 1;
+  return CARTO_TILE_URL.replace('{s}', subdomain)
+    .replace('{z}', String(coords.z))
+    .replace('{x}', String(coords.x))
+    .replace('{y}', String(coords.y))
+    .replace('{r}', retina ? '@2x' : '');
 }
+
+/** Carto raster tile URL for MapLibre raster sources ({x}/{y} template). */
+export const CARTO_RASTER_TILES = [
+  'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+  'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+  'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+  'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+];
+
+export const GSI_RASTER_TILES = [GSI_PALE_TILE_URL];

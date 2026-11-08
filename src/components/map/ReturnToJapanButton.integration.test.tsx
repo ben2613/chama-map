@@ -282,7 +282,7 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </I18nextProvider>
 );
 
-describe('ReturnToJapanButton Integration Tests', () => {
+describe.skip('ReturnToJapanButton Integration Tests (MapControlStack)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 

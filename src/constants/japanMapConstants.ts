@@ -1,5 +1,5 @@
 import type { JapanViewConfig } from '@/types/geolocation';
-import type L from 'leaflet';
+import type { MapProjection } from '@/map/mapProjection';
 
 // Japan default view configuration
 export const JAPAN_DEFAULT_VIEW: JapanViewConfig = {
@@ -62,7 +62,7 @@ export const normalizeLongitude = (lng: number): number =>
   ((lng + 180) % 360 + 360) % 360 - 180;
 
 // Utility function to check if the current map view is close to Japan's default view
-export const isMapAtJapanView = (map: L.Map, tolerance = 0.1): boolean => {
+export const isMapAtJapanView = (map: MapProjection, tolerance = 0.1): boolean => {
   const center = map.getCenter();
   const zoom = map.getZoom();
 

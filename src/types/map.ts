@@ -1,4 +1,4 @@
-import L from 'leaflet';
+import type { GeoBounds } from '@/map/geoBounds';
 
 export interface PopupOpeningControl {
   markOpening: () => void;
@@ -34,6 +34,6 @@ export interface SmartPositionConfig {
   prefectureCenter: [number, number];
   clickPosition: [number, number];
   useClickPosition: boolean;
-  viewportBounds: L.LatLngBounds;
+  viewportBounds: GeoBounds;
   adjustedPosition?: [number, number];
 }

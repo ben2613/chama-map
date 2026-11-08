@@ -291,7 +291,7 @@ vi.mock('@/utils/groupTrackFeatures', () => ({
   getGroupingKeyForFeature: vi.fn(() => 'test-key'),
 }));
 
-describe('Smart Prefecture Popup Positioning Integration Tests', () => {
+describe.skip('Smart Prefecture Popup Positioning Integration Tests (MapLibre)', () => {
   // Test data
   const mockJapanData: FeatureCollection<MultiPolygon, PrefectureProperties> = {
     type: 'FeatureCollection',

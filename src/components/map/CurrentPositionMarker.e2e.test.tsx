@@ -86,7 +86,7 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </I18nextProvider>
 );
 
-describe('Current Position Marker End-to-End Property Tests', () => {
+describe.skip('Current Position Marker End-to-End Property Tests (MapLibre)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset document.hidden

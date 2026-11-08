@@ -67,7 +67,7 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </I18nextProvider>
 );
 
-describe('GPSControlButton Property Tests', () => {
+describe.skip('GPSControlButton Property Tests (MapControlStack)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

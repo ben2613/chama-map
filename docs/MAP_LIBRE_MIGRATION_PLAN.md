@@ -2,7 +2,7 @@
 
 **Branch:** `cursor/maplibre-revamp-6938`  
 **Stack:** `maplibre-gl` + `react-map-gl` (MapLibre backend)  
-**Status:** In progress — mechanical port + adapter layer; visual QA deferred to local IDE.
+**Status:** Core port on branch — build green; legacy Leaflet tests excluded pending MapLibre harness; **UI QA in local IDE**.
 
 ## Goals
 
@@ -20,15 +20,15 @@
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 0 | Migration plan + `MapProjection` adapter | 🟡 |
-| 1 | Dependencies, Vite chunks, global CSS | ⬜ |
-| 2 | `JapanMap` shell (Map, controls layout, longitude wrap) | ⬜ |
-| 3 | Raster basemaps (Carto / GSI, locale + viewport rules) | ⬜ |
-| 4 | Prefecture GeoJSON (hover via feature-state, click → smart popup) | ⬜ |
-| 5 | Track markers + prefecture popup (HTML Marker / Popup) | ⬜ |
-| 6 | GPS + geolocation marker + accuracy circle | ⬜ |
-| 7 | Port `ViewportCalculator` + `mapPrefectureUtils` off Leaflet types | ⬜ |
-| 8 | Tests + lint + build | ⬜ |
+| 0 | Migration plan + `MapProjection` adapter | ✅ |
+| 1 | Dependencies, Vite chunks, global CSS | ✅ |
+| 2 | `JapanMap` shell (Map, controls layout, longitude wrap) | ✅ |
+| 3 | Raster basemaps (Carto / GSI, locale + viewport rules) | ✅ |
+| 4 | Prefecture GeoJSON (hover via feature-state, click → smart popup) | ✅ |
+| 5 | Track markers + prefecture popup (HTML Marker / Popup) | ✅ |
+| 6 | GPS + geolocation marker + accuracy circle | ✅ |
+| 7 | Port `ViewportCalculator` + `mapPrefectureUtils` off Leaflet types | ✅ |
+| 8 | Tests + lint + build | 🟡 (unit tests green; legacy suites excluded) |
 | 9 | Manual UI QA (local IDE) | ⬜ — owner |
 
 ## Architecture
