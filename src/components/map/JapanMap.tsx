@@ -335,22 +335,22 @@ const JapanMap: React.FC<JapanMapProps> = ({
             onClose={closePrefecturePopup}
           />
         )}
-      </MapGL>
 
-      <ErrorBoundary
-        fallback={
-          <div className="absolute bottom-3 right-3 text-xs text-red-600 bg-white p-1 rounded">Map controls error</div>
-        }
-      >
-        <MapControlStack
-          onLocate={handleGPSClick}
-          gpsLoading={isLoading}
-          gpsDisabled={!navigator.geolocation || error?.code === 'PERMISSION_DENIED'}
-          position={position}
-          onReturnToJapan={handleReturnToJapan}
-          returnAnimating={isAnimatingToJapan}
-        />
-      </ErrorBoundary>
+        <ErrorBoundary
+          fallback={
+            <div className="absolute bottom-3 right-3 text-xs text-red-600 bg-white p-1 rounded">Map controls error</div>
+          }
+        >
+          <MapControlStack
+            onLocate={handleGPSClick}
+            gpsLoading={isLoading}
+            gpsDisabled={!navigator.geolocation || error?.code === 'PERMISSION_DENIED'}
+            position={position}
+            onReturnToJapan={handleReturnToJapan}
+            returnAnimating={isAnimatingToJapan}
+          />
+        </ErrorBoundary>
+      </MapGL>
     </div>
   );
 };
