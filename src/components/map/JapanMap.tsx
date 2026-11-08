@@ -37,6 +37,7 @@ interface JapanMapProps {
   japanData: FeatureCollection<MultiPolygon, PrefectureProperties>;
   chamaTrack: FeatureCollection<Point, TrackProperties>;
   showPrefectureOverlay?: boolean;
+  onPrefectureOverlayToggle?: () => void;
 }
 
 const JapanMap: React.FC<JapanMapProps> = ({
@@ -44,6 +45,7 @@ const JapanMap: React.FC<JapanMapProps> = ({
   japanData,
   chamaTrack,
   showPrefectureOverlay = true,
+  onPrefectureOverlayToggle,
 }) => {
   const [selectedPrefecture, setSelectedPrefecture] = useState<string | null>(null);
   const [positionConfig, setPositionConfig] = useState<SmartPositionConfig | null>(null);
@@ -393,6 +395,8 @@ const JapanMap: React.FC<JapanMapProps> = ({
             position={position}
             onReturnToJapan={handleReturnToJapan}
             returnAnimating={isAnimatingToJapan}
+            prefectureOverlayVisible={showPrefectureOverlay}
+            onPrefectureOverlayToggle={onPrefectureOverlayToggle ?? (() => undefined)}
           />
         </ErrorBoundary>
       </MapGL>

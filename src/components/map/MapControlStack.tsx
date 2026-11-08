@@ -3,6 +3,8 @@ import { FaHouse, FaLocationCrosshairs, FaMinus, FaPlus } from 'react-icons/fa6'
 import { useTranslation } from 'react-i18next';
 import { useMapProjection } from '@/map/useMapProjection';
 import type { UserGeolocationPosition } from '@/types/geolocation';
+import PrefectureOverlayToggle from '@/components/ui/PrefectureOverlayToggle';
+import LanguageSelector from '@/components/ui/LanguageSelector';
 
 interface MapControlStackProps {
   onLocate: () => void;
@@ -11,6 +13,8 @@ interface MapControlStackProps {
   position?: UserGeolocationPosition | null;
   onReturnToJapan: () => void;
   returnAnimating: boolean;
+  prefectureOverlayVisible: boolean;
+  onPrefectureOverlayToggle: () => void;
 }
 
 const MapControlStack = ({
@@ -20,6 +24,8 @@ const MapControlStack = ({
   position,
   onReturnToJapan,
   returnAnimating,
+  prefectureOverlayVisible,
+  onPrefectureOverlayToggle,
 }: MapControlStackProps) => {
   const { t } = useTranslation();
   const map = useMapProjection();
@@ -43,8 +49,14 @@ const MapControlStack = ({
   const iconClass = 'text-gray-700 text-base block';
 
   return (
-    <div className="absolute bottom-3 right-3 z-10 flex flex-col items-end gap-2 pointer-events-none chama-map-control map-control-stack">
-      <div className="flex flex-col gap-1 pointer-events-auto" data-control-position="bottomright">
+    <div className="absolute right-3 bottom-[calc(2.75rem+env(safe-area-inset-bottom,0px))] z-10 flex flex-col items-end gap-2 pointer-events-none chama-map-control map-control-stack">
+      <div className="flex flex-col gap-2 pointer-events-auto" data-control-position="bottomright">
+        <PrefectureOverlayToggle
+          enabled={prefectureOverlayVisible}
+          onToggle={onPrefectureOverlayToggle}
+          className="!rounded-sm shadow-none"
+        />
+        <LanguageSelector compact className="shadow-none" />
         <ZoomButton className={controlBtnClass} label="Zoom in" onClick={() => map?.zoomIn()}>
           <FaPlus className={iconClass} aria-hidden />
         </ZoomButton>

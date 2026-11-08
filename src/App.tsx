@@ -6,7 +6,6 @@ import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
 import SplashScreen from '@/components/ui/SplashScreen';
 import FloatingArrowButton from '@/components/ui/FloatingArrowButton';
 import InfoPanel from '@/components/ui/InfoPanel';
-import MapFloatingControls from '@/components/ui/MapFloatingControls';
 import Guideline from '@/components/ui/Guideline';
 import OtherProject from '@/components/ui/OtherProject';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
@@ -84,6 +83,7 @@ function AppContent() {
             japanData={japanData}
             chamaTrack={chamaTrack}
             showPrefectureOverlay={prefectureOverlayVisible}
+            onPrefectureOverlayToggle={() => setPrefectureOverlayVisible((v) => !v)}
           />
         </Suspense>
       )}
@@ -91,13 +91,6 @@ function AppContent() {
       {!showSplash && <FloatingArrowButton open={infoOpen} onClick={() => setInfoOpen((v) => !v)} />}
       {/* Info Panel */}
       {!showSplash && <InfoPanel open={infoOpen} />}
-      {/* Language Selector */}
-      {!showSplash && (
-        <MapFloatingControls
-          prefectureOverlayVisible={prefectureOverlayVisible}
-          onPrefectureOverlayToggle={() => setPrefectureOverlayVisible((v) => !v)}
-        />
-      )}
       {/* Terms of Service Modal */}
       {!showSplash && <Guideline />}
       {/* Other Project Modal */}
