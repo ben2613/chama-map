@@ -39,21 +39,24 @@ body {
   left: 0;
 }
 
-/* Safe-area inset on control stacks only (not each button — asymmetric padding misaligns icons). */
+/* Safe-area on control stack; bottom offset lives on .map-control-stack (above attribution). */
 .chama-map-control.map-control-stack {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-right: env(safe-area-inset-right, 0px);
 }
 
 .maplibregl-ctrl-bottom-right {
-  padding-bottom: env(safe-area-inset-bottom, 10px);
-  padding-right: env(safe-area-inset-right, 10px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-right: max(env(safe-area-inset-right, 0px), 4px);
+  z-index: 2;
+}
+
+.maplibregl-ctrl-attrib.maplibregl-compact {
+  min-height: 1.75rem;
 }
 
 @media (max-width: 768px) {
   .chama-map-control.map-control-stack {
-    padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
-    padding-right: max(env(safe-area-inset-right, 0px), 8px);
+    padding-right: max(env(safe-area-inset-right, 0px), 4px);
   }
 }
 
@@ -84,10 +87,6 @@ body {
   
   /* Touch device optimizations */
   @media (hover: none) and (pointer: coarse) {
-    /* Larger touch targets on touch devices */
-    min-width: 44px;
-    min-height: 44px;
-    
     /* Remove hover effects on touch devices */
     &:hover {
       background-color: white;
@@ -116,37 +115,5 @@ body {
   &:active:not(:disabled) {
     transform: translateY(0);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-}
-
-/* Responsive adjustments for different screen sizes */
-@media (max-width: 640px) {
-  .return-to-japan-button {
-    /* Larger buttons on mobile for better touch targets */
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-  }
-}
-
-@media (min-width: 641px) {
-  .return-to-japan-button {
-    /* Standard size on desktop */
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
-  }
-}
-
-/* Orientation-specific adjustments */
-@media (orientation: landscape) and (max-height: 500px) {
-  .return-to-japan-button {
-    /* Slightly smaller on landscape mobile to save space */
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    min-height: 36px;
   }
 }
