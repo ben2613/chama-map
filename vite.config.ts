@@ -57,7 +57,7 @@ export default defineConfig({
       'react',
       'react-dom',
       'maplibre-gl',
-      'react-map-gl',
+      'react-map-gl/maplibre',
       '@reduxjs/toolkit',
       'react-redux',
       'i18next',
