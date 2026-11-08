@@ -79,16 +79,17 @@
 
 .image-gallery {
   position: relative;
-  margin-bottom: 16px;
+  margin: 0 8px 12px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  margin-left: 8px;
-  margin-right: 8px;
+  width: calc(100% - 16px);
+  box-sizing: border-box;
 }
 
 .image-container {
   position: relative;
+  width: 100%;
 }
 
 .gallery-image {
@@ -158,7 +159,8 @@
   display: flex;
   gap: 12px;
   justify-content: center;
-  padding: 12px;
+  padding: 8px 12px 12px;
+  margin: 0 8px 8px;
   background: #f8fafc;
   border-radius: 8px;
   border-top: 1px solid #e2e8f0;
@@ -182,8 +184,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 .custom-popup {
-  border: 2px solid lightskyblue;
-  border-radius: 14px;
   /* Custom popup styling */
   :global(.leaflet-popup-content-wrapper) {
     background: white;
@@ -205,7 +205,26 @@
 
   :global(.maplibregl-popup-content) {
     margin: 0;
-    padding: 0;
+    padding: 12px 0 0;
+    width: 320px;
+    max-width: 320px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e5e7eb;
+  }
+
+  :global(.maplibregl-popup-close-button) {
+    font-size: 20px;
+    padding: 4px 8px;
+    color: #6b7280;
+    z-index: 2;
+  }
+
+  :global(.maplibregl-popup-tip) {
+    border-top-color: white;
   }
 
   :global(a.leaflet-popup-close-button) {

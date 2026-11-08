@@ -4,24 +4,19 @@ function ImageContent({ src, alt, className }: { src: string; alt?: string; clas
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
+  if (isError) return null;
+
   return (
-    !isError && (
-      <div
-        className={
-          isLoading || isError
-            ? 'h-0 overflow-hidden'
-            : 'h-[200px] overflow-hidden transition-all duration-450 ease-in-out'
-        }
-      >
-        <img
-          src={src}
-          alt={alt}
-          onError={() => setIsError(true)}
-          onLoad={() => setIsLoading(false)}
-          className={className}
-        />
-      </div>
-    )
+    <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">
+      {isLoading && <div className="absolute inset-0 animate-pulse bg-gray-200" aria-hidden />}
+      <img
+        src={src}
+        alt={alt}
+        onError={() => setIsError(true)}
+        onLoad={() => setIsLoading(false)}
+        className={`${className ?? ''} ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+      />
+    </div>
   );
 }
 

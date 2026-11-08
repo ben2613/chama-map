@@ -114,6 +114,7 @@ const PrefecturePopup = ({
       longitude={lng}
       latitude={lat}
       closeOnClick={false}
+      closeButton={false}
       onClose={onClose}
       className={styles['prefecture-popup']}
       maxWidth="320px"

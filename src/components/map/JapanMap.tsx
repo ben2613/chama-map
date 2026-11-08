@@ -49,6 +49,7 @@ const JapanMap: React.FC<JapanMapProps> = ({
   const [positionConfig, setPositionConfig] = useState<SmartPositionConfig | null>(null);
   const [popupKey, setPopupKey] = useState<number>(0);
   const [isAnimatingToJapan, setIsAnimatingToJapan] = useState<boolean>(false);
+  const [activeTrackPopupId, setActiveTrackPopupId] = useState<string | null>(null);
   const hoveredPrefectureRef = useRef<string | null>(null);
   const { markerRefs, popupRef, mapRef, popupOpening, registerMarkerRef } = useMapRefs();
   const { i18n, t } = useTranslation();
@@ -144,10 +145,44 @@ const JapanMap: React.FC<JapanMapProps> = ({
     [groupedChamaTracks, chamaTrack, markerRefs]
   );
 
+  const closePrefecturePopup = useCallback(() => {
+    if (selectedPrefecture) {
+      ClickPositionManager.getInstance().clearPrefecturePositions(selectedPrefecture);
+    }
+    setSelectedPrefecture(null);
+    setPositionConfig(null);
+  }, [selectedPrefecture]);
+
+  const closeTrackPopup = useCallback(() => setActiveTrackPopupId(null), []);
+
+  const openTrackPopup = useCallback(
+    (popupId: string) => {
+      closePrefecturePopup();
+      setActiveTrackPopupId(popupId);
+    },
+    [closePrefecturePopup]
+  );
+
   const onMapClick = useCallback(
     (event: MapLayerMouseEvent) => {
+      const target = event.originalEvent.target;
+      if (target instanceof Element) {
+        // Marker / popup / control clicks are handled separately — do not treat as prefecture area.
+        if (
+          target.closest('.maplibregl-marker') ||
+          target.closest('.maplibregl-popup') ||
+          target.closest('.chama-map-control')
+        ) {
+          return;
+        }
+      }
+
       const feature = event.features?.[0];
-      if (!feature?.properties?.nam || !event.lngLat) return;
+      if (!feature?.properties?.nam || !event.lngLat) {
+        closePrefecturePopup();
+        closeTrackPopup();
+        return;
+      }
 
       const mapInstance = event.target;
       const projection = MapProjection.from(mapInstance);
@@ -156,8 +191,15 @@ const JapanMap: React.FC<JapanMapProps> = ({
       const prefectureFeature = japanData.features.find((f) => f.properties.nam === feature.properties.nam);
       if (!prefectureFeature) return;
 
+      const prefectureName = feature.properties.nam as string;
+      if (selectedPrefecture === prefectureName) {
+        closePrefecturePopup();
+        closeTrackPopup();
+        return;
+      }
+
       handlePrefectureMapClick(
-        feature.properties.nam as string,
+        prefectureName,
         prefectureFeature,
         { lat: event.lngLat.lat, lng: event.lngLat.lng },
         projection,
@@ -167,7 +209,14 @@ const JapanMap: React.FC<JapanMapProps> = ({
         ClickPositionManager.getInstance()
       );
     },
-    [japanData, onPrefectureSelect, popupOpening]
+    [
+      japanData,
+      onPrefectureSelect,
+      popupOpening,
+      closePrefecturePopup,
+      closeTrackPopup,
+      selectedPrefecture,
+    ]
   );
 
   const onMouseMove = useCallback((event: MapLayerMouseEvent) => {
@@ -205,14 +254,6 @@ const JapanMap: React.FC<JapanMapProps> = ({
       hoveredPrefectureRef.current = null;
     }
   }, []);
-
-  const closePrefecturePopup = useCallback(() => {
-    if (selectedPrefecture) {
-      ClickPositionManager.getInstance().clearPrefecturePositions(selectedPrefecture);
-    }
-    setSelectedPrefecture(null);
-    setPositionConfig(null);
-  }, [selectedPrefecture]);
 
   React.useEffect(() => {
     if (!showPrefectureOverlay) {
@@ -318,6 +359,10 @@ const JapanMap: React.FC<JapanMapProps> = ({
               groupedKey={key}
               groupedTracks={group}
               prefecture={feature.properties.prefecture}
+              popupId={key}
+              activePopupId={activeTrackPopupId}
+              onOpenPopup={openTrackPopup}
+              onClosePopup={closeTrackPopup}
             />
           );
         })}

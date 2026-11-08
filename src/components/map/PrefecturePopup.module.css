@@ -133,6 +133,10 @@
   :global(.maplibregl-popup-content) {
     margin: 0;
     padding: 16px;
+    width: 320px;
+    max-width: 320px;
+    box-sizing: border-box;
+    overflow: hidden;
     background: white;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);

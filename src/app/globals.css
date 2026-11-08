@@ -39,25 +39,21 @@ body {
   left: 0;
 }
 
-/* Map control positioning adjustments for mobile */
-.chama-map-control,
+/* Safe-area inset on control stacks only (not each button — asymmetric padding misaligns icons). */
+.chama-map-control.map-control-stack {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
 .maplibregl-ctrl-bottom-right {
-  /* Add safe area padding for mobile devices */
   padding-bottom: env(safe-area-inset-bottom, 10px);
   padding-right: env(safe-area-inset-right, 10px);
 }
 
-/* Additional mobile-specific adjustments */
 @media (max-width: 768px) {
-  .maplibregl-ctrl-bottom-right,
-  .absolute.bottom-3.right-3 {
-    /* Extra padding on mobile to account for browser UI */
-    padding-bottom: max(env(safe-area-inset-bottom, 10px), 20px);
-  }
-  
-  /* Ensure controls don't overlap with mobile browser UI */
-  .chama-map-control {
-    margin-bottom: 10px !important;
+  .chama-map-control.map-control-stack {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px);
+    padding-right: max(env(safe-area-inset-right, 0px), 8px);
   }
 }
 

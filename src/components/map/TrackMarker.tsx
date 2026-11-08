@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { Marker, Popup } from 'react-map-gl/maplibre';
 import type { Feature, Point } from 'geojson';
 import type { TrackProperties } from '@/types/map';
@@ -17,6 +17,10 @@ interface TrackMarkerProps {
   groupedKey?: string;
   groupedTracks?: Feature<Point, TrackProperties>[];
   prefecture?: string;
+  popupId: string;
+  activePopupId?: string | null;
+  onOpenPopup: (popupId: string) => void;
+  onClosePopup: () => void;
 }
 
 function linkText(link: string) {
@@ -29,9 +33,10 @@ function linkText(link: string) {
   return <FaLink className="text-blue-400 text-xl" />;
 }
 
-const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coordinates, groupedTracks }, ref) => {
+const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
+  ({ icon, coordinates, groupedTracks, popupId, activePopupId, onOpenPopup, onClosePopup }, ref) => {
   const { i18n } = useTranslation();
-  const [open, setOpen] = useState(false);
+  const open = activePopupId === popupId;
   const [imgIndex, setImgIndex] = React.useState(0);
   const [groupIndex, setGroupIndex] = React.useState(0);
 
@@ -44,7 +49,7 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
   const displayLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(displayTitle || '')}`;
 
   useImperativeHandle(ref, () => ({
-    openPopup: () => setOpen(true),
+    openPopup: () => onOpenPopup(popupId),
   }));
 
   const handlePrev = () => setImgIndex((idx) => (idx > 0 ? idx - 1 : idx));
@@ -57,13 +62,20 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
   React.useEffect(() => {
     setImgIndex(0);
   }, [groupIndex]);
-
   const longitude = coordinates[0];
   const latitude = coordinates[1];
 
   return (
     <>
-      <Marker longitude={longitude} latitude={latitude} anchor="bottom" onClick={() => setOpen(true)}>
+      <Marker
+        longitude={longitude}
+        latitude={latitude}
+        anchor="bottom"
+        onClick={(e) => {
+          e.originalEvent.stopPropagation();
+          onOpenPopup(popupId);
+        }}
+      >
         <img
           src={icon || 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png'}
           alt=""
@@ -78,8 +90,9 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(({ icon, coo
           longitude={longitude}
           latitude={latitude}
           anchor="bottom"
-          closeOnClick={false}
-          onClose={() => setOpen(false)}
+          closeOnClick
+          maxWidth="320px"
+          onClose={onClosePopup}
           className={styles['custom-popup']}
         >
           <div className={styles['popup-container']}>
