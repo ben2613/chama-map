@@ -1,12 +1,5 @@
-import type { FeatureCollection, MultiPolygon } from 'geojson';
-import type { PrefectureProperties } from '@/types/map';
 import { JAPAN_BOUNDS } from '@/constants/japanMapConstants';
-import {
-  PLATEAU_3D_MAX_ZOOM,
-  PLATEAU_3D_MIN_ZOOM,
-  PLATEAU_XING_LOD1_BY_PREFECTURE,
-} from '@/constants/plateau3dConstants';
-import { getPrefectureForPoint } from '@/utils/mapPrefectureUtils';
+import { PLATEAU_3D_MAX_ZOOM, PLATEAU_3D_MIN_ZOOM } from '@/constants/plateau3dConstants';
 
 export function isJapanCenterFor3D(lat: number, lng: number): boolean {
   return (
@@ -23,11 +16,4 @@ export function shouldLoadPlateauBuildings(enabled: boolean, zoom: number, lat: 
   return isJapanCenterFor3D(lat, lng);
 }
 
-export function resolvePlateauXingTilesetUrl(
-  coordinates: [number, number],
-  japanData: FeatureCollection<MultiPolygon, PrefectureProperties>
-): string | null {
-  const prefecture = getPrefectureForPoint(coordinates, japanData);
-  if (!prefecture) return null;
-  return PLATEAU_XING_LOD1_BY_PREFECTURE[prefecture] ?? null;
-}
+export { resolvePlateauXingTilesetUrl } from '@/utils/plateauXingResolver';

@@ -19,37 +19,46 @@ const Map3DBuildings = ({ enabled, japanData }: Map3DBuildingsProps) => {
   const maps = useMap();
   const mapRef = maps[MAP_ID] ?? maps.current;
   const overlayRef = useRef<MapboxOverlay | null>(null);
+  const enabledRef = useRef(enabled);
   const [tilesetUrl, setTilesetUrl] = useState<string | null>(null);
+
+  enabledRef.current = enabled;
 
   useEffect(() => {
     const map = mapRef?.getMap() as MapLibreMap | undefined;
     if (!map) return;
 
-    const overlay = new MapboxOverlay({ interleaved: true, layers: [] });
+    // shortcut: MapLibre + deck.gl interleaved WebGL context is unreliable; use overlaid canvas
+    const overlay = new MapboxOverlay({ interleaved: false, layers: [] });
     overlayRef.current = overlay;
     map.addControl(overlay);
 
-    const syncTileset = () => {
+    let cancelled = false;
+    let debounceId: ReturnType<typeof setTimeout> | undefined;
+
+    const syncTileset = async () => {
       const center = map.getCenter();
       const zoom = map.getZoom();
-      if (!shouldLoadPlateauBuildings(enabled, zoom, center.lat, center.lng)) {
-        setTilesetUrl(null);
+      if (!shouldLoadPlateauBuildings(enabledRef.current, zoom, center.lat, center.lng)) {
+        if (!cancelled) setTilesetUrl(null);
         return;
       }
-      const url = resolvePlateauXingTilesetUrl([center.lng, center.lat], japanData);
-      setTilesetUrl(url);
+      const url = await resolvePlateauXingTilesetUrl([center.lng, center.lat], japanData);
+      if (!cancelled) setTilesetUrl(url);
     };
 
-    let debounceId: ReturnType<typeof setTimeout> | undefined;
     const onMoveEnd = () => {
       clearTimeout(debounceId);
-      debounceId = setTimeout(syncTileset, PLATEAU_TILE_MOVE_DEBOUNCE_MS);
+      debounceId = setTimeout(() => {
+        void syncTileset();
+      }, PLATEAU_TILE_MOVE_DEBOUNCE_MS);
     };
 
     map.on('moveend', onMoveEnd);
-    syncTileset();
+    void syncTileset();
 
     return () => {
+      cancelled = true;
       clearTimeout(debounceId);
       map.off('moveend', onMoveEnd);
       if (overlayRef.current) {
@@ -57,7 +66,30 @@ const Map3DBuildings = ({ enabled, japanData }: Map3DBuildingsProps) => {
         overlayRef.current = null;
       }
     };
-  }, [mapRef, japanData, enabled]);
+  }, [mapRef, japanData]);
+
+  useEffect(() => {
+    if (!enabled) {
+      setTilesetUrl(null);
+      overlayRef.current?.setProps({ layers: [] });
+      return;
+    }
+    const map = mapRef?.getMap() as MapLibreMap | undefined;
+    if (!map) return;
+    const center = map.getCenter();
+    const zoom = map.getZoom();
+    if (!shouldLoadPlateauBuildings(true, zoom, center.lat, center.lng)) {
+      setTilesetUrl(null);
+      return;
+    }
+    let cancelled = false;
+    void resolvePlateauXingTilesetUrl([center.lng, center.lat], japanData).then((url) => {
+      if (!cancelled) setTilesetUrl(url);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [enabled, mapRef, japanData]);
 
   useEffect(() => {
     const overlay = overlayRef.current;
@@ -76,9 +108,7 @@ const Map3DBuildings = ({ enabled, japanData }: Map3DBuildingsProps) => {
           loader: Tiles3DLoader,
           pickable: false,
           loadOptions: {
-            '3d-tiles': {
-              loadGLTF: true,
-            },
+            '3d-tiles': { loadGLTF: true },
           },
         }),
       ],
