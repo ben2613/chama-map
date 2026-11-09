@@ -30,7 +30,20 @@ import {
   PREFECTURE_HOVER_STATE,
 } from '@/map/layerIds';
 import { MapProjection } from '@/map/mapProjection';
-import { JAPAN_DEFAULT_VIEW, getOptimalAnimationDuration, ANIMATION_CONFIG } from '@/constants/japanMapConstants';
+import {
+  JAPAN_DEFAULT_VIEW,
+  getOptimalAnimationDuration,
+  ANIMATION_CONFIG,
+  isMobileDevice,
+} from '@/constants/japanMapConstants';
+import {
+  MAP_3D_ENABLE_PITCH,
+  MAP_3D_MAX_PITCH,
+  MAP_3D_MOBILE_MAX_PITCH,
+  PLATEAU_3D_MIN_ZOOM,
+} from '@/constants/plateau3dConstants';
+import { useMap3DMode } from '@/hooks/useMap3DMode';
+import Map3DBuildings from './Map3DBuildings';
 
 interface JapanMapProps {
   className?: string;
@@ -55,6 +68,8 @@ const JapanMap: React.FC<JapanMapProps> = ({
   const hoveredPrefectureRef = useRef<string | null>(null);
   const { markerRefs, popupRef, mapRef, popupOpening, registerMarkerRef } = useMapRefs();
   const { i18n, t } = useTranslation();
+  const { mode3d, toggleMode3d } = useMap3DMode();
+  const maxPitch = mode3d ? (isMobileDevice() ? MAP_3D_MOBILE_MAX_PITCH : MAP_3D_MAX_PITCH) : 0;
 
   const {
     position,
@@ -114,7 +129,15 @@ const JapanMap: React.FC<JapanMapProps> = ({
       Math.min(ANIMATION_CONFIG.DURATION_MAX, getOptimalAnimationDuration())
     );
     map.stop();
-    map.flyTo(JAPAN_DEFAULT_VIEW.center, JAPAN_DEFAULT_VIEW.zoom, { duration });
+    const mlMap = map.getMap();
+    const durationMs = duration * 1000;
+    mlMap.flyTo({
+      center: [JAPAN_DEFAULT_VIEW.center[1], JAPAN_DEFAULT_VIEW.center[0]],
+      zoom: JAPAN_DEFAULT_VIEW.zoom,
+      pitch: 0,
+      duration: durationMs,
+      essential: true,
+    });
 
     const completeAnimation = () => {
       setIsAnimatingToJapan(false);
@@ -122,8 +145,22 @@ const JapanMap: React.FC<JapanMapProps> = ({
     };
     const onMoveEnd = () => completeAnimation();
     map.on('moveend', onMoveEnd);
-    setTimeout(() => completeAnimation(), duration * 1000 + ANIMATION_CONFIG.TIMEOUT_BUFFER);
+    setTimeout(() => completeAnimation(), durationMs + ANIMATION_CONFIG.TIMEOUT_BUFFER);
   }, [isAnimatingToJapan, mapRef]);
+
+  React.useEffect(() => {
+    const mlMap = mapRef.current?.getMap();
+    if (!mlMap) return;
+    if (mode3d) {
+      const zoom = mlMap.getZoom();
+      if (zoom < PLATEAU_3D_MIN_ZOOM) {
+        mlMap.easeTo({ zoom: PLATEAU_3D_MIN_ZOOM, duration: 500 });
+      }
+      mlMap.easeTo({ pitch: MAP_3D_ENABLE_PITCH, duration: 400 });
+    } else {
+      mlMap.easeTo({ pitch: 0, duration: 400 });
+    }
+  }, [mode3d, mapRef]);
 
   const onPrefectureSelect = useCallback(
     (name: string, smartPositionConfig: SmartPositionConfig) => {
@@ -290,8 +327,8 @@ const JapanMap: React.FC<JapanMapProps> = ({
         }}
         style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
         renderWorldCopies
-        maxPitch={0}
-        touchPitch={false}
+        maxPitch={maxPitch}
+        touchPitch={mode3d}
         interactiveLayerIds={showPrefectureOverlay ? [PREFECTURE_FILL_LAYER_ID] : []}
         onClick={onMapClick}
         onMouseMove={onMouseMove}
@@ -299,6 +336,7 @@ const JapanMap: React.FC<JapanMapProps> = ({
       >
         <MapRefBinder mapRef={mapRef} />
         <MapMoveHandler useJapaneseSource={useJapaneseSource} />
+        <Map3DBuildings enabled={mode3d} japanData={japanData} />
         <MapTopControlStack
           onLocate={handleGPSClick}
           gpsLoading={isLoading}
@@ -306,6 +344,8 @@ const JapanMap: React.FC<JapanMapProps> = ({
           position={position}
           prefectureOverlayVisible={showPrefectureOverlay}
           onPrefectureOverlayToggle={onPrefectureOverlayToggle ?? (() => undefined)}
+          mode3d={mode3d}
+          onMode3dToggle={toggleMode3d}
         />
 
         {devMapOverlayFlags.showTestOverlay && <MapTestOverlay />}

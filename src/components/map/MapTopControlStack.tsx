@@ -5,6 +5,7 @@ import LanguageSelector from '@/components/ui/LanguageSelector';
 import { useMapProjection } from '@/map/useMapProjection';
 import type { UserGeolocationPosition } from '@/types/geolocation';
 import MapCompass from './MapCompass';
+import Mode3DToggle from '@/components/ui/Mode3DToggle';
 
 const controlBtnClass = `
   w-11 h-11 shrink-0 p-0 bg-white border-2 border-gray-300 rounded-sm
@@ -22,6 +23,8 @@ interface MapTopControlStackProps {
   position?: UserGeolocationPosition | null;
   prefectureOverlayVisible: boolean;
   onPrefectureOverlayToggle: () => void;
+  mode3d: boolean;
+  onMode3dToggle: () => void;
 }
 
 const MapTopControlStack = ({
@@ -31,6 +34,8 @@ const MapTopControlStack = ({
   position,
   prefectureOverlayVisible,
   onPrefectureOverlayToggle,
+  mode3d,
+  onMode3dToggle,
 }: MapTopControlStackProps) => {
   const { t } = useTranslation();
   const map = useMapProjection();
@@ -45,7 +50,7 @@ const MapTopControlStack = ({
   };
 
   return (
-    <div className="absolute top-3 right-3 z-10 flex flex-col items-end gap-2 pointer-events-none chama-map-control map-secondary-control-stack">
+    <div className="absolute top-3 right-3 z-10 flex flex-row-reverse items-start gap-2 pointer-events-none chama-map-control map-secondary-control-stack">
       <div className="flex flex-col gap-2 pointer-events-auto" data-control-position="topright">
         <MapCompass />
         <PrefectureOverlayToggle
@@ -66,6 +71,7 @@ const MapTopControlStack = ({
           <FaLocationCrosshairs className={`${iconClass} ${gpsLoading ? 'animate-spin' : ''}`} aria-hidden />
         </button>
       </div>
+      <Mode3DToggle enabled={mode3d} onToggle={onMode3dToggle} className="shadow-none pointer-events-auto" />
     </div>
   );
 };

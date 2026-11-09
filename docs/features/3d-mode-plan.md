@@ -1,6 +1,6 @@
 # 3D mode (Project PLATEAU via Source Cooperative `xing`)
 
-**Status:** In progress  
+**Status:** Implemented (V1 — deck.gl Tile3DLayer + Source Cooperative xing LOD1 per prefecture)  
 **Data:** [smartmaps/xing](https://source.coop/smartmaps/xing) — PLATEAU 3D Tiles + MVT (spec V3 mirror; catalog last updated 2025-08-21).
 
 ## Goals
@@ -29,8 +29,8 @@ Persistence: `localStorage` key `chama-map-3d-mode`, default off.
 
 ## Rendering
 
-1. **V1:** MapLibre `fill-extrusion` from `xing` MVT (LOD1-style footprints + height).
-2. **V2 (optional):** deck.gl `Tile3DLayer` for high-zoom 3D Tiles.
+1. **V1 (shipped):** deck.gl `Tile3DLayer` against `xing` LOD1 `tileset.json` (per-prefecture representative URL).
+2. **V2 (optional):** Ward-level tileset index or MVT if added to `xing`.
 
 Constants and URLs: `src/constants/plateau3dConstants.ts`.
 

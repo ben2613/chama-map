@@ -14,7 +14,10 @@
     "noTracks": "No Haachama tracks found in this prefecture",
     "prefectureOverlayShow": "Show prefecture overlay",
     "prefectureOverlayHide": "Hide prefecture overlay",
-    "resetNorth": "Reset map to north"
+    "resetNorth": "Reset map to north",
+    "mode3dOn": "Enable 3D buildings",
+    "mode3dOff": "Disable 3D buildings",
+    "mode3dZoomHint": "Zoom in closer to load 3D buildings (zoom 14+)."
   },
   "navigation": {
     "home": "Home",
@@ -37,6 +40,11 @@
     "mapUpgradeBulletBasemap": "English UI uses Esri World Street labels; Japanese UI uses GSI pale tiles over Japan.",
     "mapUpgradeBulletControls": "Zoom and return-to-Japan are bottom-right; overlay, language, GPS, and north are top-right under the compass.",
     "mapUpgradeBulletPopups": "Tap the map background to close popups; tap the same prefecture again to dismiss its list.",
+    "plateau3dTitle": "3D buildings (Project PLATEAU)",
+    "plateau3dBody": "Optional 3D mode shows open building models from Japan's Project PLATEAU, served via the UN Smart Maps Group mirror on Source Cooperative (snapshot updated Aug 2025; vintage varies by city).",
+    "plateau3dAttribution": "When using 3D data, credit Project PLATEAU (MLIT / municipal rights) and Source Cooperative smartmaps/xing.",
+    "plateau3dPolicyLink": "PLATEAU site policy",
+    "plateau3dDataLink": "Source Cooperative dataset",
     "createdBy": "Created by ♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡",
     "comments": "Comments / Contact:"
   },

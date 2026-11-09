@@ -5,6 +5,7 @@ import { FaGithub, FaTwitter } from 'react-icons/fa6';
 import { showGuideline } from '@/lib/slices/guidelineSlice';
 import { showOtherProject } from '@/lib/slices/otherProjectSlice';
 import { useAppDispatch } from '@/lib/hooks';
+import { PLATEAU_POLICY_URL, PLATEAU_XING_INFO_URL } from '@/constants/plateau3dConstants';
 
 interface InfoPanelProps {
   open: boolean;
@@ -40,6 +41,29 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
             <div className="text-center mb-4">
               <h1 className="text-2xl font-bold text-gray-800 mb-1">🗾 {t('meta.title')}</h1>
               <p className="text-base text-gray-600">{t('infoPanel.description')}</p>
+            </div>
+            <div className="mb-4 rounded-lg border border-violet-200 bg-violet-50/80 px-3 py-3 text-left">
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">{t('infoPanel.plateau3dTitle')}</h3>
+              <p className="text-xs text-gray-700 mb-2">{t('infoPanel.plateau3dBody')}</p>
+              <p className="text-xs text-gray-600 mb-2">{t('infoPanel.plateau3dAttribution')}</p>
+              <div className="text-xs space-x-2">
+                <a
+                  href={PLATEAU_POLICY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-violet-700 underline"
+                >
+                  {t('infoPanel.plateau3dPolicyLink')}
+                </a>
+                <a
+                  href={PLATEAU_XING_INFO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-violet-700 underline"
+                >
+                  {t('infoPanel.plateau3dDataLink')}
+                </a>
+              </div>
             </div>
             <div className="mb-4 rounded-lg border border-sky-200 bg-sky-50/80 px-3 py-3 text-left">
               <h3 className="text-sm font-semibold text-gray-900 mb-1">{t('infoPanel.mapUpgradeTitle')}</h3>

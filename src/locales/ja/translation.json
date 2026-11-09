@@ -14,7 +14,10 @@
     "noTracks": "この地域にははあちゃまがいません",
     "prefectureOverlayShow": "都道府県オーバーレイを表示",
     "prefectureOverlayHide": "都道府県オーバーレイを非表示",
-    "resetNorth": "北向きに戻す"
+    "resetNorth": "北向きに戻す",
+    "mode3dOn": "3D建物を表示",
+    "mode3dOff": "3D建物をオフ",
+    "mode3dZoomHint": "3D建物はズーム14以上で読み込みます。"
   },
   "navigation": {
     "home": "ホーム",
@@ -37,6 +40,11 @@
     "mapUpgradeBulletBasemap": "英語表示は Esri の英語ラベル、日本語表示は日本域で GSI 淡色タイルを使います。",
     "mapUpgradeBulletControls": "拡大・縮小・日本全体は右下、オーバーレイ・言語・現在地・北向きは右上（コンパスの下）です。",
     "mapUpgradeBulletPopups": "地図の余白をタップでポップアップを閉じられます。同じ都道府県をもう一度タップすると一覧も閉じます。",
+    "plateau3dTitle": "3D建物（Project PLATEAU）",
+    "plateau3dBody": "任意の3Dモードでは、国土交通省 Project PLATEAU の建物モデル（UN Smart Maps Group が Source Cooperative で配信、2025年8月時点のミラー。都市ごとに整備年が異なります）を表示します。",
+    "plateau3dAttribution": "3Dデータ利用時は Project PLATEAU（国交省・市区町村等）および Source Cooperative smartmaps/xing への出典表示が必要です。",
+    "plateau3dPolicyLink": "PLATEAU サイトポリシー",
+    "plateau3dDataLink": "Source Cooperative データセット",
     "createdBy": "♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡ による制作",
     "comments": "コメント / お問い合わせ:"
   },
