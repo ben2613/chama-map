@@ -16,9 +16,9 @@ import { TrackProperties, PrefectureProperties, SmartPositionConfig } from '@/ty
 import { useMapRefs } from '@/hooks/useMapRefs';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { SOFT_RED, SOFT_YELLOW } from '@/utils/mapStyles';
-import { handlePrefectureMapClick } from '@/utils/mapPrefectureUtils';
+import { handlePrefectureMapClick, OVERSEAS_PREFECTURE } from '@/utils/mapPrefectureUtils';
 import { ClickPositionManager } from '@/utils/ClickPositionManager';
-import { groupMapByNameAndCoordinates } from '@/utils/groupTrackFeatures';
+import { getGroupingKeyForFeature, groupMapByNameAndCoordinates } from '@/utils/groupTrackFeatures';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { useTranslation } from 'react-i18next';
 import { createBasemapStyle } from '@/map/basemapStyle';
@@ -88,10 +88,19 @@ const JapanMap: React.FC<JapanMapProps> = ({
   const prefecturesWithTracks = useMemo(() => {
     const names = new Set<string>();
     chamaTrack?.features.forEach((f) => {
-      if (f.properties.prefecture) names.add(f.properties.prefecture);
+      const name = f.properties.prefecture;
+      if (name && name !== OVERSEAS_PREFECTURE) names.add(name);
     });
     return [...names];
   }, [chamaTrack]);
+
+  const overseasGroups = useMemo(
+    () =>
+      Object.values(groupedChamaTracks).filter(
+        (group) => group.length > 0 && group[0].properties.prefecture === OVERSEAS_PREFECTURE
+      ),
+    [groupedChamaTracks]
+  );
 
   const handleGPSClick = () => {
     if (!isPermissionGranted) {
@@ -161,6 +170,26 @@ const JapanMap: React.FC<JapanMapProps> = ({
     (popupId: string) => {
       closePrefecturePopup();
       setActiveTrackPopupId(popupId);
+    },
+    [closePrefecturePopup]
+  );
+
+  const onOverseasSelect = useCallback(
+    (feature: (typeof chamaTrack.features)[number]) => {
+      closePrefecturePopup();
+      const [lng, lat] = feature.geometry.coordinates;
+      const map = mapRef.current;
+      if (map) {
+        map.flyTo([lat, lng], Math.max(map.getZoom(), 10), { duration: 1 });
+      }
+      openTrackPopup(getGroupingKeyForFeature(feature, 6));
+    },
+    [closePrefecturePopup, mapRef, openTrackPopup]
+  );
+
+  const onOverseasOpenChange = useCallback(
+    (open: boolean) => {
+      if (open) closePrefecturePopup();
     },
     [closePrefecturePopup]
   );
@@ -306,6 +335,11 @@ const JapanMap: React.FC<JapanMapProps> = ({
           position={position}
           prefectureOverlayVisible={showPrefectureOverlay}
           onPrefectureOverlayToggle={onPrefectureOverlayToggle ?? (() => undefined)}
+          overseasGroups={overseasGroups}
+          onOverseasSelect={onOverseasSelect}
+          onOverseasOpenChange={onOverseasOpenChange}
+          onReturnToJapan={handleReturnToJapan}
+          returnAnimating={isAnimatingToJapan}
         />
 
         {devMapOverlayFlags.showTestOverlay && <MapTestOverlay />}
@@ -395,10 +429,7 @@ const JapanMap: React.FC<JapanMapProps> = ({
             <div className="absolute bottom-3 right-3 text-xs text-red-600 bg-white p-1 rounded">Map controls error</div>
           }
         >
-          <MapControlStack
-            onReturnToJapan={handleReturnToJapan}
-            returnAnimating={isAnimatingToJapan}
-          />
+          <MapControlStack />
         </ErrorBoundary>
       </MapGL>
     </div>

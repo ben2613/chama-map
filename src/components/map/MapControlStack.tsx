@@ -1,15 +1,8 @@
 import type { ReactNode } from 'react';
-import { FaHouse, FaMinus, FaPlus } from 'react-icons/fa6';
-import { useTranslation } from 'react-i18next';
+import { FaMinus, FaPlus } from 'react-icons/fa6';
 import { useMapProjection } from '@/map/useMapProjection';
 
-interface MapControlStackProps {
-  onReturnToJapan: () => void;
-  returnAnimating: boolean;
-}
-
-const MapControlStack = ({ onReturnToJapan, returnAnimating }: MapControlStackProps) => {
-  const { t } = useTranslation();
+const MapControlStack = () => {
   const map = useMapProjection();
 
   const controlBtnClass = `
@@ -30,17 +23,6 @@ const MapControlStack = ({ onReturnToJapan, returnAnimating }: MapControlStackPr
         <ZoomButton className={controlBtnClass} label="Zoom out" onClick={() => map?.zoomOut()}>
           <FaMinus className={iconClass} aria-hidden />
         </ZoomButton>
-        <button
-          type="button"
-          className={`${controlBtnClass} return-to-japan-button ${returnAnimating ? 'opacity-70' : ''}`}
-          data-control-position="bottomright"
-          disabled={returnAnimating}
-          onClick={onReturnToJapan}
-          title={t('returnToJapan.tooltip')}
-          aria-label={t('returnToJapan.ariaLabel')}
-        >
-          <FaHouse className={iconClass} aria-hidden />
-        </button>
       </div>
     </div>
   );

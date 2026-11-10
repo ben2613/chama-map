@@ -6,6 +6,12 @@ import type { GeoBounds } from '@/map/geoBounds';
 import { ViewportCalculator } from './ViewportCalculator';
 import { ClickPositionManager } from './ClickPositionManager';
 
+/** Synthetic group for tracks outside Japan (any country). */
+export const OVERSEAS_PREFECTURE = 'Overseas';
+
+/** ~220km. Keeps near-coast snaps; farther points go to Overseas. */
+const MAX_CLOSEST_FALLBACK_DEG = 2;
+
 export function getPrefectureForPoint(
   point: Position,
   prefectures: FeatureCollection<MultiPolygon, PrefectureProperties>
@@ -15,7 +21,7 @@ export function getPrefectureForPoint(
       return feature.properties.nam;
     }
   }
-  // if no prefecture found, return the closest prefecture, with the prefecture center
+  // Near Japan but outside polygons: snap to closest. Too far: Overseas group.
   const closestPrefecture = getClosestPrefecture(point, prefectures);
   console.log('No prefecture found for point', point, ', fallback to', closestPrefecture);
   return closestPrefecture;
@@ -104,6 +110,7 @@ function getClosestPrefecture(point: Position, prefectures: FeatureCollection<Mu
       closestPrefecture = feature.properties.nam;
     }
   }
+  if (closestDistance > MAX_CLOSEST_FALLBACK_DEG) return OVERSEAS_PREFECTURE;
   return closestPrefecture;
 }
 

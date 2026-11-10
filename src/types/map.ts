@@ -15,7 +15,7 @@ export interface PrefectureProperties {
 }
 
 export interface TrackProperties {
-  prefecture: string; // calculated from getPrefectureForPoint
+  prefecture: string; // calculated from getPrefectureForPoint; OVERSEAS_PREFECTURE if outside Japan
   icon: string;
   /** @deprecated */
   title: string;

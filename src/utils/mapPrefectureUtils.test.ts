@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createPrefectureHandlers, getPrefectureForPoint } from './mapPrefectureUtils';
+import { createPrefectureHandlers, getPrefectureForPoint, OVERSEAS_PREFECTURE } from './mapPrefectureUtils';
 import { ViewportCalculator } from './ViewportCalculator';
 import L from 'leaflet';
 import type { Feature, FeatureCollection, MultiPolygon } from 'geojson';
@@ -40,6 +40,44 @@ function createMockPopupOpening() {
   };
   return { control, getOpening: () => opening };
 }
+
+describe('getPrefectureForPoint overseas fallback', () => {
+  const okinawa: FeatureCollection<MultiPolygon, PrefectureProperties> = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {
+          nam: 'Okinawa',
+          nam_ja: '沖縄県',
+          id: 47,
+          center: [26.5, 127.9],
+        },
+        geometry: {
+          type: 'MultiPolygon',
+          coordinates: [[[[127, 26], [128, 26], [128, 27], [127, 27], [127, 26]]]],
+        },
+      },
+    ],
+  };
+
+  it('assigns overseas points to the Overseas group, not Okinawa', () => {
+    const mockBooleanPointInPolygon = vi.mocked(booleanPointInPolygon);
+    mockBooleanPointInPolygon.mockReturnValue(false);
+
+    // Any far point — nearest center may be Okinawa, but goes to Overseas
+    expect(getPrefectureForPoint([121.0, 14.6], okinawa)).toBe(OVERSEAS_PREFECTURE);
+    expect(getPrefectureForPoint([-0.1, 51.5], okinawa)).toBe(OVERSEAS_PREFECTURE);
+  });
+
+  it('still snaps near-coast misses to the closest prefecture', () => {
+    const mockBooleanPointInPolygon = vi.mocked(booleanPointInPolygon);
+    mockBooleanPointInPolygon.mockReturnValue(false);
+
+    // ~1.1° east of Okinawa center — outside polygon, within fallback
+    expect(getPrefectureForPoint([129.0, 26.5], okinawa)).toBe('Okinawa');
+  });
+});
 
 describe.skip('mapPrefectureUtils (Leaflet handler tests — pending MapLibre port)', () => {
   beforeEach(() => {
