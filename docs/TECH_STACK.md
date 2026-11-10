@@ -53,6 +53,8 @@ npm run test:watch
 | `VITE_SITE_URL` | Production domain for social meta tags |
 | `VITE_BASE_PATH` | Base path for subdirectory deployments |
 | `VITE_CORS_PROXY` | CORS proxy for external images |
+| `VITE_DEGEOCODE_URL` | Country lookup service (`degeocode.benlab.link`) |
+| `VITE_DEGEOCODE_API_KEY` | API key for degeocode (local `.env`; CI via `secrets.VITE_DEGEOCODE_API_KEY`) |
 
 Access in app code: `import.meta.env.VITE_*`.
 

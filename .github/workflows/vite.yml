@@ -14,6 +14,8 @@ on:
 
 env:
   VITE_CORS_PROXY: https://corsanywhere.benlab.link/
+  VITE_DEGEOCODE_URL: https://degeocode.benlab.link
+  VITE_DEGEOCODE_API_KEY: ${{ secrets.VITE_DEGEOCODE_API_KEY }}
   VITE_BASE_PATH: /chama-map/
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages

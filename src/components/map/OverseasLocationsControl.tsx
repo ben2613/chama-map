@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FaGlobe, FaXmark } from 'react-icons/fa6';
 import { useTranslation } from 'react-i18next';
 import type { Feature, Point } from 'geojson';
@@ -18,6 +18,22 @@ interface OverseasLocationsControlProps {
   onOpenChange?: (open: boolean) => void;
 }
 
+type CountrySection = {
+  code: string;
+  label: string;
+  groups: Feature<Point, TrackProperties>[][];
+};
+
+function countryLabel(code: string, locale: string, unknownLabel: string): string {
+  if (!code) return unknownLabel;
+  try {
+    const name = new Intl.DisplayNames([locale], { type: 'region' }).of(code);
+    return name ?? code;
+  } catch {
+    return code;
+  }
+}
+
 export default function OverseasLocationsControl({
   groups,
   onSelect,
@@ -25,6 +41,31 @@ export default function OverseasLocationsControl({
 }: OverseasLocationsControlProps) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
+
+  const sections = useMemo((): CountrySection[] => {
+    const unknownLabel = t('map.unknownCountry');
+    const locale = i18n.language.startsWith('ja') ? 'ja' : 'en';
+    const byCode = new Map<string, Feature<Point, TrackProperties>[][]>();
+
+    for (const group of groups) {
+      const code = (group[0]?.properties.country ?? '').toUpperCase();
+      const list = byCode.get(code);
+      if (list) list.push(group);
+      else byCode.set(code, [group]);
+    }
+
+    return [...byCode.entries()]
+      .map(([code, countryGroups]) => ({
+        code,
+        label: countryLabel(code, locale, unknownLabel),
+        groups: countryGroups,
+      }))
+      .sort((a, b) => {
+        if (!a.code && b.code) return 1;
+        if (a.code && !b.code) return -1;
+        return a.label.localeCompare(b.label, locale);
+      });
+  }, [groups, i18n.language, t]);
 
   if (groups.length === 0) return null;
 
@@ -65,36 +106,48 @@ export default function OverseasLocationsControl({
               <FaXmark />
             </button>
           </div>
-          <ul className="m-0 max-h-72 list-none overflow-y-auto overflow-x-hidden p-0">
-            {groups.map((group, idx) => {
-              const rep = group[0];
-              const label = i18n.language.startsWith('ja') ? rep.properties.nameJp : rep.properties.name;
-              const icon = rep.properties.icon;
-              const key = getGroupingKeyForFeature(rep, 6);
-              return (
-                <li key={`${key}-${idx}`}>
-                  <button
-                    type="button"
-                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-blue-600 hover:bg-slate-50 hover:underline"
-                    onClick={() => {
-                      setOpenState(false);
-                      onSelect(rep);
-                    }}
-                  >
-                    {icon && (
-                      <img src={icon} alt="" className="h-4 w-4 shrink-0 object-contain" />
-                    )}
-                    <span className="min-w-0 truncate">
-                      {label}
-                      {group.length > 1 && (
-                        <span className="font-normal text-gray-500"> ({group.length})</span>
-                      )}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="max-h-72 overflow-y-auto overflow-x-hidden">
+            {sections.map((section) => (
+              <div key={section.code || 'unknown'}>
+                <div className="sticky top-0 border-b border-gray-100 bg-slate-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-gray-600">
+                  {section.label}
+                  {section.code ? (
+                    <span className="ml-1 font-normal normal-case text-gray-400">({section.code})</span>
+                  ) : null}
+                </div>
+                <ul className="m-0 list-none p-0">
+                  {section.groups.map((group, idx) => {
+                    const rep = group[0];
+                    const label = i18n.language.startsWith('ja') ? rep.properties.nameJp : rep.properties.name;
+                    const icon = rep.properties.icon;
+                    const key = getGroupingKeyForFeature(rep, 6);
+                    return (
+                      <li key={`${section.code}-${key}-${idx}`}>
+                        <button
+                          type="button"
+                          className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-blue-600 hover:bg-slate-50 hover:underline"
+                          onClick={() => {
+                            setOpenState(false);
+                            onSelect(rep);
+                          }}
+                        >
+                          {icon && (
+                            <img src={icon} alt="" className="h-4 w-4 shrink-0 object-contain" />
+                          )}
+                          <span className="min-w-0 truncate">
+                            {label}
+                            {group.length > 1 && (
+                              <span className="font-normal text-gray-500"> ({group.length})</span>
+                            )}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
