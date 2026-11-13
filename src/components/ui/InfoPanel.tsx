@@ -46,12 +46,13 @@ const InfoPanel: React.FC<InfoPanelProps> = ({ open, className }) => {
               <p className="text-base text-gray-600">{t('infoPanel.description')}</p>
             </div>
             <div className="mb-4 rounded-lg border border-sky-200 bg-sky-50/80 px-3 py-3 text-left">
-              <h3 className="text-sm font-semibold text-gray-900 mb-1">{t('infoPanel.mapUpgradeTitle')}</h3>
-              <p className="text-xs text-gray-700 mb-2">{t('infoPanel.mapUpgradeIntro')}</p>
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">{t('infoPanel.mapHelpTitle')}</h3>
+              <p className="text-xs text-gray-700 mb-2">{t('infoPanel.mapHelpIntro')}</p>
               <ul className="list-disc pl-4 space-y-1 text-xs text-gray-600">
-                <li>{t('infoPanel.mapUpgradeBulletBasemap')}</li>
-                <li>{t('infoPanel.mapUpgradeBulletControls')}</li>
-                <li>{t('infoPanel.mapUpgradeBulletPopups')}</li>
+                <li>{t('infoPanel.mapHelpBulletSearch')}</li>
+                <li>{t('infoPanel.mapHelpBulletBasemap')}</li>
+                <li>{t('infoPanel.mapHelpBulletControls')}</li>
+                <li>{t('infoPanel.mapHelpBulletPopups')}</li>
               </ul>
             </div>
             <div>

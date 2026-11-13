@@ -34,11 +34,12 @@
   },
   "infoPanel": {
     "description": "はあちゃまの行った場所を探せるマップ",
-    "mapUpgradeTitle": "地図のアップデート",
-    "mapUpgradeIntro": "Leaflet から MapLibre GL に作り替え、地図の操作とオーバーレイを快適にしました。",
-    "mapUpgradeBulletBasemap": "英語表示は Esri の英語ラベル、日本語表示は日本域で GSI 淡色タイルを使います。",
-    "mapUpgradeBulletControls": "拡大・縮小は右下、オーバーレイ・言語・海外・日本全体・現在地・北向きは右上（コンパスの下）です。",
-    "mapUpgradeBulletPopups": "地図の余白をタップでポップアップを閉じられます。同じ都道府県をもう一度タップすると一覧も閉じます。",
+    "mapHelpTitle": "マップの使い方",
+    "mapHelpIntro": "ちゃまのスポットを探すときのヒントです。",
+    "mapHelpBulletSearch": "左上の（i）ボタンの横から、スポット名や都道府県名で検索できます。",
+    "mapHelpBulletBasemap": "英語表示は Esri の英語ラベル、日本語表示は日本域で GSI 淡色タイルを使います。",
+    "mapHelpBulletControls": "拡大・縮小は右下。右上はコンパス、都道府県オーバーレイ、言語、海外一覧、日本全体、現在地です。",
+    "mapHelpBulletPopups": "都道府県をタップでスポット一覧、ピンで詳細。余白タップで閉じ、同じ都道府県をもう一度タップでも一覧を閉じられます。",
     "createdBy": "♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡ による制作",
     "comments": "コメント / お問い合わせ:"
   },

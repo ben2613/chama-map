@@ -9,110 +9,68 @@ This project and README contains code and text AI generated.
 Please assume they are misleading or features are not implemented.
 ```
 
-## Dynamic Meta Tags for Static Site Generation
+## About
 
-This project uses Next.js with static site generation (`output: 'export'`). To support dynamic meta tags with i18next while ensuring proper social media embedding, we use a hybrid approach:
+**Haachama Radar** is a static fan site that shows where Akai Haato (Haachama) has been across Japan (and overseas), using an interactive MapLibre map, prefecture overlay, and location popups with photos and links.
 
-## About Map Data
+Trip data is maintained in **Google My Maps** and loaded by the app at runtime (see [Data sources](#data-sources)). Deeper product and architecture notes live in [`docs/`](./docs/README.md).
 
-This site displays geographic data and map tiles from third-party sources. The developer picks these providers only because they are free to use.
+## Meta tags and i18n
 
-### How it works:
+The app is a **Vite** SPA with a static `index.html` and client-side updates:
 
-1. **Static Meta Tags**: The `layout.tsx` uses Next.js metadata API to generate static meta tags in the initial HTML
-2. **Dynamic Updates**: The `DynamicMetadata` component updates these meta tags on the client side when the language changes
+1. **Initial HTML** — default Open Graph / Twitter meta tags in `index.html`
+2. **Runtime** — `DynamicMetadata` updates title and description when the language changes (`src/locales/` via i18next)
 
-### Usage:
-
-```tsx
-// In layout.tsx - Static meta tags
-export const metadata: Metadata = {
-  metadataBase: new URL('https://your-domain.com'),
-  title: 'Haachama Radar',
-  description: 'Find where the Haachama are!',
-  // ... other meta tags
-};
-
-// In components - Dynamic updates
-<DynamicMetadata /> // Uses default translations
-<DynamicMetadata
-  title="Custom Title"
-  description="Custom description"
-  image="/custom-image.jpg"
-  url="https://example.com"
-/>
-```
-
-### Environment Variables:
-
-Set `NEXT_PUBLIC_SITE_URL` to your production domain for proper social media image URLs:
+Set the production site URL for absolute social image URLs:
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://your-domain.com
+VITE_SITE_URL=https://your-domain.com
 ```
 
-### Features:
+Use `<DynamicMetadata />` in `App.tsx` with optional overrides for custom title, description, image, or URL.
 
-- ✅ Static meta tags for social media crawlers
-- ✅ Dynamic language switching with i18next
-- ✅ Open Graph and Twitter Card support
-- ✅ PWA manifest support
-- ✅ Custom meta tag overrides
-
-## Project Goals / Feature Targets
+## Project goals / feature status
 
 - Interactive map of Japan's 47 prefectures
-- Highlight prefectures Haachama has visited
-- Show trip details (tweets, photos, YouTube streams) on hover/click
-- Link to relevant tweets, photos, and YouTube streams for each trip/prefecture
-- Allow fan-submitted photos (embedded or linked)
-- Checklist of all prefectures (visualize which are visited/unvisited)
-- Visualize travel progress (e.g., % complete, which are left)
-- Manual content entry (not auto-scraping)
+- Highlight visited prefectures and show trip details (photos, tweets, YouTube)
+- Multi-language UI (EN / JA)
+- Spot search (top-left)
+- Checklist / progress visualization — **planned**
+- Fan-submitted media — **under consideration**
+- Manual content via Google My Maps — **in use**
 
-**Current Status:**
+See [docs/PRODUCT.md](./docs/PRODUCT.md) for full product context.
 
-- [x] Interactive, cartoon-style map of Japan's prefectures
-- [x] Visited status/highlighting for prefectures
-- [x] Trip details and media links per prefecture
-- [ ] Checklist/progress visualization
-- [ ] Fan content submission/embedding (should we?)
-- [x] Manual content management interface (Google My Map as backend)
+## Getting started
 
-## Getting Started
+```bash
+npm install
+npm run dev
+```
 
-1. Install dependencies:
+Open [http://localhost:3000](http://localhost:3000) (see `vite.config.ts` for the dev port).
 
-   ```bash
-   npm install
-   # or
-   yarn install
-   # or
-   pnpm install
-   # or
-   bun install
-   ```
+| Command | Purpose |
+|---------|---------|
+| `npm run build` | Typecheck + production build → `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run test` | Vitest (unit / component) |
+| `npm run lint` | ESLint |
 
-2. Start the development server:
+Stack details: [docs/TECH_STACK.md](./docs/TECH_STACK.md).  
+Layout: [docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md).
 
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
-   # or
-   bun dev
-   ```
+Main entry: `src/main.tsx` → `src/App.tsx` → lazy-loaded `src/components/map/JapanMap.tsx`.
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
+## Data sources
 
----
+- **Prefecture boundaries** — [dataofjapan/land](https://github.com/dataofjapan/land/blob/master/japan.geojson), simplified to `public/data/japan-prefectures.geojson` via [mapshaper.org](https://mapshaper.org/) (explode → simplify → dissolve by prefecture name)
+- **Chama locations** — Google My Maps KMZ (`src/services/api.ts` → `getChamaTrack()`)
+- **Map tiles** — third-party free providers (see basemap setup in `src/map/basemapStyle.ts`)
 
-## Credits / Data Source
+This site displays geographic data and map tiles from third-party sources. Providers are chosen because they are free to use where applicable.
 
-- Japanese prefecture boundaries data sourced from [dataofjapan/land](https://github.com/dataofjapan/land/blob/master/japan.geojson)
-- The `japan-prefectures.geojson` file was generated using [mapshaper.org](https://mapshaper.org/) with the following process: **explode** (to separate MultiPolygons), **simplify** (to reduce file size while preserving shape), and **dissolve** (to merge features by prefecture name, ensuring each prefecture is a single feature).
-- GeoJSON file simplified for web use with [mapshaper.org](https://mapshaper.org/))
+## Credits
 
-This project uses Next.js, React, TypeScript, React Leaflet, and Tailwind CSS. See `src/app/page.tsx` and `src/app/components/JapanMap.tsx` for main logic.
+- React, TypeScript, Vite, MapLibre GL, Tailwind CSS — see [docs/TECH_STACK.md](./docs/TECH_STACK.md)

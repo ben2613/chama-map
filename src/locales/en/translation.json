@@ -34,11 +34,12 @@
   },
   "infoPanel": {
     "description": "Interactive map for finding where Chama has been!",
-    "mapUpgradeTitle": "Map update",
-    "mapUpgradeIntro": "The site map was rebuilt on MapLibre GL (replacing Leaflet) for smoother panning and overlays.",
-    "mapUpgradeBulletBasemap": "English UI uses Esri World Street labels; Japanese UI uses GSI pale tiles over Japan.",
-    "mapUpgradeBulletControls": "Zoom is bottom-right; overlay, language, overseas, return-to-Japan, GPS, and north are top-right under the compass.",
-    "mapUpgradeBulletPopups": "Tap the map background to close popups; tap the same prefecture again to dismiss its list.",
+    "mapHelpTitle": "Using the map",
+    "mapHelpIntro": "Quick tips for exploring Chama's spots.",
+    "mapHelpBulletSearch": "Search by spot or prefecture name from the bar next to the (i) button (top-left).",
+    "mapHelpBulletBasemap": "English UI uses Esri World Street labels; Japanese UI uses GSI pale tiles over Japan.",
+    "mapHelpBulletControls": "Zoom: bottom-right. Top-right: compass, prefecture overlay, language, overseas list, return to Japan, and GPS.",
+    "mapHelpBulletPopups": "Tap a prefecture for its spot list, or a pin for details. Tap empty map to close; tap the same prefecture again to dismiss its list.",
     "createdBy": "Created by ♡₊ ‧ ❛Akai Haato Fan Server༉˚₊ ‧♡",
     "comments": "Comments / Contact:"
   },
