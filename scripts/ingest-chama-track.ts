@@ -3,12 +3,16 @@
  * track-meta.json, and vendored marker icons. Run at build time (CI or local).
  */
 import { createHash } from 'node:crypto';
-import { mkdirSync, writeFileSync, rmSync, existsSync } from 'node:fs';
+import { mkdirSync, writeFileSync, rmSync, existsSync, readFileSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Unzipped } from 'fflate';
 import { CHAMA_TRACK_KMZ_URL, CHAMA_TRACK_SCHEMA_VERSION } from '../src/constants/chamaTrackConstants';
 import { parseKmzBytesToChamaTrack } from '../src/services/kmlToChamaTrack';
+import { DEFAULT_DEGEOCODE_URL } from '../src/services/degeocodeCountries';
+import { enrichChamaTrack } from '../src/utils/enrichChamaTrack';
+import type { FeatureCollection, MultiPolygon } from 'geojson';
+import type { PrefectureProperties } from '../src/types/map';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(__dirname, '..');
@@ -51,6 +55,24 @@ async function main(): Promise<void> {
   mkdirSync(iconsDir, { recursive: true });
 
   const collection = parseKmzBytesToChamaTrack(kmzBytes, writeIconFromKmz);
+
+  const prefecturesPath = join(dataDir, 'japan-prefectures.geojson');
+  const japan = JSON.parse(
+    readFileSync(prefecturesPath, 'utf8')
+  ) as FeatureCollection<MultiPolygon, PrefectureProperties>;
+
+  const degeocodeApiKey = process.env.DEGEOCODE_API_KEY?.trim();
+  const degeocodeUrl = (process.env.DEGEOCODE_URL?.trim() || DEFAULT_DEGEOCODE_URL).replace(/\/$/, '');
+  if (!degeocodeApiKey) {
+    console.warn('DEGEOCODE_API_KEY not set — overseas country codes will be absent in GeoJSON.');
+  }
+  console.log('Enriching track (prefecture + overseas country)…');
+  await enrichChamaTrack(
+    collection,
+    japan,
+    degeocodeApiKey ? { url: degeocodeUrl, apiKey: degeocodeApiKey } : undefined
+  );
+
   const geojsonText = JSON.stringify(collection);
   const contentHash = sha256Hex(geojsonText);
 

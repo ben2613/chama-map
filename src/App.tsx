@@ -18,7 +18,6 @@ import TranslationProvider from '@/components/providers/TranslationProvider';
 // Types and utilities
 import { TrackProperties, PrefectureProperties } from '@/types/map';
 import { getPrefectureForPoint } from '@/utils/mapPrefectureUtils';
-import { resolveOverseasCountries } from '@/utils/resolveOverseasCountries';
 import { getChamaTrack, getJapanPrefectures } from '@/services/api';
 
 // Lazy load the map component
@@ -63,11 +62,12 @@ function AppContent() {
   useEffect(() => {
     let splashTimeout: ReturnType<typeof setTimeout>;
     let cancelled = false;
-    Promise.all([getJapanPrefectures(), getChamaTrack()]).then(async ([japan, track]) => {
+    Promise.all([getJapanPrefectures(), getChamaTrack()]).then(([japan, track]) => {
       for (const feature of track.features) {
-        feature.properties.prefecture = getPrefectureForPoint(feature.geometry.coordinates, japan);
+        if (!feature.properties.prefecture) {
+          feature.properties.prefecture = getPrefectureForPoint(feature.geometry.coordinates, japan);
+        }
       }
-      await resolveOverseasCountries(track.features);
       if (cancelled) return;
       setJapanData(japan);
       setChamaTrack(track);

@@ -1,11 +1,14 @@
 import type { Feature, Point } from 'geojson';
 import type { TrackProperties } from '@/types/map';
 import { OVERSEAS_PREFECTURE } from '@/utils/mapPrefectureUtils';
-import { fetchCountries } from '@/services/degeocode';
+import type { DegeocodePoint, DegeocodeResult } from '@/services/degeocodeCountries';
 
-/** Sets `country` on overseas track features via degeocode. Mutates in place. */
-export async function resolveOverseasCountries(
-  features: Feature<Point, TrackProperties>[]
+export type CountryLookup = (points: DegeocodePoint[]) => Promise<DegeocodeResult[]>;
+
+/** Sets `country` on overseas track features. Mutates in place. */
+export async function assignOverseasCountries(
+  features: Feature<Point, TrackProperties>[],
+  lookup: CountryLookup
 ): Promise<void> {
   const overseas = features.filter((f) => f.properties.prefecture === OVERSEAS_PREFECTURE);
   if (overseas.length === 0) return;
@@ -15,12 +18,12 @@ export async function resolveOverseasCountries(
       lat: f.geometry.coordinates[1],
       lng: f.geometry.coordinates[0],
     }));
-    const results = await fetchCountries(points);
+    const results = await lookup(points);
     for (let i = 0; i < overseas.length; i++) {
       overseas[i].properties.country = results[i]?.country ?? null;
     }
   } catch (err) {
-    console.warn('resolveOverseasCountries failed:', err);
+    console.warn('assignOverseasCountries failed:', err);
     for (const f of overseas) {
       f.properties.country = null;
     }
