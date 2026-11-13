@@ -16,7 +16,7 @@ export interface PrefectureProperties {
 
 export interface TrackProperties {
   prefecture: string; // calculated from getPrefectureForPoint; OVERSEAS_PREFECTURE if outside Japan
-  /** ISO 3166-1 alpha-2 from degeocode; only set for overseas tracks */
+  /** ISO 3166-1 alpha-2 from build-time degeocode; only set for overseas tracks */
   country?: string | null;
   icon: string;
   /** @deprecated */
