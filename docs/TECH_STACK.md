@@ -9,6 +9,7 @@
 ## Build and styling
 
 - **Vite 8** — dev server and production build (static output in `dist/`)
+- **vite-plugin-pwa** (Workbox) — precache app + `data/*` in production; no tile/image runtime cache
 - **Tailwind CSS 4** — utility CSS via `@tailwindcss/postcss`
 - **PostCSS** — pipeline with Autoprefixer
 

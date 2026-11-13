@@ -79,6 +79,14 @@ Trip GeoJSON is **not** in git; it is produced at build time. After editing the 
 1. **Automatic (recommended)** — workflow **Check My Maps update** runs on a schedule (every 6 hours UTC), compares the live Google KMZ SHA-256 to **`kmzSha256` in the published `data/track-meta.json`**, and dispatches **Deploy Vite React site to Pages** when they differ (or when the live file is missing). No git commits and no repository variables.
 2. **Manual** — Actions → **Deploy Vite React site to Pages** → Run workflow, or push to `master`.
 
+## Offline (PWA)
+
+Production builds register a **service worker** (via `vite-plugin-pwa`) that precaches the app shell and **same-origin data**: prefecture GeoJSON, ingested `chama-track.geojson`, `track-meta.json`, and vendored pin icons.
+
+**Map tiles** (Esri / GSI) and **popup gallery images** are **not** stored in the service worker; they rely on the **browser HTTP cache** if you viewed them while online.
+
+After one online visit, you can use search, prefectures, and pins offline with an amber banner at the bottom. Install via **Add to Home Screen** when your browser offers it (manifest `display: standalone`).
+
 ## Credits
 
 - React, TypeScript, Vite, MapLibre GL, Tailwind CSS — see [docs/TECH_STACK.md](./docs/TECH_STACK.md)
