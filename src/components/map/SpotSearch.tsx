@@ -17,6 +17,7 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
   const listId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
 
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
@@ -41,6 +42,14 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
   );
 
   const showResults = open && query.trim().length > 0;
+
+  useEffect(() => {
+    if (!showResults || results.length === 0) return;
+    const list = listRef.current;
+    if (!list) return;
+    const option = list.querySelector<HTMLElement>(`[data-result-index="${activeIndex}"]`);
+    option?.scrollIntoView({ block: 'nearest' });
+  }, [activeIndex, showResults, results.length]);
 
   useEffect(() => {
     if (!showResults) return;
@@ -181,6 +190,7 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
         {inputBlock}
         {showResults && (
           <ul
+            ref={listRef}
             id={listId}
             role="listbox"
             className="mt-1 max-h-64 overflow-y-auto rounded-sm border-2 border-gray-200 bg-white/98 py-1 shadow-lg"
@@ -193,6 +203,7 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
                   <button
                     type="button"
                     role="option"
+                    data-result-index={idx}
                     aria-selected={idx === activeIndex}
                     className={`flex w-full flex-col items-start px-3 py-2 text-left text-sm hover:bg-sky-50 ${
                       idx === activeIndex ? 'bg-sky-100' : ''
