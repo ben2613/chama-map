@@ -11,6 +11,7 @@ import { ViewportCalculator, PopupSize } from '@/utils/ViewportCalculator';
 import { useMapProjection } from '@/map/useMapProjection';
 import type { MapPopupHandle } from '@/hooks/useMapRefs';
 import styles from './PrefecturePopup.module.css';
+import { resolveTrackAssetUrl } from '@/services/kmlToChamaTrack';
 
 interface PrefecturePopupProps {
   selectedPrefecture: string;
@@ -151,7 +152,11 @@ const PrefecturePopup = ({
                   >
                     {icon && (
                       <>
-                        <img src={icon} className={'inline-block h-[1em] w-[1em] mt-[-1px] object-contain'} alt="" />
+                        <img
+                          src={resolveTrackAssetUrl(icon)}
+                          className={'inline-block h-[1em] w-[1em] mt-[-1px] object-contain'}
+                          alt=""
+                        />
                         &nbsp;
                       </>
                     )}
