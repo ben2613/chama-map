@@ -4,7 +4,7 @@
 
 - **React 19** — UI
 - **TypeScript 6** — types
-- **Node.js 20+** — local development
+- **Node.js 24** — local development and CI (see `.nvmrc`; `nvm use`)
 
 ## Build and styling
 

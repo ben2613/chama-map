@@ -44,6 +44,8 @@ See [docs/PRODUCT.md](./docs/PRODUCT.md) for full product context.
 
 ## Getting started
 
+Use **Node 24** (see `.nvmrc`; `nvm use`).
+
 ```bash
 npm install
 npm run dev
