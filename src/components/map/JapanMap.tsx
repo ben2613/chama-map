@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import MapGL, { Layer, Source } from 'react-map-gl/maplibre';
 import type { MapLayerMouseEvent } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import type { FeatureCollection, Point, MultiPolygon } from 'geojson';
+import type { Feature, FeatureCollection, Point, MultiPolygon } from 'geojson';
 import TrackMarker from './TrackMarker';
 import PrefecturePopup from './PrefecturePopup';
 import CurrentPositionMarker from './CurrentPositionMarker';
@@ -11,6 +11,7 @@ import MapRefBinder from './MapRefBinder';
 import MapTestOverlay from './MapTestOverlay';
 import MapMoveHandler from './MapMoveHandler';
 import MapTopControlStack from './MapTopControlStack';
+import SpotSearch from './SpotSearch';
 import { isMapTestOverlayEnabled, isPrefectureOverlaySkipped } from '@/map/mapTestOverlay';
 import { TrackProperties, PrefectureProperties, SmartPositionConfig } from '@/types/map';
 import { useMapRefs } from '@/hooks/useMapRefs';
@@ -194,6 +195,20 @@ const JapanMap: React.FC<JapanMapProps> = ({
     [closePrefecturePopup]
   );
 
+  const onSpotSearchSelect = useCallback(
+    (feature: Feature<Point, TrackProperties>) => {
+      closePrefecturePopup();
+      closeTrackPopup();
+      const [lng, lat] = feature.geometry.coordinates;
+      const map = mapRef.current;
+      if (map) {
+        map.flyTo([lat, lng], Math.max(map.getZoom(), 12), { duration: 1 });
+      }
+      openTrackPopup(getGroupingKeyForFeature(feature, 6));
+    },
+    [closePrefecturePopup, closeTrackPopup, mapRef, openTrackPopup]
+  );
+
   const onMapClick = useCallback(
     (event: MapLayerMouseEvent) => {
       const target = event.originalEvent.target;
@@ -295,6 +310,7 @@ const JapanMap: React.FC<JapanMapProps> = ({
 
   return (
     <div className={className} style={{ position: 'relative', height: '100%', width: '100%' }}>
+      <SpotSearch chamaTrack={chamaTrack} japanData={japanData} onSelect={onSpotSearchSelect} />
       {error && (
         <div className="absolute top-4 left-4 z-[1000] bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded shadow-lg">
           <div className="text-sm font-medium">

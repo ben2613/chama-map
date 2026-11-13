@@ -65,6 +65,13 @@
     "timeout": "Location request timed out",
     "enableLocationInstructions": "Please enable location access in your browser settings"
   },
+  "spotSearch": {
+    "label": "Search locations",
+    "placeholder": "Search spots…",
+    "noResults": "No matching spots",
+    "clear": "Clear search",
+    "open": "Open location search"
+  },
   "returnToJapan": {
     "tooltip": "Return to Japan",
     "ariaLabel": "Return to Japan view"

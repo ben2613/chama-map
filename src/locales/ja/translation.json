@@ -65,6 +65,13 @@
     "timeout": "位置情報の取得がタイムアウトしました",
     "enableLocationInstructions": "ブラウザの設定で位置情報アクセスを有効にしてください"
   },
+  "spotSearch": {
+    "label": "場所を検索",
+    "placeholder": "スポットを検索…",
+    "noResults": "該当するスポットがありません",
+    "clear": "検索をクリア",
+    "open": "場所検索を開く"
+  },
   "returnToJapan": {
     "tooltip": "日本に戻る",
     "ariaLabel": "日本の地図に戻る"
