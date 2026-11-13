@@ -11,6 +11,7 @@ import { CHAMA_TRACK_KMZ_URL, CHAMA_TRACK_SCHEMA_VERSION } from '../src/constant
 import { parseKmzBytesToChamaTrack } from '../src/services/kmlToChamaTrack';
 import { DEFAULT_DEGEOCODE_URL } from '../src/services/degeocodeCountries';
 import { enrichChamaTrack } from '../src/utils/enrichChamaTrack';
+import { kmzPayloadSha256 } from './kmzPayloadHash';
 import type { FeatureCollection, MultiPolygon } from 'geojson';
 import type { PrefectureProperties } from '../src/types/map';
 
@@ -46,7 +47,8 @@ async function main(): Promise<void> {
   }
   const arrayBuffer = await res.arrayBuffer();
   const kmzBytes = new Uint8Array(arrayBuffer);
-  const kmzSha256 = sha256Hex(kmzBytes);
+  // Payload hash: raw KMZ bytes change every download (ZIP DOS mtime).
+  const kmzSha256 = kmzPayloadSha256(kmzBytes);
 
   mkdirSync(dataDir, { recursive: true });
   if (existsSync(iconsDir)) {
