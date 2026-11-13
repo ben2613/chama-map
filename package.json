@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc --project tsconfig.build.json && vite build",
+    "ingest:track": "tsx scripts/ingest-chama-track.ts",
+    "build": "npm run ingest:track && tsc --project tsconfig.build.json && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 3",
     "test": "vitest --run",
@@ -51,6 +52,7 @@
     "postcss": "^8.5.15",
     "tailwindcss": "^4.3.1",
     "terser": "^5.48.0",
+    "tsx": "^4.20.6",
     "typescript": "^6",
     "vite": "^8.0.16",
     "vitest": "^4.1.9"

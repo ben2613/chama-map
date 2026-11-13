@@ -39,7 +39,8 @@ Map logic uses a thin **`MapProjection`** facade (`src/map/mapProjection.ts`) an
 
 ```bash
 npm run dev       # Vite dev server (port 3000)
-npm run build     # tsc + vite build
+npm run ingest:track  # fetch KMZ → public/data/ (gitignored)
+npm run build         # ingest + tsc + vite build
 npm run preview   # preview production build
 npm run lint      # ESLint
 npm test          # vitest --run

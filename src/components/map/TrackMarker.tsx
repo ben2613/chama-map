@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { FaLink, FaTwitter, FaYoutube, FaChevronLeft, FaChevronRight } from 'react-icons/fa6';
 import styles from './TrackMarker.module.css';
 import Image from '@/components/ui/Image';
+import { resolveTrackAssetUrl } from '@/services/kmlToChamaTrack';
 
 export interface TrackMarkerHandle {
   openPopup: () => void;
@@ -77,7 +78,9 @@ const TrackMarker = forwardRef<TrackMarkerHandle, TrackMarkerProps>(
         }}
       >
         <img
-          src={icon || 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png'}
+          src={
+            resolveTrackAssetUrl(icon) || 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png'
+          }
           alt=""
           width={icon ? 28 : 25}
           height={icon ? 28 : 41}

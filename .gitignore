@@ -21,6 +21,12 @@
 /build
 /dist
 
+# Chama track data generated at build / ingest (not committed)
+/public/data/chama-track.geojson
+/public/data/track-meta.json
+/public/data/track-icons/*
+!/public/data/track-icons/.gitkeep
+
 # misc
 .DS_Store
 *.pem

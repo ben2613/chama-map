@@ -13,7 +13,7 @@ Please assume they are misleading or features are not implemented.
 
 **Haachama Radar** is a static fan site that shows where Akai Haato (Haachama) has been across Japan (and overseas), using an interactive MapLibre map, prefecture overlay, and location popups with photos and links.
 
-Trip data is maintained in **Google My Maps** and loaded by the app at runtime (see [Data sources](#data-sources)). Deeper product and architecture notes live in [`docs/`](./docs/README.md).
+Trip data is maintained in **Google My Maps**. A build-time **ingest** step downloads the KMZ, writes `public/data/chama-track.geojson`, marker icons, and `track-meta.json` (not committed; shipped inside `dist/`). Deeper notes live in [`docs/`](./docs/README.md).
 
 ## Meta tags and i18n
 
@@ -53,7 +53,8 @@ Open [http://localhost:3000](http://localhost:3000) (see `vite.config.ts` for th
 
 | Command | Purpose |
 |---------|---------|
-| `npm run build` | Typecheck + production build → `dist/` |
+| `npm run ingest:track` | Fetch KMZ and write `public/data/` track bundle (also runs before `build`) |
+| `npm run build` | Ingest track + typecheck + production build → `dist/` |
 | `npm run preview` | Serve the production build locally |
 | `npm run test` | Vitest (unit / component) |
 | `npm run lint` | ESLint |
@@ -66,10 +67,14 @@ Main entry: `src/main.tsx` → `src/App.tsx` → lazy-loaded `src/components/map
 ## Data sources
 
 - **Prefecture boundaries** — [dataofjapan/land](https://github.com/dataofjapan/land/blob/master/japan.geojson), simplified to `public/data/japan-prefectures.geojson` via [mapshaper.org](https://mapshaper.org/) (explode → simplify → dissolve by prefecture name)
-- **Chama locations** — Google My Maps KMZ (`src/services/api.ts` → `getChamaTrack()`)
+- **Chama locations** — Google My Maps KMZ ingested at build (`scripts/ingest-chama-track.ts`); app loads `data/chama-track.geojson` (`getChamaTrack()` in `src/services/api.ts`). Dev can fall back to live KMZ; set `VITE_USE_LIVE_KMZ=true` to force live fetch.
 - **Map tiles** — third-party free providers (see basemap setup in `src/map/basemapStyle.ts`)
 
 This site displays geographic data and map tiles from third-party sources. Providers are chosen because they are free to use where applicable.
+
+## Refreshing map data (no git commit)
+
+After editing the Google My Map, run a new deploy — **Actions → “Deploy Vite React site to Pages” → Run workflow** (`workflow_dispatch`), or push to `master`. Ingest runs as part of `npm run build`.
 
 ## Credits
 

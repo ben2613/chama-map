@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { Feature, Point } from 'geojson';
 import type { TrackProperties } from '@/types/map';
 import { getGroupingKeyForFeature } from '@/utils/groupTrackFeatures';
+import { resolveTrackAssetUrl } from '@/services/kmlToChamaTrack';
 
 const controlBtnClass = `
   w-11 h-11 shrink-0 p-0 bg-white border-2 border-gray-300 rounded-sm
@@ -132,7 +133,7 @@ export default function OverseasLocationsControl({
                           }}
                         >
                           {icon && (
-                            <img src={icon} alt="" className="h-4 w-4 shrink-0 object-contain" />
+                            <img src={resolveTrackAssetUrl(icon)} alt="" className="h-4 w-4 shrink-0 object-contain" />
                           )}
                           <span className="min-w-0 truncate">
                             {label}
