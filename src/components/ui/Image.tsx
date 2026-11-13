@@ -1,10 +1,25 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function ImageContent({ src, alt, className }: { src: string; alt?: string; className?: string }) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
-  if (isError) return null;
+  if (isError) {
+    return (
+      <div
+        className="flex h-[200px] w-full flex-col items-center justify-center gap-1 bg-gray-100 text-gray-500"
+        role="img"
+        aria-label={alt ?? t('offline.imageUnavailable')}
+      >
+        <span className="text-2xl opacity-60" aria-hidden>
+          🖼
+        </span>
+        <span className="px-2 text-center text-xs">{t('offline.imageUnavailable')}</span>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-[200px] w-full overflow-hidden bg-gray-100">

@@ -66,6 +66,10 @@
     "timeout": "Location request timed out",
     "enableLocationInstructions": "Please enable location access in your browser settings"
   },
+  "offline": {
+    "banner": "Offline — spot data and search still work. Map tiles and photos only if your browser cached them; open online once for best results.",
+    "imageUnavailable": "Image unavailable offline"
+  },
   "spotSearch": {
     "label": "Search locations",
     "placeholder": "Search spots…",

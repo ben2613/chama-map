@@ -9,6 +9,7 @@ import InfoPanel from '@/components/ui/InfoPanel';
 import Guideline from '@/components/ui/Guideline';
 import OtherProject from '@/components/ui/OtherProject';
 import DynamicMetadata from '@/components/ui/DynamicMetadata';
+import OfflineBanner from '@/components/ui/OfflineBanner';
 
 // Providers
 import StoreProvider from '@/components/providers/StoreProvider';
@@ -101,6 +102,7 @@ function AppContent() {
       {!showSplash && <Guideline />}
       {/* Other Project Modal */}
       {!showSplash && <OtherProject />}
+      <OfflineBanner />
     </div>
   );
 }
