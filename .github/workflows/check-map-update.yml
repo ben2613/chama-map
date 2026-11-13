@@ -30,8 +30,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Read KMZ baseline repository variable
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          HASH="$(gh variable get LAST_KMZ_SHA256 2>/dev/null || true)"
+          echo "LAST_KMZ_SHA256=$HASH" >> "$GITHUB_ENV"
+
       - name: Compare KMZ hash to published baseline
         id: kmz
+        env:
+          LAST_KMZ_SHA256: ${{ env.LAST_KMZ_SHA256 }}
         run: npx tsx scripts/check-kmz-update.ts
 
       - name: Trigger Pages deploy
