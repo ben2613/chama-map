@@ -33,7 +33,7 @@ Map logic uses a thin **`MapProjection`** facade (`src/map/mapProjection.ts`) an
 
 ## Development
 
-- **ESLint 10**, **Vitest 4**, **Testing Library**, **fast-check** (property tests)
+- **ESLint 10**, **Vitest 5**, **Testing Library**, **fast-check** (property tests)
 - Path alias `@/` → `./src/`
 
 ## Commands
