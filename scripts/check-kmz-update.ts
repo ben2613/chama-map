@@ -1,5 +1,5 @@
 /**
- * Fetches the Chama KMZ and compares SHA-256 to LAST_KMZ_SHA256 (repo variable in CI).
+ * Fetches the Chama KMZ and compares SHA-256 to LAST_KMZ_SHA256 (published track-meta in CI).
  * Used by the scheduled GitHub Actions workflow (stdout + GITHUB_OUTPUT).
  */
 import { createHash } from 'node:crypto';
@@ -36,7 +36,7 @@ async function main(): Promise<void> {
   }
 
   if (!initialized) {
-    console.warn('No LAST_KMZ_SHA256 repository variable; deploy recommended to initialize baseline.');
+    console.warn('No published KMZ baseline (track-meta missing); deploy recommended.');
   }
 }
 

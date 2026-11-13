@@ -23,7 +23,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  actions: write
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -83,12 +82,6 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Vite
         run: ${{ steps.detect-package-manager.outputs.runner }} build
-      - name: Update KMZ baseline repository variable
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          KMZ_SHA=$(node -p "JSON.parse(require('fs').readFileSync('public/data/track-meta.json','utf8')).kmzSha256")
-          gh variable set LAST_KMZ_SHA256 --body "$KMZ_SHA"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:

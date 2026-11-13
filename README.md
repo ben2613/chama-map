@@ -76,10 +76,8 @@ This site displays geographic data and map tiles from third-party sources. Provi
 
 Trip GeoJSON is **not** in git; it is produced at build time. After editing the Google My Map:
 
-1. **Automatic (recommended)** — workflow **Check My Maps update** runs on a schedule (every 6 hours UTC), compares the live KMZ SHA-256 to the repository variable **`LAST_KMZ_SHA256`**, and dispatches **Deploy Vite React site to Pages** when it changes (or when the variable is not set yet). You can also run it manually from Actions.
+1. **Automatic (recommended)** — workflow **Check My Maps update** runs on a schedule (every 6 hours UTC), compares the live Google KMZ SHA-256 to **`kmzSha256` in the published `data/track-meta.json`**, and dispatches **Deploy Vite React site to Pages** when they differ (or when the live file is missing). No git commits and no repository variables.
 2. **Manual** — Actions → **Deploy Vite React site to Pages** → Run workflow, or push to `master`.
-
-Each successful deploy build runs ingest and updates **`LAST_KMZ_SHA256`** via the GitHub API (no git commits). Set the variable once by running a deploy, or under **Settings → Secrets and variables → Actions → Variables**.
 
 ## Credits
 

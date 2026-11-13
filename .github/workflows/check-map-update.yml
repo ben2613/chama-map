@@ -30,12 +30,24 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Read KMZ baseline repository variable
+      - name: Read KMZ hash from live site track-meta.json
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          HASH="$(gh variable get LAST_KMZ_SHA256 2>/dev/null || true)"
-          echo "LAST_KMZ_SHA256=$HASH" >> "$GITHUB_ENV"
+          SITE="$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.html_url' 2>/dev/null || true)"
+          SITE="${SITE%/}"
+          if [ -z "$SITE" ]; then
+            echo "LAST_KMZ_SHA256=" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          META_URL="${SITE}/data/track-meta.json"
+          JSON="$(curl -fsSL "${META_URL}?t=$(date +%s)" || true)"
+          if [ -n "$JSON" ]; then
+            HASH="$(node -p "JSON.parse(process.argv[1]).kmzSha256" "$JSON")"
+            echo "LAST_KMZ_SHA256=$HASH" >> "$GITHUB_ENV"
+          else
+            echo "LAST_KMZ_SHA256=" >> "$GITHUB_ENV"
+          fi
 
       - name: Compare KMZ hash to published baseline
         id: kmz
