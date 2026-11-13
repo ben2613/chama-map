@@ -22,6 +22,7 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
   const [open, setOpen] = useState(false);
   const [expandedMobile, setExpandedMobile] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [inputFocused, setInputFocused] = useState(false);
 
   const index = useMemo(() => buildSpotSearchIndex(chamaTrack), [chamaTrack]);
 
@@ -98,7 +99,12 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
 
   const inputBlock = (
     <div className="relative flex min-w-0 flex-1 items-center">
-      <FaMagnifyingGlass className="pointer-events-none absolute left-2.5 text-gray-400 text-sm" aria-hidden />
+      <FaMagnifyingGlass
+        className={`pointer-events-none absolute left-2.5 text-sm transition-colors sm:text-red-500 ${
+          expandedMobile || inputFocused ? 'text-red-500' : 'text-gray-400'
+        }`}
+        aria-hidden
+      />
       <input
         ref={inputRef}
         type="search"
@@ -110,7 +116,11 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
           setActiveIndex(0);
           setOpen(true);
         }}
-        onFocus={() => setOpen(true)}
+        onFocus={() => {
+          setOpen(true);
+          setInputFocused(true);
+        }}
+        onBlur={() => setInputFocused(false)}
         onKeyDown={onKeyDown}
         placeholder={t('spotSearch.placeholder')}
         aria-label={t('spotSearch.label')}
@@ -138,9 +148,9 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
   return (
     <div
       ref={rootRef}
-      className="chama-map-control pointer-events-auto fixed top-3 z-[10002] flex max-w-full items-start gap-2 spot-search"
+      className="chama-map-control pointer-events-auto fixed top-3 z-[10002] flex max-w-full items-center gap-2 spot-search"
       style={{
-        left: 'calc(1.25rem + 3rem + 0.5rem)',
+        left: 'calc(0.75rem + 2.75rem + 0.5rem)',
         right: 'calc(0.75rem + 2.75rem + 0.5rem)',
       }}
       data-control-position="topleft"
@@ -148,7 +158,11 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
       {/* Mobile: icon expands to full search row */}
       <button
         type="button"
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border-2 border-gray-300 bg-white/95 text-gray-600 hover:bg-gray-50 sm:hidden"
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border-2 bg-white/95 transition-colors hover:bg-gray-50 sm:hidden ${
+          expandedMobile
+            ? 'border-red-400 bg-red-50 text-red-500 shadow-sm'
+            : 'border-gray-300 text-gray-600'
+        }`}
         aria-label={t('spotSearch.open')}
         aria-expanded={expandedMobile}
         onClick={() => {
@@ -158,7 +172,7 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
           }
         }}
       >
-        <FaMagnifyingGlass aria-hidden />
+        <FaMagnifyingGlass className={expandedMobile ? 'text-red-500' : undefined} aria-hidden />
       </button>
 
       <div
