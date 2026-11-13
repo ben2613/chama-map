@@ -157,7 +157,7 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
   return (
     <div
       ref={rootRef}
-      className="chama-map-control pointer-events-auto fixed top-3 z-[10002] flex max-w-full items-center gap-2 spot-search"
+      className="chama-map-control pointer-events-auto fixed top-3 z-[10002] flex max-w-full items-start gap-2 spot-search"
       style={{
         left: 'calc(0.75rem + 2.75rem + 0.5rem)',
         right: 'calc(0.75rem + 2.75rem + 0.5rem)',
@@ -185,7 +185,7 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
       </button>
 
       <div
-        className={`min-w-0 flex-1 flex-col ${expandedMobile ? 'flex' : 'hidden sm:flex'}`}
+        className={`relative min-w-0 flex-1 ${expandedMobile ? 'block' : 'hidden sm:block'}`}
       >
         {inputBlock}
         {showResults && (
@@ -193,7 +193,7 @@ const SpotSearch: React.FC<SpotSearchProps> = ({ chamaTrack, japanData, onSelect
             ref={listRef}
             id={listId}
             role="listbox"
-            className="mt-1 max-h-64 overflow-y-auto rounded-sm border-2 border-gray-200 bg-white/98 py-1 shadow-lg"
+            className="absolute left-0 right-0 top-full z-10 mt-1 max-h-64 overflow-y-auto rounded-sm border-2 border-gray-200 bg-white/98 py-1 shadow-lg"
           >
             {results.length === 0 ? (
               <li className="px-3 py-2 text-sm text-gray-500">{t('spotSearch.noResults')}</li>
