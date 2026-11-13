@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "ingest:track": "tsx scripts/ingest-chama-track.ts",
+    "check:kmz": "tsx scripts/check-kmz-update.ts",
     "build": "npm run ingest:track && tsc --project tsconfig.build.json && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 3",

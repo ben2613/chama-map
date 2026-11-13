@@ -72,9 +72,14 @@ Main entry: `src/main.tsx` → `src/App.tsx` → lazy-loaded `src/components/map
 
 This site displays geographic data and map tiles from third-party sources. Providers are chosen because they are free to use where applicable.
 
-## Refreshing map data (no git commit)
+## Refreshing map data (no track commit)
 
-After editing the Google My Map, run a new deploy — **Actions → “Deploy Vite React site to Pages” → Run workflow** (`workflow_dispatch`), or push to `master`. Ingest runs as part of `npm run build`.
+Trip GeoJSON is **not** in git; it is produced at build time. After editing the Google My Map:
+
+1. **Automatic (recommended)** — workflow **Check My Maps update** runs on a schedule (every 6 hours UTC), compares the live KMZ SHA-256 to `.github/last-kmz-sha256`, and dispatches **Deploy Vite React site to Pages** when it changes. You can also run it manually from Actions.
+2. **Manual** — Actions → **Deploy Vite React site to Pages** → Run workflow, or push to `master`.
+
+Each successful deploy build updates `.github/last-kmz-sha256` (`[skip ci]` so the baseline commit does not loop CI).
 
 ## Credits
 

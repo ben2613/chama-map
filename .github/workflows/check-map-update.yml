@@ -1,0 +1,47 @@
+# Poll Google My Maps KMZ; dispatch Pages deploy when the published hash differs.
+name: Check My Maps update
+
+on:
+  schedule:
+    # Every 6 hours (UTC). GitHub may delay scheduled runs on busy hosts.
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: check-map-update
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compare KMZ hash to published baseline
+        id: kmz
+        run: npx tsx scripts/check-kmz-update.ts
+
+      - name: Trigger Pages deploy
+        if: steps.kmz.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "KMZ changed (${{ steps.kmz.outputs.remote_sha256 }}); dispatching Pages deploy."
+          gh workflow run "Deploy Vite React site to Pages" --ref master
+
+      - name: No map changes
+        if: steps.kmz.outputs.changed != 'true'
+        run: echo "KMZ unchanged; skipping deploy."
